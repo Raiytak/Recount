@@ -11,7 +11,7 @@ from dateutil.relativedelta import relativedelta
 
 
 
-class GraphInit():
+class DashboardA():
     def getInputDivA(self):
         periode_input = dcc.RadioItems(
             id="input-radio",
@@ -24,11 +24,35 @@ class GraphInit():
         )
         date_input = dcc.DatePickerSingle(
             id="input-date",
-            date = dt.now()-relativedelta(months=4),
+            # date = dt.now(),
+            # date = dt.now()-relativedelta(months=4),
+            date = datetime.datetime(year=2019,month=9,day=1),
             display_format="D/M/Y"
         )
-        input_div = html.Div(children=[date_input,
-                                       periode_input])
+
+        excel_input = dcc.Upload(
+            id='upload-data',
+            children=html.Div('Import csv File'),
+            # children=html.Div('Import csv File (format .xlsx)'),
+            # style={
+            #     'width': '20%',
+            #     'height': '60px',
+            #     'lineHeight': '60px',
+            #     'borderWidth': '1px',
+            #     'borderStyle': 'dashed',
+            #     'borderRadius': '5px',
+            #     'textAlign': 'center',
+            #     'margin': '10px'
+            # },
+            # Allow multiple files to be uploaded
+            multiple=False
+        )
+
+        excel_input_div = html.Button(excel_input)
+
+        date_input_div = html.Div(children=[date_input, periode_input])
+
+        input_div = html.Div(children=[date_input_div,excel_input_div])
         return input_div
 
     def getEmptyGraphA(self, graph_type):
@@ -44,20 +68,20 @@ class GraphInit():
 
 class EmptyDashboard():
     def __init__(self):
-        self.graphInit = GraphInit()
+        self.graphInitA = DashboardA()
         
     def getEmptyDashboardA(self):
-        input_div = self.graphInit.getInputDivA()
+        input_div = self.graphInitA.getInputDivA()
         
-        scatter_graph = self.graphInit.getEmptyGraphA("scatter")
-        pie_graph = self.graphInit.getEmptyGraphA("pie")
+        scatter_graph = self.graphInitA.getEmptyGraphA("scatter")
+        pie_graph = self.graphInitA.getEmptyGraphA("pie")
         upper_graphs = html.Div([scatter_graph, pie_graph],
                                     style= {'display': 'flex'})
         upper_dashboard = html.Div([input_div, upper_graphs],
                                     style= {'display': 'block'})
         
-        mean_graph = self.graphInit.getEmptyGraphA("mean")
-        food_graph = self.graphInit.getEmptyGraphA("food")
+        mean_graph = self.graphInitA.getEmptyGraphA("mean")
+        food_graph = self.graphInitA.getEmptyGraphA("food")
         bottom_dashboard = html.Div([mean_graph, food_graph],
                                     style= {'display': 'flex'})
         

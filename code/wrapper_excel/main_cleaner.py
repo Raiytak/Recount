@@ -29,7 +29,7 @@ class MainCleanerExcel():
         
         self.ReviewerDataframe.checkConformity(dataframe)
         
-        dataframe.to_excel(self.ExcelToDataframe.AccessExcel.ExcelPaths.excel_path)
+        dataframe.to_excel(self.ExcelToDataframe.AccessExcel.ExcelPaths.copiedExcelPath())
 
 
 

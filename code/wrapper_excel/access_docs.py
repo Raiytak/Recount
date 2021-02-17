@@ -6,16 +6,36 @@ import json
 
 
 
+
 class AccessExcel():
     def __init__(self, ExcelPath):
         self.ExcelPaths = ExcelPath
-        self.copyExcelToData()
+        self.useExampleIfNoImportedExcel()
     
-    def copyExcelToData(self):
-        copyfile(self.ExcelPaths._source_excel_path, self.ExcelPaths.excel_path)  
+    def useExampleIfNoImportedExcel(self):
+        if self.ExcelPaths.importedExcelExists():
+            self.copyImportedExcel()
+        else:
+            self.copyExampleExcel()
+
+    def copyImportedExcel(self):
+        copyfile(self.ExcelPaths.importedExcelPath(), self.ExcelPaths.copiedExcelPath())
+
+    def copyExampleExcel(self):
+        copyfile(self.ExcelPaths.exampleExcelPath(), self.ExcelPaths.copiedExcelPath())
     
     def getDataframeOfExcel(self):
-        xl_file = pd.ExcelFile(self.ExcelPaths.excel_path)
+        filename = self.ExcelPaths.copiedExcelPath()
+        if '.csv' in filename:
+            # Assume that the user uploaded a CSV file
+            df = pd.read_csv(io.StringIO(decoded.decode('utf-8')))
+        elif '.xlsx' in filename:
+            # Assume that the user uploaded an excel file
+            xl_file = pd.ExcelFile(self.ExcelPaths.copiedExcelPath())
+        # elif '.xls' in filename:
+            # Assume that the user uploaded an excel file
+            # df = pd.read_excel(io.BytesIO(decoded))
+            
         dfs = {sheet_name: xl_file.parse(sheet_name) 
                 for sheet_name in xl_file.sheet_names}
         try:

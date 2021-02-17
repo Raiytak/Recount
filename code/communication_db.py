@@ -87,6 +87,11 @@ class DateToDataframe:
         except ValueError:
             pass
         try:
+            formated_date = datetime.datetime.strptime(my_date, "%Y-%m-%dT%H:%M:%S")
+            return formated_date
+        except ValueError:
+            pass
+        try:
             formated_date = datetime.datetime.strptime(my_date, "%Y-%m-%d")
             return formated_date
         except ValueError:

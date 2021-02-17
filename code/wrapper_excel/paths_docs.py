@@ -5,6 +5,7 @@ import json
 import pandas as pd
 
 import getpass
+import os
 
 
 username = getpass.getuser()
@@ -31,20 +32,31 @@ class ApplicationDataPath():
 #   and the copy excel (copied and cleaned by the applciation)
 class ExcelPath(ApplicationDataPath):
     def __init__(self):
-        self.excel_path = self.getCopiedExcelPath()
-        self._source_excel_path = self.getSourceExcelPath()
+        self._excel_path = self.copiedExcelPath()
+        self._source_excel_path = self.importedExcelPath()
         
-    def getSourceExcelPath(self):
-        path_file = USER_HOME+PATH_TO_MAIN_FOLDER
+    def importedExcelPath(self):
+        path_file = self.getDataPath()
         name_file = "expenses.xlsx"
         path_excel = path_file + "/" + name_file
         return path_excel
     
-    def getCopiedExcelPath(self):
+    def copiedExcelPath(self):
         path_file = self.getDataPath()
-        name_file = "comptes.xlsx"
+        name_file = "copy_expenses.xlsx"
         project_excel = path_file + "/" + name_file
         return project_excel
+
+    def exampleExcelPath(self):
+        path_file = USER_HOME+PATH_TO_MAIN_FOLDER
+        name_file = "example_expenses.xlsx"
+        path_excel = path_file + "/" + name_file
+        return path_excel
+
+
+    def importedExcelExists(self):
+        is_present = os.path.exists(self.importedExcelPath())
+        return is_present
 
 
 
