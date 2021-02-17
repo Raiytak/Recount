@@ -12,7 +12,7 @@ class AccessExcel():
         self.copyExcelToData()
     
     def copyExcelToData(self):
-        copyfile(self.ExcelPaths._real_excel_path, self.ExcelPaths.excel_path)  
+        copyfile(self.ExcelPaths._source_excel_path, self.ExcelPaths.excel_path)  
     
     def getDataframeOfExcel(self):
         xl_file = pd.ExcelFile(self.ExcelPaths.excel_path)

@@ -14,6 +14,7 @@ import wrapper_excel.access_docs as access_docs
 AuthorizedTST = access_docs.AccessTSTAuthorized(TSTAuthPath)
 authorizedTST_json = AuthorizedTST.getJson()
 
+# Objects used to clean the data
 import wrapper_dash.prepare_dashboard as prepare_dashboard
 import wrapper_dash.main_convert_df_to_graph as main_convert_df_to_graph
 import wrapper_dash.convert_ld_to_graph as convert_ld_to_graph
@@ -23,7 +24,7 @@ ListDictToGraph = convert_ld_to_graph.ListDictToGraph(authorizedTST_json)
 ConvertDfToGraph = main_convert_df_to_graph.DataframeToGraph(DataframeToListDict, ListDictToGraph)
 
 
-
+# Main dashboard
 class DashboardA():
     def __init__(self):
         self.EmptyDashboard = prepare_dashboard.EmptyDashboard()
@@ -43,7 +44,7 @@ class DashboardA():
         def update_graph(selected_date_str, selected_periode):        
             dataframe = self.DateToDataframe.getDataframeFromDate(selected_date_str, selected_periode)
             list_dataframes = self.DateToDataframe.getListDataframeByWeekFromDate(selected_date_str, selected_periode)
-            
+
             scatter_graph = self.ConvertDfToGraph.convertDataframeToGraph(dataframe, "all-scatter")
             pie_graph = self.ConvertDfToGraph.convertDataframeToGraph(dataframe, "theme-pie")
             mean_graph = self.ConvertDfToGraph.convertDataframeToGraph(list_dataframes, "mean-bar")
@@ -62,7 +63,7 @@ class DashboardA():
     
     def launch(self):
         self.prepareDashboard()
-        print("-#- Application Running -#-")
+        print("-#- Application Running -#-\n")
         self.run()
     
 

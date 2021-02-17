@@ -7,7 +7,7 @@
 
     "transport": ["bus", "avion", "taxi", "train", "voiture", "autorisation"],
 
-    "sante": ["assurance", "medecin", "dentiste", "ostheopate", "urgence", "hopital", "creme"],
+    "sante": ["assurance", "medecin", "dentiste", "osteopathe", "urgence", "hopital", "creme"],
 
     "loisir": ["activite", "jeu_video", "jeu_de_societe", "livre", "bar", "cinema", "sortie", "visite", "streaming"],
 

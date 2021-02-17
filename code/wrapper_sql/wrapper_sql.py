@@ -11,7 +11,7 @@ class SQLConnector():
         # self.username = 'root'
         # self.password = 'root'
         self.username = 'newuser'
-        self.password = 'password1AAa+sada'
+        self.password = 'password'
         self.database = 'depenses'
         
         self.myConnection, self.cursor = self.connect()
@@ -84,7 +84,8 @@ class WrapperOfTable(SQLConnector):
     def getNameColumns(self):
         database = self.getNameDatabase()
         table = self.getNameTable()
-        request = "SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA='"+database+"' AND TABLE_NAME='"+table+"'"
+        # request = "SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA='"+database+"' AND TABLE_NAME='"+table+"'"
+        request = "SELECT column_name FROM information_schema.columns WHERE table_schema='"+database+"' AND table_name='"+table+"'" + " ORDER BY table_name, ordinal_position;"
         response = self.select(request)
         name_columns = [col[0] for col in response]
         return name_columns

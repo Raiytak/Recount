@@ -31,7 +31,7 @@ class DataframeToSql():
         
         for column_excel in equivalent_columns.keys():
             columns_sql = equivalent_columns[column_excel]
-            if column_excel == "ID": #Goal is to avoid a coma at the start of the request (try without the if and look at the requests to understand)
+            if columns_sql[0] == "ID": #Goal is to avoid a coma at the start of the request (try without the if and look at the requests to understand)
                 values = dict_list_list[column_excel][0]
                 dict_list_list_bool = [False if (values[i]==str(np.nan) or values[i]=="None") else True for i in range(len(values))]
                 start_requests = self._concatenateRequestsAndValueWithoutComa(start_requests, columns_sql[0], dict_list_list_bool)
