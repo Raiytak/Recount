@@ -1,8 +1,0 @@
-dash
-pandas
-unidecode
-stop_words
-xlrd==1.2.0
-pymysql
-openpyxl
-getpass
