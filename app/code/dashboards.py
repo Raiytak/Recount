@@ -9,25 +9,31 @@ import communication_db
 
 import wrapper_excel.paths_docs as paths_docs
 TSTAuthPath = paths_docs.ThemesAndSubthemesAuthorized()
+ExcelPath = paths_docs.ExcelPath()
 
 import wrapper_excel.access_docs as access_docs
 AuthorizedTST = access_docs.AccessTSTAuthorized(TSTAuthPath)
 authorizedTST_json = AuthorizedTST.getJson()
 
+# Objects used to clean the data
 import wrapper_dash.prepare_dashboard as prepare_dashboard
 import wrapper_dash.main_convert_df_to_graph as main_convert_df_to_graph
 import wrapper_dash.convert_ld_to_graph as convert_ld_to_graph
 import wrapper_dash.convert_df_to_ld as convert_df_to_ld
+import wrapper_dash.import_excel as import_excel
 DataframeToListDict = convert_df_to_ld.DataframeToListOfDicts()
 ListDictToGraph = convert_ld_to_graph.ListDictToGraph(authorizedTST_json)
 ConvertDfToGraph = main_convert_df_to_graph.DataframeToGraph(DataframeToListDict, ListDictToGraph)
+FileSaver = import_excel.FileSaver(ExcelPath)
 
 
-
+# Main dashboard
 class DashboardA():
     def __init__(self):
         self.EmptyDashboard = prepare_dashboard.EmptyDashboard()
-        self.app = dash.Dash()
+
+        external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
+        self.app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
         
         self.DateToDataframe = communication_db.DateToDataframe()
         self.ConvertDfToGraph = ConvertDfToGraph
@@ -39,11 +45,15 @@ class DashboardA():
             dash.dependencies.Output("mean-output", "figure"),
             dash.dependencies.Output("food-output", "figure")],
             [dash.dependencies.Input("input-date", 'date'),
-            dash.dependencies.Input("input-radio", 'value')])
-        def update_graph(selected_date_str, selected_periode):        
+            dash.dependencies.Input("input-radio", 'value'),
+            dash.dependencies.Input('upload-data', 'contents')])
+        def update_graph(selected_date_str, selected_periode, imported_file):     
+             
+            FileSaver.saveFile(imported_file)
+            
             dataframe = self.DateToDataframe.getDataframeFromDate(selected_date_str, selected_periode)
             list_dataframes = self.DateToDataframe.getListDataframeByWeekFromDate(selected_date_str, selected_periode)
-            
+
             scatter_graph = self.ConvertDfToGraph.convertDataframeToGraph(dataframe, "all-scatter")
             pie_graph = self.ConvertDfToGraph.convertDataframeToGraph(dataframe, "theme-pie")
             mean_graph = self.ConvertDfToGraph.convertDataframeToGraph(list_dataframes, "mean-bar")
@@ -62,7 +72,7 @@ class DashboardA():
     
     def launch(self):
         self.prepareDashboard()
-        print("-#- Application Running -#-")
+        print("-#- Application Running -#-\n")
         self.run()
     
 

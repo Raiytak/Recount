@@ -4,17 +4,17 @@ et de retourner des graphiques dynmiques, avec comme BUT d'analyser les dépense
 période.
 
 """
+
+
 import update_db
 import dashboards
 
-
+ 
 # --- INIT ---
 myDashboard = dashboards.DashboardA()
 
-
 # --- UPDATING DATABASE ---
 update_db.updateAll()   
-
 
 # --- MAIN PART ---
 myDashboard.launch()

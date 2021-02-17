@@ -1,5 +1,3 @@
-
-
 class DataframeToGraph(): #main class
     def __init__(self, DataframeToListDict, ListDictToGraph):
         self.DfToLd = DataframeToListDict

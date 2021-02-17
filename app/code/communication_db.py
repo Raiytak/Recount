@@ -33,6 +33,7 @@ class DateToDataframe:
         start_date = self._convertToDatetime(start_date)
         request = self.convertDateToRequestSQL(start_date, end_date)
         reponse = self.bd_sql.select(request)
+        # print("Reponse : " + reponse)
         dataframe = self._translateSqlToDataframe(reponse)
         return dataframe
         
@@ -86,9 +87,39 @@ class DateToDataframe:
         except ValueError:
             pass
         try:
+            formated_date = datetime.datetime.strptime(my_date, "%Y-%m-%dT%H:%M:%S")
+            return formated_date
+        except ValueError:
+            pass
+        try:
             formated_date = datetime.datetime.strptime(my_date, "%Y-%m-%d")
             return formated_date
         except ValueError:
             pass
         raise Exception
+    
+    
+# class DateToDataframeConsideringTrips(DateToDataframe):
+#     def __init__(self):
+#         super().__init__()
+        
+    
+    
+#     def getListDataframeByWeekFromDate(self, start_date, periode):
+#         current_date = self._convertToDatetime(start_date)
+#         list_dataframe = []
+#         end_date = self._convertPeriodeToDate(current_date, periode)
+#         while current_date < end_date:
+#             dataframe = self.getDataframeFromDate(current_date, "week")
+#             dataframe["date_week"] = self.getYMDatetime(current_date)
+#             if dataframe.empty == False:
+#                 list_dataframe.append(dataframe)
+#             current_date = self._addWeek(current_date)
+#         return list_dataframe
+    
+#     def getDataframeFromDate(self, start_date, periode):
+#         start_date = self._convertToDatetime(start_date)
+#         end_date = self._convertPeriodeToDate(start_date, periode)
+#         dataframe = self._convertDateToDataframe(start_date, end_date)
+#         return dataframe
     
