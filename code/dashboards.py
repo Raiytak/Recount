@@ -9,7 +9,7 @@ import communication_db
 
 import wrapper_excel.paths_docs as paths_docs
 TSTAuthPath = paths_docs.ThemesAndSubthemesAuthorized()
-AppDataPath = paths_docs.ApplicationDataPath()
+ExcelPath = paths_docs.ExcelPath()
 
 import wrapper_excel.access_docs as access_docs
 AuthorizedTST = access_docs.AccessTSTAuthorized(TSTAuthPath)
@@ -24,13 +24,14 @@ import wrapper_dash.import_excel as import_excel
 DataframeToListDict = convert_df_to_ld.DataframeToListOfDicts()
 ListDictToGraph = convert_ld_to_graph.ListDictToGraph(authorizedTST_json)
 ConvertDfToGraph = main_convert_df_to_graph.DataframeToGraph(DataframeToListDict, ListDictToGraph)
-FileSaver = import_excel.FileSaver(AppDataPath)
+FileSaver = import_excel.FileSaver(ExcelPath)
 
 
 # Main dashboard
 class DashboardA():
     def __init__(self):
         self.EmptyDashboard = prepare_dashboard.EmptyDashboard()
+
         external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
         self.app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
         

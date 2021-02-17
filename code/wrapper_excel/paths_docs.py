@@ -34,10 +34,13 @@ class ExcelPath(ApplicationDataPath):
     def __init__(self):
         self._excel_path = self.copiedExcelPath()
         self._source_excel_path = self.importedExcelPath()
+
+    def nameImportedExcel(self):
+        return "imported_excel"
         
     def importedExcelPath(self):
         path_file = self.getDataPath()
-        name_file = "expenses.xlsx"
+        name_file = self.nameImportedExcel() + ".xlsx"
         path_excel = path_file + "/" + name_file
         return path_excel
     

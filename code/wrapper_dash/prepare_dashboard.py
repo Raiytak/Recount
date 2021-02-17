@@ -8,9 +8,6 @@ from dateutil.relativedelta import relativedelta
 
 
 
-
-
-
 class DashboardA():
     def getInputDivA(self):
         periode_input = dcc.RadioItems(
@@ -24,8 +21,6 @@ class DashboardA():
         )
         date_input = dcc.DatePickerSingle(
             id="input-date",
-            # date = dt.now(),
-            # date = dt.now()-relativedelta(months=4),
             date = datetime.datetime(year=2019,month=9,day=1),
             display_format="D/M/Y"
         )
@@ -33,18 +28,6 @@ class DashboardA():
         excel_input = dcc.Upload(
             id='upload-data',
             children=html.Div('Import csv File'),
-            # children=html.Div('Import csv File (format .xlsx)'),
-            # style={
-            #     'width': '20%',
-            #     'height': '60px',
-            #     'lineHeight': '60px',
-            #     'borderWidth': '1px',
-            #     'borderStyle': 'dashed',
-            #     'borderRadius': '5px',
-            #     'textAlign': 'center',
-            #     'margin': '10px'
-            # },
-            # Allow multiple files to be uploaded
             multiple=False
         )
 
