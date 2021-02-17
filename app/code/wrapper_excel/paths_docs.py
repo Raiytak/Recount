@@ -9,14 +9,14 @@ import os
 
 
 username = getpass.getuser()
-USER_HOME = "/home/"+username
-PATH_TO_MAIN_FOLDER ="/Desktop/Projets/Comptes"
+# USER_HOME = "/home/"+username
+# PATH_TO_MAIN_FOLDER ="/Desktop/Projets/Comptes"
 
 
 # Path to the file data used by the application
 class ApplicationDataPath():
     def getDataPath(self):
-        path_file = USER_HOME+PATH_TO_MAIN_FOLDER+"/code/data"
+        path_file = "/code/data"
         return path_file
 
     def popEnd(self, name_directory):
