@@ -1,9 +1,13 @@
 import unittest
 import os
 
+import getpass
 
 
 import wrapper_excel
+
+username = getpass.getuser()
+print(username)
 
 
 class PathDocs(unittest.TestCase): 

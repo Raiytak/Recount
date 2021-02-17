@@ -1,0 +1,24 @@
+version: "3.0"
+services:
+  app:
+    build: .
+    ports:
+      - "8050:8050"
+    # volumes:
+    #   - .:/code
+    # environment:
+      # FLASK_ENV: development
+  mysql:
+    image: "mysql:latest"
+    environment: 
+      MYSQL_ROOT_PASSWORD: "root"
+
+
+
+
+  web:
+    build: ./app_dockerfile
+    ports:
+      - "5000:5000"
+    environment:
+      FLASK_ENV: development

@@ -4,11 +4,20 @@ import json
 
 import pandas as pd
 
+import getpass
 
+
+username = getpass.getuser()
+MAIN_FOLDER = "/home/"+username
+SUB_FOLDER ="/Documents/Comptes"
+
+
+# Execl used as tmp excel
 class DataPath():
     def getDataPath(self):
-        path_data = r"C:\Users\User1\Desktop\Projets\Comptes\data"
-        return path_data
+        path_file = MAIN_FOLDER+SUB_FOLDER+"/code/data"
+
+        return path_file
 
     def popEnd(self, name_directory):
         size = len(name_directory)
@@ -18,18 +27,22 @@ class DataPath():
         return name_directory[0:i]
 
 
-
+# Excel Origin
 class ExcelPath(DataPath):
     def __init__(self):
         self.excel_path = self.getProjectExcelPath()
         self._real_excel_path = self.getRealExcelPath()
     
     def getProjectExcelPath(self):
-        project_excelexcel = self.getDataPath() + "/comptes.xlsx"
-        return project_excelexcel
+        path_data = self.getDataPath()
+        name_file = "comptes.xlsx"
+        project_excel = path_data + "/" + name_file
+        return project_excel
         
     def getRealExcelPath(self):
-        path_excel = r"C:\Users\User1\Desktop\Le Dossier\Comptes\credit_etudiant.xlsx"
+        path_file = MAIN_FOLDER+SUB_FOLDER
+        name_file = "expenses.xlsx"
+        path_excel = path_file + "/" + name_file
         return path_excel
 
 

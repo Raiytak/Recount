@@ -62,6 +62,7 @@ class DashboardA():
     
     def launch(self):
         self.prepareDashboard()
+        print("-#- Application Running -#-")
         self.run()
     
 

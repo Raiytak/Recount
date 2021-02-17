@@ -8,11 +8,15 @@ import numpy as np
 class SQLConnector():
     def __init__(self):
         self.hostname = 'localhost'
-        self.username = 'root'
-        self.password = ''
+        # self.username = 'root'
+        # self.password = 'root'
+        self.username = 'newuser'
+        self.password = 'password1AAa+sada'
         self.database = 'depenses'
         
         self.myConnection, self.cursor = self.connect()
+
+
         
     def connect(self):
         myConnection = pymysql.connect( host=self.hostname,
@@ -34,7 +38,6 @@ class WrapperOfTable(SQLConnector):
         
     def _execute(self, request_sql):
         request_sql = request_sql.replace("&", self.table)
-        # print("_execute  : ", request_sql)
         response = self.cursor.execute(request_sql)
         return response
         
