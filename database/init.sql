@@ -7,6 +7,7 @@
 -- Version du serveur :  5.7.26
 -- Version de PHP :  7.2.18
 
+
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET AUTOCOMMIT = 0;
 START TRANSACTION;
@@ -25,6 +26,17 @@ CREATE DATABASE IF NOT EXISTS `depenses` DEFAULT CHARACTER SET latin1 COLLATE la
 USE `depenses`;
 
 -- --------------------------------------------------------
+
+
+
+
+-- My modifications (the rest was automatically generated)
+-- CREATE USER 'newuser'@'localhost' IDENTIFIED BY 'password';
+-- GRANT ALL PRIVILEGES ON *.* TO 'newuser'@'localhost';
+-- GRANT INSERT, SELECT, DELETE, UPDATE ON 'depenses'.* TO 'newsuser'@'localhost' IDENTIFIED BY 'password';
+-- End my modif
+
+
 
 --
 -- Structure de la table `depenses_brutes`
@@ -831,3 +843,5 @@ COMMIT;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+
+

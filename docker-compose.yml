@@ -3,7 +3,7 @@ services:
   app:
     depends_on: 
       - db
-    build: ./app_dockerfile
+    build: ./app
     ports:
       - "8050:8050"
     # networks:
@@ -21,7 +21,8 @@ services:
       - "3306:3306"
     volumes:
     - ./database:/tmp/database
-    command: mysqld --init-file="/tmp/database/depenses.sql"
+    command: mysqld --init-file="/tmp/database/init.sql"
+    
   #   networks:
   #     test:
   #       aliases:
