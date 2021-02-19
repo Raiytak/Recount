@@ -31,11 +31,24 @@ class DashboardA():
             multiple=False
         )
 
+        # excel_example_download = html.Button('Import csv File',
+        #     id='upload-data',
+        #     href="/home/mathieu/Desktop/Projets/Comptes/code/wrapper_dash/format_expenses.xlsx"
+        # )
+
         excel_input_div = html.Button(excel_input)
 
-        date_input_div = html.Div(children=[date_input, periode_input])
+        # excel_example_div = html.Button(excel_example_download)
 
-        input_div = html.Div(children=[date_input_div,excel_input_div])
+        date_input_div = html.Div(  children=[date_input, periode_input],
+                                    style={
+                                        "display":"flex",
+                                        "justify-content":"space-between"})
+
+        input_div = html.Div(   children=[date_input_div,excel_input_div],
+                                style={
+                                        "display":"flex",
+                                        "justify-content":"space-between"})
         return input_div
 
     def getEmptyGraphA(self, graph_type):

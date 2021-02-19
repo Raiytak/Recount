@@ -3,26 +3,18 @@ import pandas as pd
 import numpy as np
 
 
-
-
 class SQLConnector():
-    def __init__(self):
-        self.hostname = 'localhost'
-        # self.username = 'root'
-        # self.password = 'root'
-        self.username = 'newuser'
-        self.password = 'password'
-        self.database = 'depenses'
-        
-        self.myConnection, self.cursor = self.connect()
+    def __init__(self, config):
+        self.myConnection, self.cursor = self.connect(config)
 
 
         
-    def connect(self):
-        myConnection = pymysql.connect( host=self.hostname,
-                                       user=self.username,
-                                       passwd=self.password,
-                                       db=self.database )
+    def connect(self, config):
+        conf = config["mysql"]
+        myConnection = pymysql.connect( host=conf["host"],
+                                       user=conf["user"],
+                                       passwd=conf["passwd"],
+                                       db=conf["db"])
         return myConnection, myConnection.cursor()
     
     def  end_connection(self):
@@ -31,8 +23,8 @@ class SQLConnector():
 
 
 class WrapperOfTable(SQLConnector):
-    def __init__(self, table):
-        super().__init__()
+    def __init__(self, table, config):
+        SQLConnector.__init__(self, config)
         self.table = table
         
         

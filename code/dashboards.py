@@ -8,9 +8,14 @@ import datetime
 import communication_db
 import update_db
 
+
+import config.access_config as access_config
+myAccessConfig = access_config.AccessConfig()
+config_json = myAccessConfig.getConfig()
+
 import wrapper_excel.paths_docs as paths_docs
-TSTAuthPath = paths_docs.ThemesAndSubthemesAuthorized()
-ExcelPath = paths_docs.ExcelPath()
+TSTAuthPath = paths_docs.ThemesAndSubthemesAuthorized(config_json)
+ExcelPath = paths_docs.ExcelPath(config_json)
 
 import wrapper_excel.access_docs as access_docs
 AuthorizedTST = access_docs.AccessTSTAuthorized(TSTAuthPath)
@@ -51,10 +56,11 @@ class DashboardA():
         def update_graph(selected_date_str, selected_periode, imported_file):     
              
             FileSaver.saveFile(imported_file)
-            update_db.updateAll()
             
             dataframe = self.DateToDataframe.getDataframeFromDate(selected_date_str, selected_periode)
             list_dataframes = self.DateToDataframe.getListDataframeByWeekFromDate(selected_date_str, selected_periode)
+
+            # print(dataframe[0:2])
 
             scatter_graph = self.ConvertDfToGraph.convertDataframeToGraph(dataframe, "all-scatter")
             pie_graph = self.ConvertDfToGraph.convertDataframeToGraph(dataframe, "theme-pie")

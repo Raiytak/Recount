@@ -3,11 +3,14 @@ from dateutil.relativedelta import relativedelta
 
 import wrapper_sql.wrapper_sql as wrapper_sql
 
+import config.access_config as access_config
+myAccessConfig = access_config.AccessConfig()
+config_json = myAccessConfig.getConfig()
 
 
 class DateToDataframe:
     def __init__(self):
-        self.bd_sql = wrapper_sql.WrapperOfTable("depenses_propres")
+        self.bd_sql = wrapper_sql.WrapperOfTable("depenses_propres", config_json)
         self.translator = wrapper_sql.ResponseSqlToDataframe()
     
     def getListDataframeByWeekFromDate(self, start_date, periode):
@@ -97,29 +100,4 @@ class DateToDataframe:
         except ValueError:
             pass
         raise Exception
-    
-    
-# class DateToDataframeConsideringTrips(DateToDataframe):
-#     def __init__(self):
-#         super().__init__()
-        
-    
-    
-#     def getListDataframeByWeekFromDate(self, start_date, periode):
-#         current_date = self._convertToDatetime(start_date)
-#         list_dataframe = []
-#         end_date = self._convertPeriodeToDate(current_date, periode)
-#         while current_date < end_date:
-#             dataframe = self.getDataframeFromDate(current_date, "week")
-#             dataframe["date_week"] = self.getYMDatetime(current_date)
-#             if dataframe.empty == False:
-#                 list_dataframe.append(dataframe)
-#             current_date = self._addWeek(current_date)
-#         return list_dataframe
-    
-#     def getDataframeFromDate(self, start_date, periode):
-#         start_date = self._convertToDatetime(start_date)
-#         end_date = self._convertPeriodeToDate(start_date, periode)
-#         dataframe = self._convertDateToDataframe(start_date, end_date)
-#         return dataframe
     

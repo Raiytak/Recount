@@ -7,6 +7,10 @@ def updatingByRemovingAllExistingRowsOfTable(wrapperTable):
     return updateDecorator
 
 
+import config.access_config as access_config
+myAccessConfig = access_config.AccessConfig()
+config_json = myAccessConfig.getConfig()
+
 import wrapper_excel.access_docs as access_docs
 import wrapper_excel.main_cleaner as main_cleaner
 import wrapper_excel.cleaner_dataframe as cleaner_dataframe
@@ -14,9 +18,9 @@ import wrapper_excel.fill_blanks as fill_blanks
 import wrapper_excel.paths_docs as paths_docs
 import wrapper_excel.check_conformity as check_conformity
 
-myExcelPath = paths_docs.ExcelPath()
-myDescrToThemePath = paths_docs.DescrToThemePath()
-myTSTAuthorized = paths_docs.ThemesAndSubthemesAuthorized()
+myExcelPath = paths_docs.ExcelPath(config_json)
+myDescrToThemePath = paths_docs.DescrToThemePath(config_json)
+myTSTAuthorized = paths_docs.ThemesAndSubthemesAuthorized(config_json)
 
 myExcelToDataframe = access_docs.ExcelToDataframe(myExcelPath)
 myAccessDescrToTheme = access_docs.AccessDescrToTheme(myDescrToThemePath)
@@ -41,10 +45,10 @@ convertDfToReq = dataframe_to_request_sql.DataframeToSql()
 convertRespToDf = wrapper_sql.ResponseSqlToDataframe()
 convertRespToList = wrapper_sql.ResponseSqlToList()
 
-rawTable = wrapper_sql.WrapperOfTable("depenses_brutes")
-tripTable = wrapper_sql.WrapperOfTable("depenses_voyages")
-repayTable = wrapper_sql.WrapperOfTable("remboursements")
-cleanTable = wrapper_sql.WrapperOfTable("depenses_propres")
+rawTable = wrapper_sql.WrapperOfTable("depenses_brutes", config_json)
+tripTable = wrapper_sql.WrapperOfTable("depenses_voyages", config_json)
+repayTable = wrapper_sql.WrapperOfTable("remboursements", config_json)
+cleanTable = wrapper_sql.WrapperOfTable("depenses_propres", config_json)
 
 rawToRepayement = table_to_other_table.RawToRepayement(rawTable, repayTable)
 rawToTrip = table_to_other_table.RawToTrip(rawTable, tripTable)
