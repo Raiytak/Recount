@@ -7,12 +7,16 @@ import numpy as np
 
 class SQLConnector():
     def __init__(self):
-        self.hostname = 'localhost'
+        # self.hostname = 'localhost'
+        self.hostname = 'db' 
+        self.port = 3306
+
+        self.database = 'depenses'
+
         # self.username = 'root'
         # self.password = 'root'
-        self.username = 'newuser'
-        self.password = 'password'
-        self.database = 'depenses'
+        self.username = 'myuser'
+        self.password = 'mypass'
         
         self.myConnection, self.cursor = self.connect()
 
@@ -20,9 +24,10 @@ class SQLConnector():
         
     def connect(self):
         myConnection = pymysql.connect( host=self.hostname,
+                                       port=self.port,
+                                    #    db=self.database,
                                        user=self.username,
-                                       passwd=self.password,
-                                       db=self.database )
+                                       passwd=self.password)
         return myConnection, myConnection.cursor()
     
     def  end_connection(self):

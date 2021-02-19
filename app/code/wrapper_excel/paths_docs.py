@@ -4,11 +4,11 @@ import json
 
 import pandas as pd
 
-import getpass
+# import getpass
 import os
 
 
-username = getpass.getuser()
+# username = getpass.getuser()
 # USER_HOME = "/home/"+username
 # PATH_TO_MAIN_FOLDER ="/Desktop/Projets/Comptes"
 
@@ -51,7 +51,7 @@ class ExcelPath(ApplicationDataPath):
         return project_excel
 
     def exampleExcelPath(self):
-        path_file = USER_HOME+PATH_TO_MAIN_FOLDER
+        path_file = self.getDataPath()
         name_file = "example_expenses.xlsx"
         path_excel = path_file + "/" + name_file
         return path_excel

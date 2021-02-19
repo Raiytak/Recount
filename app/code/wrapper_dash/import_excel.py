@@ -2,6 +2,7 @@ import os
 import io
 import base64
 
+import update_db
 
 
 class FileSaver():
@@ -46,3 +47,6 @@ class FileSaver():
         elif "csv" in content_type:
             with open(path_file, 'w') as f:
                 f.write(decodedFile)
+
+        
+        update_db.updateAll()

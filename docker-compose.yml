@@ -6,28 +6,20 @@ services:
     build: ./app
     ports:
       - "8050:8050"
-    # networks:
-    #   test:
-    #     aliases:
-    #       - mysql #Any container connected to test network can access this simply by using mysql as hostname  
 
   db:
     image: mysql:latest
+    # build: ./database
     environment: 
-      MYSQL_HOST: 127.0.0.1
-      MYSQL_TCP_PORT: 3306
+      # MYSQL_HOST: 127.0.0.1
+      # MYSQL_TCP_PORT: 3306
       MYSQL_ROOT_PASSWORD: 'root'
     ports:
-      - "3306:3306"
+      - "33000:3306"
+    # expose: :
+    #   - 3306
     volumes:
     - ./database:/tmp/database
     command: mysqld --init-file="/tmp/database/init.sql"
+    # command: ./tmp/database/init_user.sh
     
-  #   networks:
-  #     test:
-  #       aliases:
-  #         - mysql #Any container connected to test network can access this simply by using mysql as hostname  
-
-  # networks:
-  #   test:
-  #     external: true
