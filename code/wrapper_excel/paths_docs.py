@@ -4,12 +4,15 @@ import json
 
 import pandas as pd
 
-import getpass
 import os
 
 
-username = getpass.getuser()
-USER_HOME = "/home/"+username
+# --- INITIALIZE PATHS OF THE EXCELS USED ---
+# On the branch docker_deployment_linux, those lines are commented
+import getpass
+global USERNAME, USER_HOME, PATH_TO_MAIN_FOLDER
+USERNAME = getpass.getuser()
+USER_HOME = "/home/"+USERNAME
 PATH_TO_MAIN_FOLDER ="/Desktop/Projets/Comptes"
 
 

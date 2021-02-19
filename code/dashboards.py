@@ -6,6 +6,7 @@ import datetime
 
 
 import communication_db
+import update_db
 
 import wrapper_excel.paths_docs as paths_docs
 TSTAuthPath = paths_docs.ThemesAndSubthemesAuthorized()
@@ -50,6 +51,7 @@ class DashboardA():
         def update_graph(selected_date_str, selected_periode, imported_file):     
              
             FileSaver.saveFile(imported_file)
+            update_db.updateAll()
             
             dataframe = self.DateToDataframe.getDataframeFromDate(selected_date_str, selected_periode)
             list_dataframes = self.DateToDataframe.getListDataframeByWeekFromDate(selected_date_str, selected_periode)
