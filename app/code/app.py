@@ -16,8 +16,11 @@ config_json = myAccessConfig.getConfig()
 
 # Get the different paths used in the app
 import wrapper_excel.paths_docs as paths_docs
+myExcelPath = paths_docs.ExcelPath(config_json)
 TSTAuthPath = paths_docs.ThemesAndSubthemesAuthorized(config_json)
-ExcelPath = paths_docs.ExcelPath(config_json)
+
+import wrapper_excel.access_docs as access_docs
+myAccessExcel = access_docs.AccessExcel(myExcelPath)
 
 import wrapper_excel.access_docs as access_docs
 accessAuthorizedTST = access_docs.AccessTSTAuthorized(TSTAuthPath)
@@ -35,7 +38,7 @@ ConvertDfToGraph = main_convert_df_to_graph.DataframeToGraph(DataframeToListDict
 
 # Object used to import an excel given by the user
 import wrapper_dash.facilitator_dash.import_excel as import_excel
-FileSaver = import_excel.FileSaver(ExcelPath)   
+FileSaver = import_excel.FileSaver(myAccessExcel)   
 
 
 

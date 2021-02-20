@@ -55,7 +55,7 @@ class ExcelPath(ApplicationDataPath):
 
     def exampleExcelPath(self):
         path_file = self.getMainPath()
-        name_file = "example_expenses.xlsx"
+        name_file = "/documentation/example_expenses.xlsx"
         path_excel = path_file + "/" + name_file
         return path_excel
 
