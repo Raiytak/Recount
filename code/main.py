@@ -7,15 +7,15 @@ période.
 
 
 import update_db
-import dashboards
+import app
 
  
 # --- INIT ---
-myDashboard = dashboards.DashboardA()
+myApp = app.AppDash()
 
 # --- UPDATING DATABASE ---
 update_db.updateAll()   
 
 # --- MAIN PART ---
-myDashboard.launch()
+myApp.launch()
 

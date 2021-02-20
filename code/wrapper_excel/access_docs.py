@@ -78,8 +78,13 @@ class AccessDescrToTheme():
         
     def getJsonDescrToTheme(self):
         data = {}
-        with open(self.DescrToThemePath.getDescriptionToThemePath(), "r") as json_file:
-            data = json.load(json_file)
+        try:
+            with open(self.DescrToThemePath.getDescriptionToThemePath(), "r") as json_file:
+                data = json.load(json_file)
+        # Case where the document isn't created yet
+        except FileNotFoundError:
+            self.updateDescrConvJson(data)
+
         return data
     
     def updateDescrConvJson(self, data):
@@ -104,9 +109,14 @@ class AccessTSTAuthorized():
     def updateJson(self, data):
         with open(self.TSTAuth.getTSTPath(), "w") as json_file:
             try:
-                json.dump(data, json_file)
+                json.dump(data, json_file, indent=4)
             except TypeError:
                 print("JSON of wrong type :\n", data)
+
+    def getPrettyJson(self):
+        data = self.getJson()
+        json_formatted_str = json.dumps(data, indent=4) 
+        return json_formatted_str
                 
                 
                 
