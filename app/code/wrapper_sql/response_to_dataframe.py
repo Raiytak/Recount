@@ -6,9 +6,6 @@ import numpy as np
 class ResponseSqlToDataframe():
     def translateResponseSqlToDataframe(self, response_sql, wrapper_table):
         dataframe = pd.DataFrame(response_sql)
-        # if dataframe.empty == True:
-        #     return dataframe
-        # dataframe = dataframe.replace(None, str(np.nan))
         columns_name = wrapper_table.getNameColumns()
 
         # If data exists in the period selected, the the dataframe is not empty and can be returned right away
@@ -17,7 +14,6 @@ class ResponseSqlToDataframe():
             return dataframe
         # Else we have to create a dataframe with empty values
         else:
-            print('ici')
             dataframe = self.getDataframeWithEmptyValues(columns_name)
             dataframe.columns = columns_name
             return dataframe

@@ -11,9 +11,10 @@ class FileSaver():
         self.AccessExcel = AccessExcel
         self.path_to_save = self.AccessExcel.ExcelPath.getDataPath()
         self.name_imported_excel = self.AccessExcel.ExcelPath.nameImportedExcel()
+        # self.removeOlderImportedFile()
         
 
-    def removeOlderFile(self):
+    def removeOlderImportedFile(self):
         for file_format in ["xlsx","csv"]:
             try:
                 path_file = self.path_to_save + "/" + self.name_imported_excel + "." + file_format
@@ -35,7 +36,7 @@ class FileSaver():
         if file_in_str == None:
             return 0
 
-        self.removeOlderFile()
+        self.removeOlderImportedFile()
 
         content_type, content_string = file_in_str.split(',')
         file_in_str = base64.b64decode(content_string)

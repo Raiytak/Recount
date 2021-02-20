@@ -28,15 +28,8 @@ class ElementsVue():
             children=html.Div('Import csv File'),
             multiple=False
         )
-
-        # excel_example_download = html.Button('Import csv File',
-        #     id='upload-data',
-        #     href="/home/mathieu/Desktop/Projets/Comptes/code/wrapper_dash/format_expenses.xlsx"
-        # )
-
         excel_input_div = html.Button(excel_input)
 
-        # excel_example_div = html.Button(excel_example_download)
         date_input_div = html.Div(  children=[date_input, periode_input],
                                     style={
                                         "display":"flex",

@@ -29,21 +29,20 @@ class ApplicationDataPath():
 
 
 # Path to the excels used : 
-#   the source excel (from user) 
-#   and the copy excel (copied and cleaned by the applciation)
+#   the source excel : 
+#       imported = imported by the user
+#       example = means no file has been imported yet
+#   and the copy excel (copied, cleaned and manipulated by the applciation)
 class ExcelPath(ApplicationDataPath):
     def __init__(self, config_json):
         ApplicationDataPath.__init__(self, config_json)
         self._excel_path = self.copiedExcelPath()
         self._source_excel_path = self.importedExcelPath()
         self.config_json = config_json
-
-    def nameImportedExcel(self):
-        return "imported_excel"
         
     def importedExcelPath(self):
         path_file = self.getDataPath()
-        name_file = self.nameImportedExcel() + ".xlsx"
+        name_file = "imported_expenses.xlsx"
         path_excel = path_file + "/" + name_file
         return path_excel
     

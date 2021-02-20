@@ -4,7 +4,6 @@ import dash_core_components as dcc
 from dash.dependencies import Input, Output
 
 
-import update_db
 import communication_db
 DateToDataframe = communication_db.DateToDataframe()
 
@@ -21,8 +20,6 @@ TSTAuthPath = paths_docs.ThemesAndSubthemesAuthorized(config_json)
 
 import wrapper_excel.access_docs as access_docs
 myAccessExcel = access_docs.AccessExcel(myExcelPath)
-
-import wrapper_excel.access_docs as access_docs
 accessAuthorizedTST = access_docs.AccessTSTAuthorized(TSTAuthPath)
 authorizedTST_json = accessAuthorizedTST.getJson()
 
