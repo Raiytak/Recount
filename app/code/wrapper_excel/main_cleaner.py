@@ -7,7 +7,7 @@ class MainCleanerExcel():
         self.IntellFill = IntelligentFill
         self.ReviewerDataframe = ReviewerDataframe
         
-    def updateExcel(self):
+    def updateCopyExcel(self):
         dataframe = self.ExcelToDataframe.getDataframe()
         
         dataframe = self.CleanerDf.addDateEverywhere(dataframe)
@@ -18,10 +18,10 @@ class MainCleanerExcel():
         dataframe = self.CleanerDf.removeRawExpensesColumns(dataframe)
         
         dataframe = self.CleanerDf.normalizeDescription(dataframe)
-        dataframe = self.CleanerDf.splitAndCleanTheme(dataframe)
+        dataframe = self.CleanerDf.splitAndCleanCategory(dataframe)
         dataframe = self.CleanerDf.splitAndCleanDescription(dataframe)
         
-        dataframe = self.IntellFill.intelligentFillBlankThemeUsingEntreprise(dataframe)
+        dataframe = self.IntellFill.intelligentFillBlankCategoryUsingEntreprise(dataframe)
         
         dataframe = self.CleanerDf.removeUselessColumns(dataframe)
         dataframe = self.CleanerDf.removeAllApostrophes(dataframe)

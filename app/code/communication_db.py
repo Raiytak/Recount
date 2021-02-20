@@ -11,7 +11,7 @@ config_json = myAccessConfig.getConfig()
 
 class DateToDataframe:
     def __init__(self):
-        self.bd_sql = wrapper_sql.WrapperOfTable("depenses_propres", config_json)
+        self.bd_sql = wrapper_sql.WrapperOfTable("clean_expenses", config_json)
         self.translator = response_to_dataframe.ResponseSqlToDataframe()
     
     def getListDataframeByWeekFromDate(self, start_date, periode):
@@ -55,7 +55,11 @@ class DateToDataframe:
 
     def _translateSqlToDataframe(self, response):
         dataframe = self.translator.translateResponseSqlToDataframe(response, self.bd_sql)
-        return dataframe
+        if dataframe.empty == False:
+            return dataframe
+        else:
+            dataframe = self.translator.getDataframeWithEmptyValues(self.bd_sql)
+            return dataframe
     
     
     def _convertPeriodeToDate(self, start_date, periode):

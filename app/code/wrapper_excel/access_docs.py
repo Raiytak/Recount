@@ -51,7 +51,6 @@ class ExcelToDataframe():
         self.updatDataframe()
         
     def getDataframe(self):
-        self.updatDataframe()
         return self._dfExcel
     
     def getDataframeAndEqCol(self):
@@ -63,12 +62,14 @@ class ExcelToDataframe():
     def updatDataframe(self):
         dataframe = self.AccessExcel.getDataframeOfExcel()
         self._dfExcel = dataframe
-        
+    
+    # This works like this :
+    #   - "column excel" : ["column sql"]
     def getEquivalentColumns(self):
-        equivalent_columns = {"ID":["ID"], "Date":["date"], "Dépenses":["montant"],
-                            "Theme":["theme"], "Soustheme":["soustheme"],
-                            "Voyage":["voyage"], "Type":["methode_payement"],
-                            "Entreprise":["entreprise"], "Description":["description"]}
+        equivalent_columns = {"ID":["ID"], "Date":["date"], "Expenses":["amount"],
+                            "Category":["category"], "Theme":["theme"],
+                            "Trip":["trip"], "Type":["payment_method"],
+                            "Company":["company"], "Description":["description"]}
         return  equivalent_columns
             
             

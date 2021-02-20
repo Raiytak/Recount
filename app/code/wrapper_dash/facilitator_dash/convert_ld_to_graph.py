@@ -13,7 +13,7 @@ class ListDictToGraph(): #add metadata
             graph = self.scatterGraph(list_dict_of_expenses)
             return graph
         
-        if type_graph == "theme-pie":
+        if type_graph == "category-pie":
             graph = self.pieGraph(list_dict_of_expenses)
             return graph
         

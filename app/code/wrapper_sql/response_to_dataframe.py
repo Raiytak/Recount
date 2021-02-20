@@ -12,15 +12,11 @@ class ResponseSqlToDataframe():
         columns_name = wrapper_table.getNameColumns()
 
         # If data exists in the period selected, the the dataframe is not empty and can be returned right away
+        # Else we simply return the dataframe completely empty
         if dataframe.empty == False:
             dataframe.columns = columns_name
-            return dataframe
-        # Else we have to create a dataframe with empty values
-        else:
-            print('ici')
-            dataframe = self.getDataframeWithEmptyValues(columns_name)
-            dataframe.columns = columns_name
-            return dataframe
+        return dataframe
+
 
     def getEquivalentColumns(self, wrapper_table):
         columns_name = wrapper_table.getNameColumns()
@@ -29,8 +25,9 @@ class ResponseSqlToDataframe():
 
 
     # Create a dataframe with empty values
-    def getDataframeWithEmptyValues(self, columns_name):
-        dataframe = pd.DataFrame(np.array([[0,"2000-01-01", 0, "alimentaire", "course", "walmart", "courses", None, "carte", 0]]),
+    def getDataframeWithEmptyValues(self, wrapper_table):
+        columns_name = wrapper_table.getNameColumns()
+        dataframe = pd.DataFrame(np.array([[0,"2000-01-01", 0, "alimentary", "course", "walmart", "food", None, "card", 0]]),
                     columns=columns_name)
         return dataframe 
 

@@ -3,33 +3,29 @@ import numpy as np
 
 
 
-class DataframeToListOfDicts(): #logic
+class DataframeToListOfDicts():
     def convertDataframeToListOfDicts(self, dataframe, type_graph):
         if type_graph == "all-scatter":
-            # dataframe = dataframe[dataframe["theme"].isnull() == False]
-            list_dict_expenses = self.convertDataframeToExpensesByColumn(dataframe, "theme")
+            list_dict_expenses = self.convertDataframeToExpensesByColumn(dataframe, "category")
             return list_dict_expenses
         
-        if type_graph == "theme-pie":
-            # dataframe = dataframe[dataframe["theme"]=="alimentaire"]
-            list_dict_expenses = self.convertDataframeToSumExpensesByColumn(dataframe, "theme")
+        if type_graph == "category-pie":
+            list_dict_expenses = self.convertDataframeToSumExpensesByColumn(dataframe, "category")
             return list_dict_expenses
         
         if type_graph == "mean-bar":
             list_dataframes = dataframe
-            # for df in list_dataframes:
-            #     df = df[df["theme"].isnull() == False]
-            list_dict_expenses = self.convertListDataframeByWeekToExpensesByColumn(dataframe, "theme")
+            list_dict_expenses = self.convertListDataframeByWeekToExpensesByColumn(dataframe, "category")
             return list_dict_expenses
         
         if type_graph == "food-bar":
             list_dataframes = []
             for df in dataframe:
-                df = df[df["theme"]=="alimentaire"]
-                new_df = df[df["soustheme"].isnull() == False]
+                df = df[df["category"]=="alimentary"]
+                new_df = df[df["theme"].isnull() == False]
                 list_dataframes.append(new_df)
                 
-            list_dict_expenses = self.convertListDataframeByWeekToExpensesByColumn(list_dataframes, "soustheme")
+            list_dict_expenses = self.convertListDataframeByWeekToExpensesByColumn(list_dataframes, "theme")
             return list_dict_expenses
         
         raise ValueError
@@ -41,7 +37,7 @@ class DataframeToListOfDicts(): #logic
         unique_theme = [val for val in data[column_name].unique() if val is not None]
         list_dict_expenses = [dict(
                 x=data[data[column_name] == i]["date"],
-                y=data[data[column_name] == i]["montant"],
+                y=data[data[column_name] == i]["amount"],
                 text=data[data[column_name] == i]["description"],
                 name = i
             ) for i in unique_theme]
@@ -54,7 +50,7 @@ class DataframeToListOfDicts(): #logic
         unique_theme = [val for val in data[column_name].unique() if val is not None]
         unique_theme.sort()
         for i in unique_theme:
-            list_dict_expenses["values"].append(np.sum(data[data[column_name]==i]["montant"]))
+            list_dict_expenses["values"].append(np.sum(data[data[column_name]==i]["amount"]))
             list_dict_expenses["names"].append(i)
             list_dict_expenses["labels"].append(i)
         return [list_dict_expenses]    
@@ -68,7 +64,7 @@ class DataframeToListOfDicts(): #logic
             unique_theme = [val for val in data[column_name].unique() if val is not None]
             dict_expenses = {i:dict(
                     x=[data.iloc[0]["date_week"]],
-                    y=[np.sum(data[data[column_name] == i]["montant"])],
+                    y=[np.sum(data[data[column_name] == i]["amount"])],
                     name = i
                 ) for i in unique_theme}
             updateDictWithLists(dict_returned, dict_expenses)
@@ -94,11 +90,11 @@ class DataframeToListOfDicts(): #logic
             if data.empty:
                 dict_expenses_week = {}
             else:
-                data_alim = data["theme" == "alimentaire"]
-                unique_theme = data_alim["subtheme"].unique()
+                data_alim = data["category" == "alimentary"]
+                unique_theme = data_alim["theme"].unique()
                 dict_expenses_week = {i:dict(
                         x=[date],
-                        y=[np.sum(data[data["subtheme"] == i]["montant"])],
+                        y=[np.sum(data[data["theme"] == i]["amount"])],
                         name = i
                     ) for i in unique_theme}
             dict_prep_expenses = updateDictWithLists(dict_prep_expenses, dict_expenses_week)
@@ -113,10 +109,10 @@ class DataframeToListOfDicts(): #logic
             if data.empty:
                 dict_expenses_week = {}
             else:
-                unique_theme = data["theme"].unique()
+                unique_theme = data["category"].unique()
                 dict_expenses_week = {i:dict(
                         x=[date],
-                        y=[np.sum(data[data["theme"] == i]["montant"])],
+                        y=[np.sum(data[data["category"] == i]["amount"])],
                         name = i
                     ) for i in unique_theme}
             dict_prep_expenses = updateDictWithLists(dict_prep_expenses, dict_expenses_week)

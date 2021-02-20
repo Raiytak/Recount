@@ -46,10 +46,10 @@ convertDfToReq = dataframe_to_request_sql.DataframeToSql()
 convertRespToDf = response_to_dataframe.ResponseSqlToDataframe()
 convertRespToList = response_to_dataframe.ResponseSqlToList()
 
-rawTable = wrapper_sql.WrapperOfTable("depenses_brutes", config_json)
-tripTable = wrapper_sql.WrapperOfTable("depenses_voyages", config_json)
-repayTable = wrapper_sql.WrapperOfTable("remboursements", config_json)
-cleanTable = wrapper_sql.WrapperOfTable("depenses_propres", config_json)
+rawTable = wrapper_sql.WrapperOfTable("raw_expenses", config_json)
+tripTable = wrapper_sql.WrapperOfTable("trip_expenses", config_json)
+repayTable = wrapper_sql.WrapperOfTable("reimbursement", config_json)
+cleanTable = wrapper_sql.WrapperOfTable("clean_expenses", config_json)
 
 rawToRepayement = table_to_other_table.RawToRepayement(rawTable, repayTable)
 rawToTrip = table_to_other_table.RawToTrip(rawTable, tripTable)
@@ -64,34 +64,32 @@ repayRep = repay_repayments.RepayPepayements(rawTable, repayTable)
 
 @updatingByRemovingAllExistingRowsOfTable(rawTable)
 def updateRawTable():
-    print("--- Update 'depenses_brutes' Table ---")
-    mainCleaner.updateExcel()
+    print("--- Update 'raw_expenses' Table ---")
+    mainCleaner.updateCopyExcel()
     dataframe, equivalent_columns = mainCleaner.getDataframeAndEqCol()
     myUpdateConversionJson.updateConversionJsonUsingDataframe(dataframe)
     list_requests = convertDfToReq.translateDataframeToRequestSql(dataframe, equivalent_columns)
     rawTable.insertAllReqs(list_requests)
-    #return list_requests
 
 
 
 @updatingByRemovingAllExistingRowsOfTable(repayTable)
 def updateRepayementsTable():
-    print("--- Update 'remboursement' Table ---")
+    print("--- Update 'reimbursement' Table ---")
     response = rawToRepayement.selectRepayementRows()
-    dataframe = convertRespToDf.translateResponseSqlToDataframe(response, rawTable)
+    dataframe = convertRespToDf.translateResponseSqlToDataframe(response, rawTable)    
     equivalent_columns = rawToRepayement.getEquivalentColumns()
     list_requests = convertDfToReq.translateDataframeToRequestSql(dataframe, equivalent_columns)
     repayTable.insertAllReqs(list_requests)
-    #return list_requests
 
 def deleteRepayementsFromRaw():
-    print("--- Delete 'remboursement' in 'depenses_brutes' ---")
+    print("--- Delete 'reimbursement' in 'raw_expenses' ---")
     response = rawToRepayement.selectRepayementIds()
     list_resp = convertRespToList.translateResponseSqlToList(response)
     rawTable.deleteListRowsId(list_resp)
 
 def repayRepayements():
-    print("--- Repay 'remboursement' in 'depenses_brutes' ---")
+    print("--- Repay 'reimbursement' in 'raw_expenses' ---")
     response_rep = repayRep.selectRepayementRows()
     dataframe_rep = convertRespToDf.translateResponseSqlToDataframe(response_rep, repayTable)
     
@@ -110,16 +108,15 @@ def repayRepayements():
 
 @updatingByRemovingAllExistingRowsOfTable(tripTable)
 def updateTripsTable():
-    print("--- Update 'depenses_voyages' ---")
+    print("--- Update 'trip_expenses' ---")
     response = rawToTrip.selectTripRows()
     dataframe = convertRespToDf.translateResponseSqlToDataframe(response, rawTable)
     equivalent_columns = rawToTrip.getEquivalentColumns()
     list_requests = convertDfToReq.translateDataframeToRequestSql(dataframe, equivalent_columns)
     tripTable.insertAllReqs(list_requests)
-    #return list_requests
 
 def deleteTripsFromRaw():
-    print("--- Delete 'depenses_voyages' in 'depenses_brutes' ---")
+    print("--- Delete 'trip_expenses' in 'raw_expenses' ---")
     response = rawToTrip.selectTripIds()
     list_resp = convertRespToList.translateResponseSqlToList(response)
     rawTable.deleteListRowsId(list_resp)
@@ -128,7 +125,7 @@ def deleteTripsFromRaw():
 
 @updatingByRemovingAllExistingRowsOfTable(cleanTable)
 def updateCleanTable():
-    print("--- Update 'depenses_propres' ---")
+    print("--- Update 'clean_expenses' ---")
     response = rawToClean.selectAllRemainingRowsInRaw()
     dataframe = convertRespToDf.translateResponseSqlToDataframe(response, rawTable)
     equivalent_columns = rawToClean.getEquivalentColumns()
@@ -140,11 +137,10 @@ def updateCleanTable():
     equivalent_columns = tripToClean.getEquivalentColumns()
     list_requests += convertDfToReq.translateDataframeToRequestSql(dataframe, equivalent_columns)
     cleanTable.insertAllReqs(list_requests)
-    #return list_requests
 
 
 
-# main
+# == MAIN == FUNCTION : updates all the tables by removing ALL the older values
 def updateAll():
     updateRawTable()
 

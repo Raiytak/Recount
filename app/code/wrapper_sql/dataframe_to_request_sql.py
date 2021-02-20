@@ -8,6 +8,9 @@ import pandas as pd
 
 class DataframeToSql():
     def translateDataframeToRequestSql(self, dataframe, equivalent_columns):
+        # In the case where the dataframe is empty, we return an empty request
+        if dataframe.empty == True:
+            return ['']
         dict_of_list_list = self.convertDataframeColumnsToDictOfListList(dataframe)
         list_requests_sql = self.convertDictListListToRequestSql(dict_of_list_list, equivalent_columns)
         return list_requests_sql

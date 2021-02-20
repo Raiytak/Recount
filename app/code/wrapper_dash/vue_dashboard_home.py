@@ -122,7 +122,7 @@ class AppDash(EmptyVue):
 
 
             scatter_graph = self.ConvertDfToGraph.convertDataframeToGraph(dataframe, "all-scatter")
-            pie_graph = self.ConvertDfToGraph.convertDataframeToGraph(dataframe, "theme-pie")
+            pie_graph = self.ConvertDfToGraph.convertDataframeToGraph(dataframe, "category-pie")
             mean_graph = self.ConvertDfToGraph.convertDataframeToGraph(list_dataframes, "mean-bar")
             food_graph = self.ConvertDfToGraph.convertDataframeToGraph(list_dataframes, "food-bar")
             

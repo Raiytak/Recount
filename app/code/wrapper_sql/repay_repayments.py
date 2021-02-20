@@ -49,14 +49,14 @@ class RepayPepayements():
     def addDfRawAndDfRepayement(self, dataframe_raw, dataframe_rep):
         dataframe_raw = dataframe_raw.sort_values(by="ID")
         dataframe_rep = dataframe_rep.sort_values(by="ID_pay_orig")
-        sum_expense = np.around(dataframe_raw["montant"] + dataframe_rep["montant"], 2)
-        dataframe_raw["montant"] = sum_expense
+        sum_expense = np.around(dataframe_raw["amount"] + dataframe_rep["amount"], 2)
+        dataframe_raw["amount"] = sum_expense
         
-        dataframe_clean = dataframe_raw.loc[dataframe_raw["montant"] > 1]
+        dataframe_clean = dataframe_raw.loc[dataframe_raw["amount"] > 1]
 
         return dataframe_clean
         
     def getEquivalentColumns(self):
-        equivalent_columns = {"ID":["ID"], "soustheme":["ID_pay_orig"], "date":["date"], "montant":["montant"]}
+        equivalent_columns = {"ID":["ID"], "theme":["ID_pay_orig"], "date":["date"], "amount":["amount"]}
         return equivalent_columns
 

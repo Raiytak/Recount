@@ -55,7 +55,7 @@ class ExcelPath(ApplicationDataPath):
 
     def exampleExcelPath(self):
         path_file = self.getMainPath()
-        name_file = "/documentation/example_expenses.xlsx"
+        name_file = "documentation/example_expenses_en.xlsx"
         path_excel = path_file + "/" + name_file
         return path_excel
 
@@ -75,7 +75,8 @@ class DescrToThemePath(ApplicationDataPath):
 
 class ThemesAndSubthemesAuthorized(ApplicationDataPath):        
     def getTSTPath(self):
-        path_conv = self.getDataPath() + "/themes_subthemes_authorized.json"
+        # path_conv = self.getDataPath() + "/themes_subthemes_authorized.json"
+        path_conv = self.getDataPath() + "/categories_themes_authorized.json"
         return path_conv
     
 
