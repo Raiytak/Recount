@@ -1,9 +1,6 @@
 import numpy as np
 import pandas as pd
 
-# import table_to_other_table
-
-# RawToRepayement = table_to_other_table.RawToRepayement
 
 
 class RepayPepayements():

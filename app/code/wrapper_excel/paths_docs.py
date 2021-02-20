@@ -4,20 +4,21 @@ import json
 
 import pandas as pd
 
-# import getpass
 import os
-
-
-# username = getpass.getuser()
-# USER_HOME = "/home/"+username
-# PATH_TO_MAIN_FOLDER ="/Desktop/Projets/Comptes"
 
 
 # Path to the file data used by the application
 class ApplicationDataPath():
+    def __init__(self, config_json):
+        self.config_json = config_json
+
     def getDataPath(self):
-        path_file = "/code/data"
-        return path_file
+        path_data = self.config_json["paths"]["PATH_TO_MAIN_FOLDER"] + "/code/data"
+        return path_data
+
+    def getMainPath(self):
+        path_main_folder = self.config_json["paths"]["PATH_TO_MAIN_FOLDER"]
+        return path_main_folder
 
     def popEnd(self, name_directory):
         size = len(name_directory)
@@ -31,9 +32,11 @@ class ApplicationDataPath():
 #   the source excel (from user) 
 #   and the copy excel (copied and cleaned by the applciation)
 class ExcelPath(ApplicationDataPath):
-    def __init__(self):
+    def __init__(self, config_json):
+        ApplicationDataPath.__init__(self, config_json)
         self._excel_path = self.copiedExcelPath()
         self._source_excel_path = self.importedExcelPath()
+        self.config_json = config_json
 
     def nameImportedExcel(self):
         return "imported_excel"
@@ -51,7 +54,7 @@ class ExcelPath(ApplicationDataPath):
         return project_excel
 
     def exampleExcelPath(self):
-        path_file = self.getDataPath()
+        path_file = self.getMainPath()
         name_file = "example_expenses.xlsx"
         path_excel = path_file + "/" + name_file
         return path_excel
