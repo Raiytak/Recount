@@ -37,6 +37,9 @@ class ElementsVue():
                                         )
         return links_div
 
+    def getOtherTextArea(self):
+        return ''
+
 
 
 class EmptyVue():
