@@ -1,0 +1,18 @@
+{
+    "dietary": ["food", "glottony", "restaurant", "pastry", "food_test", "alcohol"],
+
+    "equipement": ["cooking", "sport", "furniture", "bedding", "dress", "phone", "computer", "other"],
+
+    "housing": ["rent","hotel", "laundry"],
+
+    "transport": ["bus", "plane", "taxi", "train", "car", "permit"],
+
+    "health": ["insurance", "doctor", "dentist", "osteopath", "emergency", "hospital", "cream"],
+
+    "leasure": ["activity", "video_game", "board_game", "book", "pub", "movie_theater", "out", "visit", "streaming"],
+
+    "school": ["registration", "supplies"],
+
+    "other": ["post", "present", "printer", "hairdresser", "withdrawal", "authorization"]
+
+}
