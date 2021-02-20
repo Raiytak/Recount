@@ -120,6 +120,7 @@ class AppDash(EmptyVue):
             dataframe = self.DateToDataframe.getDataframeFromDate(selected_date_str, selected_periode)
             list_dataframes = self.DateToDataframe.getListDataframeByWeekFromDate(selected_date_str, selected_periode)
 
+
             scatter_graph = self.ConvertDfToGraph.convertDataframeToGraph(dataframe, "all-scatter")
             pie_graph = self.ConvertDfToGraph.convertDataframeToGraph(dataframe, "theme-pie")
             mean_graph = self.ConvertDfToGraph.convertDataframeToGraph(list_dataframes, "mean-bar")

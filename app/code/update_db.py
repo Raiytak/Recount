@@ -38,12 +38,13 @@ myUpdateConversionJson = fill_blanks.UpdateConversionJson(myAccessDescrToTheme)
 
 import wrapper_sql.wrapper_sql as wrapper_sql
 import wrapper_sql.dataframe_to_request_sql as dataframe_to_request_sql
+import wrapper_sql.response_to_dataframe as response_to_dataframe
 import wrapper_sql.table_to_other_table as table_to_other_table
 import wrapper_sql.repay_repayments as repay_repayments
 
 convertDfToReq = dataframe_to_request_sql.DataframeToSql()
-convertRespToDf = wrapper_sql.ResponseSqlToDataframe()
-convertRespToList = wrapper_sql.ResponseSqlToList()
+convertRespToDf = response_to_dataframe.ResponseSqlToDataframe()
+convertRespToList = response_to_dataframe.ResponseSqlToList()
 
 rawTable = wrapper_sql.WrapperOfTable("depenses_brutes", config_json)
 tripTable = wrapper_sql.WrapperOfTable("depenses_voyages", config_json)

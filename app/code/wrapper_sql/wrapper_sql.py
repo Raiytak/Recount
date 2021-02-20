@@ -1,6 +1,4 @@
 import pymysql
-import pandas as pd
-import numpy as np
 
 
 class SQLConnector():
@@ -81,27 +79,3 @@ class WrapperOfTable(SQLConnector):
         response = self.select(request)
         name_columns = [col[0] for col in response]
         return name_columns
-
-
-
-class ResponseSqlToDataframe():
-    def translateResponseSqlToDataframe(self, response_sql, wrapper_table):
-        dataframe = pd.DataFrame(response_sql)
-        if dataframe.empty == True:
-            return dataframe
-        # dataframe = dataframe.replace(None, str(np.nan))
-        columns_name = wrapper_table.getNameColumns()
-        dataframe.columns = columns_name
-        return dataframe
-
-    def getEquivalentColumns(self, wrapper_table):
-        columns_name = wrapper_table.getNameColumns()
-        equivalent_columns = {col:[col] for col in columns_name}
-        return equivalent_columns
-
-
-        
-class ResponseSqlToList():
-    def translateResponseSqlToList(self, response_sql):
-        list_response = [elem[0] for elem in response_sql]
-        return list_response
