@@ -11,7 +11,7 @@ class ResponseSqlToDataframe():
         # dataframe = dataframe.replace(None, str(np.nan))
         columns_name = wrapper_table.getNameColumns()
 
-        # If data exists in the period selected, the the dataframe is not empty and can be returned right away
+        # If data exists in the period selected, the dataframe is not empty and can be returned by describing it's columns
         # Else we simply return the dataframe completely empty
         if dataframe.empty == False:
             dataframe.columns = columns_name

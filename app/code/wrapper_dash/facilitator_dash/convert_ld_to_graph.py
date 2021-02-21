@@ -1,6 +1,6 @@
 import random
 
-
+# TODO maybe change the logic of this modul, where the data is parsed
 class ListDictToGraph(): #add metadata
     def __init__(self, autorized_tst_json):
         self.ColorSetter = ColorSetter(autorized_tst_json)
@@ -37,9 +37,9 @@ class ListDictToGraph(): #add metadata
             dict_exp["hoverinfo"] = "text+y+x"
             list_data.append(dict_exp)
         fig_data = {"data":list_data,
-                    "layout":{"title":{"text":"Dépenses par thème"},
+                    "layout":{"title":{"text":"Expenses by category"},
                               "yaxis": {"type": "log", "title":"Dépenses (euros)"},
-                              "xaxis":{"title":"Jour"}}
+                              "xaxis":{"title":"Day"}}
         }
         return fig_data
     
@@ -47,7 +47,7 @@ class ListDictToGraph(): #add metadata
         list_dict_of_expenses[0]["type"] = "pie"
         list_dict_of_expenses[0]["marker"] = {"colors":self.getListColors(list_dict_of_expenses[0]["names"])}
         fig_data = {"data":list_dict_of_expenses,
-                    "layout":{"title":{"text":"Camembert des thèmes"}}
+                    "layout":{"title":{"text":"Pie chart of categories"}}
         }
         return fig_data
     
@@ -59,10 +59,10 @@ class ListDictToGraph(): #add metadata
             dict_exp["marker"] = {"color":self.getColor(dict_exp["name"])}
             list_data.append(dict_exp)
         fig_data = {"data":list_data,
-                    "layout":{"title":{"text":"Total des dépenses par semaine"},
+                    "layout":{"title":{"text":"Total expenses by week"},
                               "barmode":"stack",
-                              "yaxis": {"title":"Dépenses (euros)"},
-                              "xaxis":{"title":"Jour"}}
+                              "yaxis": {"title":"Expenses (euros)"},
+                              "xaxis":{"title":"Day"}}
         }
         return fig_data
     
@@ -73,10 +73,10 @@ class ListDictToGraph(): #add metadata
             dict_exp["marker"] = {"color":self.getColor(dict_exp["name"])}
             list_data.append(dict_exp)
         fig_data = {"data":list_data,
-                    "layout":{"title":{"text":"Dépenses par semaine en nourriture"},
+                    "layout":{"title":{"text":"Expenses by week in alimentary"},
                               "barmode":"stack",
-                              "yaxis": {"title":"Dépenses (euros)"},
-                              "xaxis":{"title":"Jour"}}
+                              "yaxis": {"title":"Expenses (euros)"},
+                              "xaxis":{"title":"Day"}}
         }
         return fig_data
     

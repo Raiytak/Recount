@@ -57,6 +57,7 @@ class RepayPepayements():
         return dataframe_clean
         
     def getEquivalentColumns(self):
+        # "origin":["destination"]
         equivalent_columns = {"ID":["ID"], "theme":["ID_pay_orig"], "date":["date"], "amount":["amount"]}
         return equivalent_columns
 

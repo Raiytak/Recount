@@ -1,4 +1,13 @@
 # -*- coding: utf-8 -*-
+
+# === DESCRIPTION ===
+# This module parse the description column of the excel to get information about the company and the theme of each row.
+# To do so, the results are saved in the convert_descr_to_theme.json file in data.
+#
+# Each time a combo of category, theme and description is founded, it is created in this file or the combo number is increased by one.
+# When there is only a description on the row, the module looks at the existing combos and returns the one that has the maximum combo number,
+# meaning that this is the most probable one.
+
 import numpy as np
 import pandas as pd
 
@@ -10,32 +19,32 @@ class IntelligentFill():
     def __init__(self, AccessDescrToTheme):
         self._descr_to_category_json = AccessDescrToTheme.getJsonDescrToTheme()      
     
-    def intelligentFillBlankCategoryUsingEntreprise(self, dataframe):
+    def intelligentFillBlankCategoryUsingCompany(self, dataframe):
         if self._descr_to_category_json != {}:
-            dataframe = self.fillBlanksUsingEntreprise(dataframe)
+            dataframe = self.fillBlanksUsingCompany(dataframe)
             # dataframe = self.fillBlanksUsingDescription(dataframe) #TODO
         return dataframe
         
-    def fillBlanksUsingEntreprise(self, dataframe):
+    def fillBlanksUsingCompany(self, dataframe):
         def fillRowUsingEntreprise(row):
             if row["Category"] == str(np.nan):
                 company = row["Company"]
-                theme = self.convertEntrepriseToThemeSubtheme(company, "Category")
-                row["Category"] = theme
+                category = self.convertCompanyToCategoryAndTheme(company, "Category")
+                row["Category"] = category
             if row["Theme"] == str(np.nan):
                 company = row["Company"]
-                soustheme = self.convertEntrepriseToThemeSubtheme(company, "Theme")
-                row["Theme"] = soustheme
+                theme = self.convertCompanyToCategoryAndTheme(company, "Theme")
+                row["Theme"] = theme
             return row
         dataframe = dataframe.apply(fillRowUsingEntreprise, axis=1)
         return dataframe
     
-    def convertEntrepriseToThemeSubtheme(self, company, t_st):
+    def convertCompanyToCategoryAndTheme(self, company, c_t):
         conv_json = self._descr_to_category_json
         best_theme = str(np.nan)
         if company != str(np.nan):
             try:
-                themes_json = conv_json["Company"][company][t_st]
+                themes_json = conv_json["Company"][company][c_t]
                 if str(np.nan) in themes_json.keys():
                     del themes_json[str(np.nan)]
                 if themes_json != {}:
@@ -66,28 +75,28 @@ class UpdateConversionJson():
         self.AccessDescrToTheme.updateDescrConvJson(self._descr_to_category_json)
         
     
-    def _updateConversionEntrepriseJson(self, company, t_st, value, type_output):
-        #type_output = "t_st" or "Theme"
+    def _updateConversionEntrepriseJson(self, company, c_t, value, type_output):
+        #type_output = "c_t" or "Theme"
         if company != str(np.nan):
             try:
-                self._descr_to_category_json["Company"][company][type_output][t_st] += value
+                self._descr_to_category_json["Company"][company][type_output][c_t] += value
             except KeyError:
                 try:
-                    self._descr_to_category_json["Company"][company][type_output][t_st] = value
+                    self._descr_to_category_json["Company"][company][type_output][c_t] = value
                 except KeyError:
                     try:
                         self._descr_to_category_json["Company"][company][type_output] = {}
-                        self._descr_to_category_json["Company"][company][type_output][t_st] = value
+                        self._descr_to_category_json["Company"][company][type_output][c_t] = value
                     except KeyError:
                         try:
                             self._descr_to_category_json["Company"][company] = {}
                             self._descr_to_category_json["Company"][company][type_output] = {}
-                            self._descr_to_category_json["Company"][company][type_output][t_st] = value
+                            self._descr_to_category_json["Company"][company][type_output][c_t] = value
                         except KeyError:
                             self._descr_to_category_json["Company"] = {}
                             self._descr_to_category_json["Company"][company] = {}
                             self._descr_to_category_json["Company"][company][type_output] = {}
-                            self._descr_to_category_json["Company"][company][type_output][t_st] = value
+                            self._descr_to_category_json["Company"][company][type_output][c_t] = value
         
         
     # def getListStopWords(self):

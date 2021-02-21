@@ -29,6 +29,7 @@ class RawToRepayement():
             
     
     def getEquivalentColumns(self):
+        # "origin":["destination"]
         equivalent_columns = {"ID":["ID"], "theme":["ID_pay_orig"], "date":["date"], "amount":["amount"]}
         return equivalent_columns
 
@@ -59,6 +60,7 @@ class RawToTrip():
             
             
     def getEquivalentColumns(self):
+        # "origin":["destination"]
         columns = self.table_raw.getNameColumns()
         equivalent_columns = {col:[col] for col in columns}
         return equivalent_columns
@@ -81,6 +83,7 @@ class RawToClean():
             self.table_clean.insert(req)
             
     def getEquivalentColumns(self):
+        # "origin":["destination"]
         columns = self.table_clean.getNameColumns()
         equivalent_columns = {col:[col] for col in columns}
         return equivalent_columns
@@ -109,6 +112,7 @@ class TripToClean():
             
             
     def getEquivalentColumns(self):
+        # "origin":["destination"]
         columns = self.table_clean.getNameColumns()
         equivalent_columns = {col:[col] for col in columns}
         return equivalent_columns

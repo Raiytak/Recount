@@ -11,9 +11,9 @@ class ElementsVue():
         periode_input = dcc.RadioItems(
             id="input-radio",
             options=[
-                {"label":"Semaine", "value":"week"},
-                {"label":"Mois", "value":"month"},
-                {"label":"Trimestre", "value":"semestre"}
+                {"label":"Week", "value":"week"},
+                {"label":"Month", "value":"month"},
+                {"label":"Quarter", "value":"semestre"}
             ],
             value='month'
         )

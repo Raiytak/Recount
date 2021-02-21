@@ -4,11 +4,11 @@ from dateutil.relativedelta import relativedelta
 import wrapper_sql.wrapper_sql as wrapper_sql
 import wrapper_sql.response_to_dataframe as response_to_dataframe
 
-import config.access_config as access_config
+import accessors.access_config as access_config
 myAccessConfig = access_config.AccessConfig()
 config_json = myAccessConfig.getConfig()
 
-
+# TODO simplify this class
 class DateToDataframe:
     def __init__(self):
         self.bd_sql = wrapper_sql.WrapperOfTable("clean_expenses", config_json)

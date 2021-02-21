@@ -56,7 +56,6 @@ class CleanerDataframe():
         #                 "Excess E", "Excess D"]
         list_columns = ["Sum Euros", "Sum Dollars",
                         "Excess E", "Excess D", "TemporaryDescription"]
-        # list_columns = ["Sum Euros", "Sum Dollars", "Excess E", "Excess D"]
         dataframe = dataframe.drop(columns=list_columns)
         return dataframe
         
@@ -128,7 +127,7 @@ class CleanerDataframe():
         return text
     
     def removeApostrophe(self, text):
-        #Have to remove the apostrophes for the pymysql that doesn't support it
+        #Have to remove the apostrophes because that pymysql doesn't support it
         text = text.replace("'"," ")
         return text
         

@@ -7,28 +7,30 @@ def updatingByRemovingAllExistingRowsOfTable(wrapperTable):
     return updateDecorator
 
 
-import config.access_config as access_config
+import accessors.access_config as access_config
 myAccessConfig = access_config.AccessConfig()
 config_json = myAccessConfig.getConfig()
 
-import wrapper_excel.access_docs as access_docs
+import accessors.paths_docs as paths_docs
+import accessors.access_docs as access_docs
+
 import wrapper_excel.main_cleaner as main_cleaner
 import wrapper_excel.cleaner_dataframe as cleaner_dataframe
 import wrapper_excel.fill_blanks as fill_blanks
-import wrapper_excel.paths_docs as paths_docs
 import wrapper_excel.check_conformity as check_conformity
+
 
 myExcelPath = paths_docs.ExcelPath(config_json)
 myDescrToThemePath = paths_docs.DescrToThemePath(config_json)
-myTSTAuthorized = paths_docs.ThemesAndSubthemesAuthorized(config_json)
+myCatThemeAuthPath = paths_docs.CategoryAndThemeAuthorizedPath(config_json)
 
 myExcelToDataframe = access_docs.ExcelToDataframe(myExcelPath)
 myAccessDescrToTheme = access_docs.AccessDescrToTheme(myDescrToThemePath)
-myAccessTSTAuthorized = access_docs.AccessTSTAuthorized(myTSTAuthorized)
+myAccessCTAuthorized = access_docs.AccessCTAuthorized(myCatThemeAuthPath)
 
 myCleanerDataframe = cleaner_dataframe.CleanerDataframe()
 myIntelligentFill = fill_blanks.IntelligentFill(myAccessDescrToTheme)
-myReviewerDataframe = check_conformity.ReviewerDataframe(myAccessTSTAuthorized)
+myReviewerDataframe = check_conformity.ReviewerDataframe(myAccessCTAuthorized)
 mainCleaner = main_cleaner.MainCleanerExcel(myExcelToDataframe, myCleanerDataframe, myIntelligentFill, myReviewerDataframe)
 
 myUpdateConversionJson = fill_blanks.UpdateConversionJson(myAccessDescrToTheme)
@@ -65,7 +67,7 @@ repayRep = repay_repayments.RepayPepayements(rawTable, repayTable)
 @updatingByRemovingAllExistingRowsOfTable(rawTable)
 def updateRawTable():
     print("--- Update 'raw_expenses' Table ---")
-    mainCleaner.updateCopyExcel()
+    mainCleaner.updateExcel()
     dataframe, equivalent_columns = mainCleaner.getDataframeAndEqCol()
     myUpdateConversionJson.updateConversionJsonUsingDataframe(dataframe)
     list_requests = convertDfToReq.translateDataframeToRequestSql(dataframe, equivalent_columns)

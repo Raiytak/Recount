@@ -1,4 +1,9 @@
 # -*- coding: utf-8 -*-
+
+# === DESCRIPTION ===
+# This file aims to do return the paths of the documents used in the app.
+# The manipulations are done in other modules.
+
 from shutil import copyfile
 import json
 
@@ -29,14 +34,13 @@ class ApplicationDataPath():
 
 
 # Path to the excels used : 
-#   the source excel (from user) 
-#   and the copy excel (copied and cleaned by the applciation)
+#   the source excel (from the user or excel_example) 
+#   and the copy excel (copied, cleaned and manipulated by the applciation)
 class ExcelPath(ApplicationDataPath):
     def __init__(self, config_json):
-        ApplicationDataPath.__init__(self, config_json)
+        super().__init__(config_json)
         self._excel_path = self.copiedExcelPath()
         self._source_excel_path = self.importedExcelPath()
-        self.config_json = config_json
 
     def nameImportedExcel(self):
         return "imported_excel"
@@ -73,8 +77,8 @@ class DescrToThemePath(ApplicationDataPath):
     
 
 
-class ThemesAndSubthemesAuthorized(ApplicationDataPath):        
-    def getTSTPath(self):
+class CategoryAndThemeAuthorizedPath(ApplicationDataPath):        
+    def getCategoryAndThemePath(self):
         # path_conv = self.getDataPath() + "/themes_subthemes_authorized.json"
         path_conv = self.getDataPath() + "/categories_themes_authorized.json"
         return path_conv
