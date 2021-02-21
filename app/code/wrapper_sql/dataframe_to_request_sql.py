@@ -1,13 +1,12 @@
-import datetime
-import unidecode
-
 import numpy as np
-import pandas as pd
 
 
 
 class DataframeToSql():
     def translateDataframeToRequestSql(self, dataframe, equivalent_columns):
+        # In the case where the dataframe is empty, we return an empty request
+        if dataframe.empty == True:
+            return ['']
         dict_of_list_list = self.convertDataframeColumnsToDictOfListList(dataframe)
         list_requests_sql = self.convertDictListListToRequestSql(dict_of_list_list, equivalent_columns)
         return list_requests_sql
@@ -28,7 +27,7 @@ class DataframeToSql():
         equivalent_columns = dict_equivalent_columns
         start_requests = ["INSERT INTO & ("]*dict_list_list["len"]
         end_requests = ["VALUES ("]*dict_list_list["len"]
-        
+        # TODO understand this function and simplify it
         for column_excel in equivalent_columns.keys():
             columns_sql = equivalent_columns[column_excel]
             if columns_sql[0] == "ID": #Goal is to avoid a coma at the start of the request (try without the if and look at the requests to understand)
@@ -40,8 +39,8 @@ class DataframeToSql():
                 for i in range(len(columns_sql)):
                     values = dict_list_list[column_excel][i]
                     dict_list_list_bool = [False if (values[i]==str(np.nan) or values[i]=="None") else True for i in range(len(values))]
-                    start_requests = self._concatenateRequestsAndValue(start_requests, columns_sql[i], dict_list_list_bool)
-                    end_requests = self._concatenateRequestsAndListValues(end_requests, dict_list_list[column_excel][i],dict_list_list_bool)
+                    start_requests = self._concatenateRequestsAndValueWithComa(start_requests, columns_sql[i], dict_list_list_bool)
+                    end_requests = self._concatenateRequestsAndListValuesWithComa(end_requests, dict_list_list[column_excel][i], dict_list_list_bool)
                 
         start_requests = self.closeRequest(start_requests)
         end_requests = self.closeRequest(end_requests)
@@ -54,16 +53,29 @@ class DataframeToSql():
     def _concatenateRequestsAndList(self, requests, values):
         return [requests[i]+" "+values[i] for i in range(len(requests))]
                 
-                
+        
     def _concatenateRequestsAndValue(self, requests, column_sql, dict_list_list_bool):
-        return [requests[i]+", "+column_sql if dict_list_list_bool[i] else requests[i] for i in range(len(requests))]
-    
+        if column_sql == "ID":
+            return self._concatenateRequestsAndValueWithoutComa(requests, column_sql, dict_list_list_bool)
+        else:
+            return self._concatenateRequestsAndValueWithComa(requests, column_sql, dict_list_list_bool)
+    # TODO not working
     def _concatenateRequestsAndListValues(self, requests, values, dict_list_list_bool):
-        return [requests[i]+", '"+values[i]+"'" if dict_list_list_bool[i] else requests[i] for i in range(len(requests))]
-    
-                
+        if column_sql == "ID":
+            return self._concatenateRequestsAndListValuesWithoutComa(requests, column_sql, dict_list_list_bool)
+        else:
+            return self._concatenateRequestsAndListValuesWithComa(requests, column_sql, dict_list_list_bool)
+
+
+    def _concatenateRequestsAndValueWithComa(self, requests, column_sql, dict_list_list_bool):
+        return [requests[i]+", "+column_sql if dict_list_list_bool[i] else requests[i] for i in range(len(requests))]
+
     def _concatenateRequestsAndValueWithoutComa(self, requests, column_sql, dict_list_list_bool):
         return [requests[i]+column_sql if dict_list_list_bool[i] else requests[i] for i in range(len(requests))]
+
+
+    def _concatenateRequestsAndListValuesWithComa(self, requests, values, dict_list_list_bool):
+        return [requests[i]+", '"+values[i]+"'" if dict_list_list_bool[i] else requests[i] for i in range(len(requests))]
     
     def _concatenateRequestsAndListValuesWithoutComa(self, requests, values, dict_list_list_bool):
         return [requests[i]+"'"+values[i]+"'" if dict_list_list_bool[i] else requests[i] for i in range(len(requests))]

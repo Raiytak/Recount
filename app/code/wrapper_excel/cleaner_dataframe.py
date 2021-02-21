@@ -9,9 +9,9 @@ class CleanerDataframe():
     def addDateEverywhere(self, dataframe):
         last_date = np.datetime64("2019-07-01")
         for i in range(len(dataframe)):
-            current_date = dataframe.loc[i,"Quand"]
+            current_date = dataframe.loc[i,"Date"]
             if pd.isnull(current_date):
-                dataframe.at[i,"Quand"] = last_date
+                dataframe.at[i,"Date"] = last_date
             else:
                 last_date = current_date
         return dataframe
@@ -20,68 +20,70 @@ class CleanerDataframe():
         def convertDatetimeToSQLFormat(datetime_elem):
             time_sql_format = datetime_elem.strftime("%Y-%m-%d")
             return time_sql_format
-        dataframe["Date"] = dataframe["Quand"].apply(convertDatetimeToSQLFormat)
+        dataframe["Date"] = dataframe["Date"].apply(convertDatetimeToSQLFormat)
         return dataframe
     
     def removeSummationLines(self, dataframe):
         for i in range(len(dataframe)):
             current_line = dataframe.loc[i]
-            if pd.isnull(current_line["Dépenses Euros"]) and pd.isnull(current_line["Dépenses Dollars"]):
+            if pd.isnull(current_line["Expense Euros"]) and pd.isnull(current_line["Expense Dollars"]):
                 dataframe = dataframe.drop(i)
         return dataframe
     
     def addSummarizedExpensesColumn(self, dataframe):
         list_expenses = self.getListExpenses(dataframe)
-        dataframe.insert(loc=0, column="Dépenses", value=list_expenses)
+        dataframe.insert(loc=0, column="Expenses", value=list_expenses)
         return dataframe
 
     def getListExpenses(self, dataframe):
-        df_expenses = dataframe.loc[:,["Dépenses Euros", "Dépenses Dollars"]]
+        df_expenses = dataframe.loc[:,["Expense Euros", "Expense Dollars"]]
         df_expenses = df_expenses.fillna(0) #Fill the nan values with 0
         df_expenses = [self.convertExpenseInEuros(row) for index, row in df_expenses.iterrows()]
         return df_expenses
     
     def convertExpenseInEuros(self, row):
-        expenseE = row["Dépenses Euros"]
-        expenseD = row["Dépenses Dollars"]
+        expenseE = row["Expense Euros"]
+        expenseD = row["Expense Dollars"]
         return np.around(expenseE + (expenseD/1.5), 2) #Limit the number of digits to 2
     
     def removeRawExpensesColumns(self, dataframe):
-        dataframe = dataframe.drop(columns=["Dépenses Euros", "Dépenses Dollars"])
+        dataframe = dataframe.drop(columns=["Expense Euros", "Expense Dollars"])
         return dataframe
     
     def removeUselessColumns(self, dataframe):
-        list_columns = ["Thème", "Quoi", "Quand",
-                        "Somme euro", "Somme dollar", "Sommes E", "Sommes D",
-                        "Excédentaires E", "Excédentaires D"]
+        # list_columns = ["Category", "Description", "Date",
+        #                 "Expense Euros", "Expense Dollars", "Sum Euros", "Sum Dollars",
+        #                 "Excess E", "Excess D"]
+        list_columns = ["Sum Euros", "Sum Dollars",
+                        "Excess E", "Excess D", "TemporaryDescription"]
         dataframe = dataframe.drop(columns=list_columns)
         return dataframe
         
     
     def normalizeDescription(self, dataframe):
-        dataframe["Quoi"] = dataframe["Quoi"].apply(self.removeAccentAndLowerStr)
+        dataframe["Description"] = dataframe["Description"].apply(self.removeAccentAndLowerStr)
         return dataframe
         
         
-    def splitAndCleanTheme(self, dataframe):
-        def convertIntoTheme(theme_subtheme):
-            theme_subtheme = str(theme_subtheme)
-            list_tst = theme_subtheme.split(":")
+    def splitAndCleanCategory(self, dataframe):
+        def convertIntoCategory(category_theme):
+            category_theme = str(category_theme)
+            list_tst = category_theme.split(":")
             if list_tst != []:
                 return list_tst[0]
-        def convertIntoSubtheme(theme_subtheme):
-            theme_subtheme = str(theme_subtheme)
-            list_tst = theme_subtheme.split(":")
+        def convertIntoTheme(category_theme):
+            category_theme = str(category_theme)
+            list_tst = category_theme.split(":")
             if len(list_tst) > 1:
                 return list_tst[1]
             return str(np.nan)       
-        dataframe["Theme"] = dataframe["Thème"].apply(convertIntoTheme)
-        dataframe["Soustheme"] = dataframe["Thème"].apply(convertIntoSubtheme)
+        dataframe["Theme"] = dataframe["Category"].apply(convertIntoTheme)
+        dataframe["Category"] = dataframe["Category"].apply(convertIntoCategory)
         return dataframe
         
         
     def splitAndCleanDescription(self, dataframe):
-        def isOnlyEnterprise(raw_description):
+        def isOnlyCompany(raw_description):
             splited_descr = raw_description.split()
             if len(splited_descr) > 1:
                 return False
@@ -90,8 +92,8 @@ class CleanerDataframe():
             if len(resplited_descr) > 1:
                 return False
             return True
-        def convertIntoEnterprise(raw_description):
-            if isOnlyEnterprise(raw_description):
+        def convertIntoCompany(raw_description):
+            if isOnlyCompany(raw_description):
                 return raw_description
             list_descr = raw_description.split(":")
             list_descr = self.removeSpaceInList(list_descr)
@@ -102,18 +104,19 @@ class CleanerDataframe():
                 return list_descr[0]
             return str(np.nan)
         def convertIntoDescription(raw_description):
-            if isOnlyEnterprise(raw_description):
+            if isOnlyCompany(raw_description):
                 return str(np.nan)
             list_descr = raw_description.split(":")
             if len(list_descr) > 1:
                 return list_descr[1]
             return list_descr[0]
-        dataframe["Entreprise"] = dataframe["Quoi"].apply(convertIntoEnterprise)
-        dataframe["Description"] = dataframe["Quoi"].apply(convertIntoDescription)
+        dataframe["TemporaryDescription"] = dataframe["Description"]
+        dataframe["Company"] = dataframe["TemporaryDescription"].apply(convertIntoCompany)
+        dataframe["Description"] = dataframe["TemporaryDescription"].apply(convertIntoDescription)
         return dataframe
         
     def removeAllApostrophes(self, dataframe):
-        list_to_normalize = ["Entreprise", "Description"]
+        list_to_normalize = ["Company", "Description"]
         for column in list_to_normalize:
             dataframe[column] = dataframe[column].apply(self.removeApostrophe)
         return dataframe
@@ -124,7 +127,7 @@ class CleanerDataframe():
         return text
     
     def removeApostrophe(self, text):
-        #Have to remove the apostrophes for the pymysql that doesn't support it
+        #Have to remove the apostrophes because that pymysql doesn't support it
         text = text.replace("'"," ")
         return text
         

@@ -1,4 +1,9 @@
 # -*- coding: utf-8 -*-
+
+# === DESCRIPTION ===
+# This file aims to do the CRUD manipulations on the files used by the application.
+# The paths used are stored in the paths_docs module, and are used by the wrappers of this module.
+
 from shutil import copyfile
 
 import pandas as pd
@@ -9,29 +14,29 @@ import json
 
 class AccessExcel():
     def __init__(self, ExcelPath):
-        self.ExcelPaths = ExcelPath
+        self.ExcelPath = ExcelPath
         self.useExampleIfNoImportedExcel()
     
     def useExampleIfNoImportedExcel(self):
-        if self.ExcelPaths.importedExcelExists():
+        if self.ExcelPath.importedExcelExists():
             self.copyImportedExcel()
         else:
             self.copyExampleExcel()
 
     def copyImportedExcel(self):
-        copyfile(self.ExcelPaths.importedExcelPath(), self.ExcelPaths.copiedExcelPath())
+        copyfile(self.ExcelPath.importedExcelPath(), self.ExcelPath.copiedExcelPath())
 
     def copyExampleExcel(self):
-        copyfile(self.ExcelPaths.exampleExcelPath(), self.ExcelPaths.copiedExcelPath())
+        copyfile(self.ExcelPath.exampleExcelPath(), self.ExcelPath.copiedExcelPath())
     
     def getDataframeOfExcel(self):
-        filename = self.ExcelPaths.copiedExcelPath()
-        if '.csv' in filename:
+        path_excel = self.ExcelPath.copiedExcelPath()
+        if '.csv' in path_excel:
             # Assume that the user uploaded a CSV file
             df = pd.read_csv(io.StringIO(decoded.decode('utf-8')))
-        elif '.xlsx' in filename:
+        elif '.xlsx' in path_excel:
             # Assume that the user uploaded an excel file
-            xl_file = pd.ExcelFile(self.ExcelPaths.copiedExcelPath())
+            xl_file = pd.ExcelFile(path_excel)
         # elif '.xls' in filename:
             # Assume that the user uploaded an excel file
             # df = pd.read_excel(io.BytesIO(decoded))
@@ -44,7 +49,7 @@ class AccessExcel():
             return dfs["Sheet1"]
 
 
-
+# This class load the copy_expenses.xmlx file in code/data and converts it to a dataframe used by other functions
 class ExcelToDataframe():
     def __init__(self, ExcelPath):
         self.AccessExcel = AccessExcel(ExcelPath)
@@ -62,12 +67,14 @@ class ExcelToDataframe():
     def updatDataframe(self):
         dataframe = self.AccessExcel.getDataframeOfExcel()
         self._dfExcel = dataframe
-        
+    
+    # This works like this :
+    #   - "column excel" : ["column sql"]
     def getEquivalentColumns(self):
-        equivalent_columns = {"ID":["ID"], "Date":["date"], "Dépenses":["montant"],
-                            "Theme":["theme"], "Soustheme":["soustheme"],
-                            "Voyage":["voyage"], "Type":["methode_payement"],
-                            "Entreprise":["entreprise"], "Description":["description"]}
+        equivalent_columns = {"ID":["ID"], "Date":["date"], "Expenses":["amount"],
+                            "Category":["category"], "Theme":["theme"],
+                            "Trip":["trip"], "Type":["payment_method"],
+                            "Company":["company"], "Description":["description"]}
         return  equivalent_columns
             
             
@@ -96,18 +103,18 @@ class AccessDescrToTheme():
     
 
 
-class AccessTSTAuthorized():
-    def __init__(self, ThemesAndSubthemesAuthorized):
-        self.TSTAuth = ThemesAndSubthemesAuthorized
+class AccessCTAuthorized():
+    def __init__(self, CategoryAndThemeAuthorized):
+        self.TSTAuth = CategoryAndThemeAuthorized
     
     def getJson(self):
         data = {}
-        with open(self.TSTAuth.getTSTPath(), "r") as json_file:
+        with open(self.TSTAuth.getCategoryAndThemePath(), "r") as json_file:
             data = json.load(json_file)
         return data
     
     def updateJson(self, data):
-        with open(self.TSTAuth.getTSTPath(), "w") as json_file:
+        with open(self.TSTAuth.getCategoryAndThemePath(), "w") as json_file:
             try:
                 json.dump(data, json_file, indent=4)
             except TypeError:

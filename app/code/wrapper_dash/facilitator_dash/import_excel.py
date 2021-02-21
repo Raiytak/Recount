@@ -7,9 +7,10 @@ import update_db
 
 
 class FileSaver():
-    def __init__(self, excel_path):
-        self.path_to_save = excel_path.getDataPath()
-        self.name_imported_excel = excel_path.nameImportedExcel()
+    def __init__(self, AccessExcel):
+        self.AccessExcel = AccessExcel
+        self.path_to_save = self.AccessExcel.ExcelPath.getDataPath()
+        self.name_imported_excel = self.AccessExcel.ExcelPath.nameImportedExcel()
         
 
     def removeOlderFile(self):
@@ -22,10 +23,10 @@ class FileSaver():
 
     def decodeImportedFile(self, content_type, content):
         if "xml" in content_type:
-            decodedFile = io.BytesIO(decoded)
+            decodedFile = io.BytesIO(content)
             file_format = "xlsx"
         elif "csv" in content_type:
-            decodedFile = decoded.decode('utf-8')
+            decodedFile = content.decode('utf-8')
             file_format = "csv"
         return decodedFile, file_format
 
@@ -37,7 +38,7 @@ class FileSaver():
         self.removeOlderFile()
 
         content_type, content_string = file_in_str.split(',')
-        decoded = base64.b64decode(content_string)
+        file_in_str = base64.b64decode(content_string)
 
         decodedFile, file_format = self.decodeImportedFile(content_type, file_in_str)
         path_file = self.path_to_save + "/" + self.name_imported_excel + "." + file_format
@@ -49,5 +50,5 @@ class FileSaver():
             with open(path_file, 'w') as f:
                 f.write(decodedFile)
 
-        
+        self.AccessExcel.copyImportedExcel()
         update_db.updateAll()

@@ -1,6 +1,4 @@
 import dash
-import dash_html_components as html
-import dash_core_components as dcc
 from dash.dependencies import Input, Output
 
 
@@ -10,34 +8,34 @@ DateToDataframe = communication_db.DateToDataframe()
 
 
 # Import the config file
-import config.access_config as access_config
+import accessors.access_config as access_config
 myAccessConfig = access_config.AccessConfig()
 config_json = myAccessConfig.getConfig()
 
-# Get the different paths used in the app
-import wrapper_excel.paths_docs as paths_docs
-TSTAuthPath = paths_docs.ThemesAndSubthemesAuthorized(config_json)
-ExcelPath = paths_docs.ExcelPath(config_json)
+# Get the different paths of the files used in the app.
+import accessors.paths_docs as paths_docs
+myExcelPath = paths_docs.ExcelPath(config_json)
+myCatThemeAuthPath = paths_docs.CategoryAndThemeAuthorizedPath(config_json)
 
-import wrapper_excel.access_docs as access_docs
-accessAuthorizedTST = access_docs.AccessTSTAuthorized(TSTAuthPath)
-authorizedTST_json = accessAuthorizedTST.getJson()
+# Access the documents, to get the value and update those. Need the paths to work.
+import accessors.access_docs as access_docs
+myAccessExcel = access_docs.AccessExcel(myExcelPath)
+myAccessCTAuthorized = access_docs.AccessCTAuthorized(myCatThemeAuthPath)
+authorizedCT_json = myAccessCTAuthorized.getJson()
 
 
-# Objects used to clean the data
+# Objects used to clean and convert the data into dataframe and objects readable for the dash app
 # import wrapper_dash.facilitator_dash.prepare_dashboard as prepare_dashboard
 import wrapper_dash.facilitator_dash.main_convert_df_to_graph as main_convert_df_to_graph
 import wrapper_dash.facilitator_dash.convert_ld_to_graph as convert_ld_to_graph
 import wrapper_dash.facilitator_dash.convert_df_to_ld as convert_df_to_ld
 DataframeToListDict = convert_df_to_ld.DataframeToListOfDicts()
-ListDictToGraph = convert_ld_to_graph.ListDictToGraph(authorizedTST_json)
+ListDictToGraph = convert_ld_to_graph.ListDictToGraph(authorizedCT_json)
 ConvertDfToGraph = main_convert_df_to_graph.DataframeToGraph(DataframeToListDict, ListDictToGraph)
 
-# Object used to import an excel given by the user
+# Object used to save an excel uploaded by the user
 import wrapper_dash.facilitator_dash.import_excel as import_excel
-FileSaver = import_excel.FileSaver(ExcelPath)   
-
-
+FileSaver = import_excel.FileSaver(myAccessExcel)   
 
 
 
@@ -54,7 +52,7 @@ class AppDash():
         self.vueIndex = vue_index.AppDash(self.app)
         self.vueHome = vue_home.AppDash(self.app)
         self.vueDashboardHome = vue_dashboard_home.AppDash(self.app, DateToDataframe, ConvertDfToGraph, FileSaver)
-        self.vueThemesFile = vue_modify_themes_file.AppDash(self.app, accessAuthorizedTST)
+        self.vueThemesFile = vue_modify_themes_file.AppDash(self.app, myAccessCTAuthorized)
     
 
 

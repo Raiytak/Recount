@@ -18,18 +18,19 @@ class MainCleanerExcel():
         dataframe = self.CleanerDf.removeRawExpensesColumns(dataframe)
         
         dataframe = self.CleanerDf.normalizeDescription(dataframe)
-        dataframe = self.CleanerDf.splitAndCleanTheme(dataframe)
+        dataframe = self.CleanerDf.splitAndCleanCategory(dataframe)
         dataframe = self.CleanerDf.splitAndCleanDescription(dataframe)
         
-        dataframe = self.IntellFill.intelligentFillBlankThemeUsingEntreprise(dataframe)
+        dataframe = self.IntellFill.intelligentFillBlankCategoryUsingCompany(dataframe)
         
         dataframe = self.CleanerDf.removeUselessColumns(dataframe)
         dataframe = self.CleanerDf.removeAllApostrophes(dataframe)
         
-        
+        # This function shows on the CLI if there are inputs of the excel that are not allowed (mostly for syntax errors)
         self.ReviewerDataframe.checkConformity(dataframe)
         
-        dataframe.to_excel(self.ExcelToDataframe.AccessExcel.ExcelPaths.copiedExcelPath())
+        # Save the dataframe create into the appropriate excel (this must be copy_expenses.xlsx)
+        dataframe.to_excel(self.ExcelToDataframe.AccessExcel.ExcelPath.copiedExcelPath())
 
 
 

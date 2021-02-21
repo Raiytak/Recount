@@ -22,8 +22,8 @@ SET time_zone = "+00:00";
 --
 -- Base de données :  `depenses`
 --
-CREATE DATABASE IF NOT EXISTS `depenses` DEFAULT CHARACTER SET latin1 COLLATE latin1_swedish_ci;
-USE `depenses`;
+CREATE DATABASE IF NOT EXISTS `expenses` DEFAULT CHARACTER SET latin1 COLLATE latin1_swedish_ci;
+USE `expenses`;
 
 -- --------------------------------------------------------
 
@@ -39,94 +39,94 @@ USE `depenses`;
 
 
 --
--- Structure de la table `depenses_brutes`
+-- Structure de la table `raw_expenses`
 --
 
-DROP TABLE IF EXISTS `depenses_brutes`;
-CREATE TABLE IF NOT EXISTS `depenses_brutes` (
+DROP TABLE IF EXISTS `raw_expenses`;
+CREATE TABLE IF NOT EXISTS `raw_expenses` (
   `ID` int(11) DEFAULT NULL,
   `date` date NOT NULL,
-  `montant` float NOT NULL,
+  `amount` float NOT NULL,
+  `category` text,
   `theme` text,
-  `soustheme` text,
-  `voyage` text,
-  `entreprise` text,
+  `trip` text,
+  `company` text,
   `description` mediumtext,
-  `methode_payement` varchar(15) NOT NULL DEFAULT 'carte',
+  `payment_method` varchar(15) NOT NULL DEFAULT 'card',
   `_id` int(11) NOT NULL AUTO_INCREMENT,
   PRIMARY KEY (`_id`)
 ) ENGINE=MyISAM AUTO_INCREMENT=88030 DEFAULT CHARSET=latin1;
 
 --
--- Déchargement des données de la table `depenses_brutes`
+-- Déchargement des données de la table `raw_expenses`
 --
 
 -- --------------------------------------------------------
 
 --
--- Structure de la table `depenses_propres`
+-- Structure de la table `clean_expenses`
 --
 
-DROP TABLE IF EXISTS `depenses_propres`;
-CREATE TABLE IF NOT EXISTS `depenses_propres` (
+DROP TABLE IF EXISTS `clean_expenses`;
+CREATE TABLE IF NOT EXISTS `clean_expenses` (
   `ID` int(11) NOT NULL,
   `date` date NOT NULL,
-  `montant` float NOT NULL,
-  `theme` mediumtext,
-  `soustheme` text,
-  `entreprise` text,
+  `amount` float NOT NULL,
+  `category` mediumtext,
+  `theme` text,
+  `company` text,
   `description` text,
-  `voyage` text,
-  `methode_payement` text NOT NULL,
+  `trip` text,
+  `payment_method` text NOT NULL,
   `_id` int(11) NOT NULL AUTO_INCREMENT,
   PRIMARY KEY (`_id`)
 ) ENGINE=MyISAM AUTO_INCREMENT=88030 DEFAULT CHARSET=latin1;
 
 --
--- Déchargement des données de la table `depenses_propres`
+-- Déchargement des données de la table `clean_expenses`
 --
 
 -- --------------------------------------------------------
 
 --
--- Structure de la table `depenses_voyages`
+-- Structure de la table `trip_expenses`
 --
 
-DROP TABLE IF EXISTS `depenses_voyages`;
-CREATE TABLE IF NOT EXISTS `depenses_voyages` (
+DROP TABLE IF EXISTS `trip_expenses`;
+CREATE TABLE IF NOT EXISTS `trip_expenses` (
   `ID` int(11) DEFAULT NULL,
-  `voyage` text,
+  `trip` text,
   `date` date NOT NULL,
-  `montant` float NOT NULL,
-  `theme` mediumtext,
-  `soustheme` text,
-  `entreprise` text,
+  `amount` float NOT NULL,
+  `category` mediumtext,
+  `theme` text,
+  `company` text,
   `description` mediumtext,
-  `methode_payement` varchar(15) NOT NULL DEFAULT 'carte',
+  `payment_method` varchar(15) NOT NULL DEFAULT 'card',
   `_id` int(11) NOT NULL AUTO_INCREMENT,
   PRIMARY KEY (`date`,`_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 --
--- Déchargement des données de la table `depenses_voyages`
+-- Déchargement des données de la table `trip_expenses`
 --
 
 -- --------------------------------------------------------
 
 --
--- Structure de la table `remboursements`
+-- Structure de la table `reimbursement`
 --
 
-DROP TABLE IF EXISTS `remboursements`;
-CREATE TABLE IF NOT EXISTS `remboursements` (
+DROP TABLE IF EXISTS `reimbursement`;
+CREATE TABLE IF NOT EXISTS `reimbursement` (
   `ID` int(11) NOT NULL,
   `ID_pay_orig` int(11) NOT NULL,
   `date` date NOT NULL,
-  `montant` float NOT NULL
+  `amount` float NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 --
--- Déchargement des données de la table `remboursements`
+-- Déchargement des données de la table `reimbursement`
 --
 
 

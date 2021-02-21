@@ -16,26 +16,26 @@ class ReviewerDataframe():
     
     def checkThemesAndSubthemes(self, dataframe):
         def chekTSTByRow(row):
-            theme = row["Theme"]
-            if (theme == str(np.nan)) or (theme == "remboursement"):
+            category = row["Category"]
+            if (category == str(np.nan)) or (category == "reimbursement"):
                 return row
-            if (theme in self._tst_json.keys()):
-                subtheme = row["Soustheme"]
-                if (subtheme in self._tst_json[theme]) or (subtheme == str(np.nan)):
+            if (category in self._tst_json.keys()):
+                theme = row["Theme"]
+                if (theme in self._tst_json[category]) or (theme == str(np.nan)):
                     return row
                 self.printSubthemeError(row)
-                print("Error of SUBTHEME in row :\n", row)
+                print("Error of THEME in row :\n", row)
                 # raise Exception
             self.printThemeError(row)
-            print("Error of THEME in row :\n", row)
+            print("Error of CATEGORY in row :\n", row)
             # raise Exception
         dataframe.apply(chekTSTByRow, axis=1)
     
 
     def printSubthemeError(self, row):
-        print("ERROR SUBTHEME :")
-        print("In row ", row["ID"], "orthograph error in subtheme : ", row["Soustheme"])
-
-    def printThemeError(self, row):
         print("ERROR THEME :")
         print("In row ", row["ID"], "orthograph error in theme : ", row["Theme"])
+
+    def printThemeError(self, row):
+        print("ERROR CATEGORY :")
+        print("In row ", row["ID"], "orthograph error in category : ", row["Category"])

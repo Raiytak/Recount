@@ -28,19 +28,19 @@ DICT_PATHS = {
 DICT_CONNEXION_MYSQL = {
     "manual_deployment_linux":{
         "host":"localhost",
-        "db":"depenses",
+        "db":"expenses",
         "user":"myuser",
         "passwd":"mypass"
     },
     "manual_deployment_linux_using_docker_version":{
         "host":"localhost",
-        "db":"depenses",
+        "db":"expenses",
         "user":"myuser",
         "passwd":"mypass"
     },
     "docker_deployment_linux":{
         "host":"",
-        "db":"depenses",
+        "db":"expenses",
         "user":"myuser",
         "passwd":"mypass"
     }

@@ -11,9 +11,9 @@ class ElementsVue():
         periode_input = dcc.RadioItems(
             id="input-radio",
             options=[
-                {"label":"Semaine", "value":"week"},
-                {"label":"Mois", "value":"month"},
-                {"label":"Trimestre", "value":"semestre"}
+                {"label":"Week", "value":"week"},
+                {"label":"Month", "value":"month"},
+                {"label":"Quarter", "value":"semestre"}
             ],
             value='month'
         )
@@ -120,8 +120,9 @@ class AppDash(EmptyVue):
             dataframe = self.DateToDataframe.getDataframeFromDate(selected_date_str, selected_periode)
             list_dataframes = self.DateToDataframe.getListDataframeByWeekFromDate(selected_date_str, selected_periode)
 
+
             scatter_graph = self.ConvertDfToGraph.convertDataframeToGraph(dataframe, "all-scatter")
-            pie_graph = self.ConvertDfToGraph.convertDataframeToGraph(dataframe, "theme-pie")
+            pie_graph = self.ConvertDfToGraph.convertDataframeToGraph(dataframe, "category-pie")
             mean_graph = self.ConvertDfToGraph.convertDataframeToGraph(list_dataframes, "mean-bar")
             food_graph = self.ConvertDfToGraph.convertDataframeToGraph(list_dataframes, "food-bar")
             

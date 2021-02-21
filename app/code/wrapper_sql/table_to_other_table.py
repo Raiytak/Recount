@@ -10,7 +10,7 @@ class RawToRepayement():
         self.name = "rawToRepayement"
         
     def selectRepayementRows(self):
-        request = "SELECT * FROM & where theme = 'remboursement'"
+        request = "SELECT * FROM & where category = 'reimbursement'"
         response = self.table_raw.select(request)
         return response
     
@@ -29,7 +29,8 @@ class RawToRepayement():
             
     
     def getEquivalentColumns(self):
-        equivalent_columns = {"ID":["ID"], "soustheme":["ID_pay_orig"], "date":["date"], "montant":["montant"]}
+        # "origin":["destination"]
+        equivalent_columns = {"ID":["ID"], "theme":["ID_pay_orig"], "date":["date"], "amount":["amount"]}
         return equivalent_columns
 
 
@@ -40,7 +41,7 @@ class RawToTrip():
         self.name = "rawToTrip"
         
     def selectTripRows(self):
-        request = "SELECT * FROM & where voyage IS NOT NULL"
+        request = "SELECT * FROM & where trip IS NOT NULL"
         response = self.table_raw.select(request)
         return response
     
@@ -59,6 +60,7 @@ class RawToTrip():
             
             
     def getEquivalentColumns(self):
+        # "origin":["destination"]
         columns = self.table_raw.getNameColumns()
         equivalent_columns = {col:[col] for col in columns}
         return equivalent_columns
@@ -81,6 +83,7 @@ class RawToClean():
             self.table_clean.insert(req)
             
     def getEquivalentColumns(self):
+        # "origin":["destination"]
         columns = self.table_clean.getNameColumns()
         equivalent_columns = {col:[col] for col in columns}
         return equivalent_columns
@@ -109,6 +112,7 @@ class TripToClean():
             
             
     def getEquivalentColumns(self):
+        # "origin":["destination"]
         columns = self.table_clean.getNameColumns()
         equivalent_columns = {col:[col] for col in columns}
         return equivalent_columns
