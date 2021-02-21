@@ -1,11 +1,11 @@
 {
-    "dietary": ["food", "glottony", "restaurant", "pastry", "food_test", "alcohol"],
+    "alimentary": ["food", "gluttony", "restaurant", "pastry", "food_test", "alcohol"],
 
     "equipement": ["cooking", "sport", "furniture", "bedding", "dress", "phone", "computer", "other"],
 
     "housing": ["rent","hotel", "laundry"],
 
-    "transport": ["bus", "plane", "taxi", "train", "car", "permit"],
+    "transport": ["bus", "plane", "taxi", "train", "car", "authorization"],
 
     "health": ["insurance", "doctor", "dentist", "osteopath", "emergency", "hospital", "cream"],
 

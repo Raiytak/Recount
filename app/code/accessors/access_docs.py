@@ -1,4 +1,9 @@
 # -*- coding: utf-8 -*-
+
+# === DESCRIPTION ===
+# This file aims to do the CRUD manipulations on the files used by the application.
+# The paths used are stored in the paths_docs module, and are used by the wrappers of this module.
+
 from shutil import copyfile
 
 import pandas as pd
@@ -44,14 +49,13 @@ class AccessExcel():
             return dfs["Sheet1"]
 
 
-
+# This class load the copy_expenses.xmlx file in code/data and converts it to a dataframe used by other functions
 class ExcelToDataframe():
     def __init__(self, ExcelPath):
         self.AccessExcel = AccessExcel(ExcelPath)
         self.updatDataframe()
         
     def getDataframe(self):
-        self.updatDataframe()
         return self._dfExcel
     
     def getDataframeAndEqCol(self):
@@ -63,12 +67,14 @@ class ExcelToDataframe():
     def updatDataframe(self):
         dataframe = self.AccessExcel.getDataframeOfExcel()
         self._dfExcel = dataframe
-        
+    
+    # This works like this :
+    #   - "column excel" : ["column sql"]
     def getEquivalentColumns(self):
-        equivalent_columns = {"ID":["ID"], "Date":["date"], "Dépenses":["montant"],
-                            "Theme":["theme"], "Soustheme":["soustheme"],
-                            "Voyage":["voyage"], "Type":["methode_payement"],
-                            "Entreprise":["entreprise"], "Description":["description"]}
+        equivalent_columns = {"ID":["ID"], "Date":["date"], "Expenses":["amount"],
+                            "Category":["category"], "Theme":["theme"],
+                            "Trip":["trip"], "Type":["payment_method"],
+                            "Company":["company"], "Description":["description"]}
         return  equivalent_columns
             
             
@@ -97,18 +103,18 @@ class AccessDescrToTheme():
     
 
 
-class AccessTSTAuthorized():
-    def __init__(self, ThemesAndSubthemesAuthorized):
-        self.TSTAuth = ThemesAndSubthemesAuthorized
+class AccessCTAuthorized():
+    def __init__(self, CategoryAndThemeAuthorized):
+        self.TSTAuth = CategoryAndThemeAuthorized
     
     def getJson(self):
         data = {}
-        with open(self.TSTAuth.getTSTPath(), "r") as json_file:
+        with open(self.TSTAuth.getCategoryAndThemePath(), "r") as json_file:
             data = json.load(json_file)
         return data
     
     def updateJson(self, data):
-        with open(self.TSTAuth.getTSTPath(), "w") as json_file:
+        with open(self.TSTAuth.getCategoryAndThemePath(), "w") as json_file:
             try:
                 json.dump(data, json_file, indent=4)
             except TypeError:
