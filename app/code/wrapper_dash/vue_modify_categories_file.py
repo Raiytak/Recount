@@ -57,7 +57,7 @@ class AppDash(EmptyVue):
             [Input('submit-button', 'n_clicks')],
             [State('textarea-state', 'value')]
         )
-        def update_themes(json_entered):     
+        def update_categories(json_entered):     
             # print(json_entered)
             return ""
 

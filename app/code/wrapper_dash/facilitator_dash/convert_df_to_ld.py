@@ -5,11 +5,11 @@ import numpy as np
 
 class DataframeToListOfDicts():
     def convertDataframeToListOfDicts(self, dataframe, type_graph):
-        if type_graph == "all-scatter":
+        if type_graph == "scatter-graph-all":
             list_dict_expenses = self.convertDataframeToExpensesByColumn(dataframe, "category")
             return list_dict_expenses
         
-        if type_graph == "category-pie":
+        if type_graph == "pie-chart-category":
             list_dict_expenses = self.convertDataframeToSumExpensesByColumn(dataframe, "category")
             return list_dict_expenses
         

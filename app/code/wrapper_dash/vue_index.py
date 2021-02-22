@@ -4,40 +4,42 @@ from dash.dependencies import Input, Output, State
 
 import wrapper_dash.vue_links_other_vues as vue_links_other_vues
 
+import wrapper_dash.reusable_components.reusable_inputs as reusable_inputs
+import wrapper_dash.reusable_components.reusable_links as reusable_links
 
 
 class ElementsVue():
-    def __init__(self):
-        pass
+    def __init__(self, ReusableInputs, ReusableLinks):
+        self.ReusableInputs = ReusableInputs
+        self.ReusableLinks = ReusableLinks
 
-    def getDefaultInputDiv(self):
-        location = dcc.Location(id='default-url', refresh=False)
-        page_content = html.Div(id='default-page-content')
-        default_input_div = html.Div( children=[location, page_content])
-        return default_input_div        
 
     def getInputDiv(self):
-        location = dcc.Location(id='url', refresh=False)
-        page_content = html.Div(id='page-content')
-        input_div = html.Div( children=[location, page_content])
-                                    # style={
-                                    #     "display":"column",
-                                    #     "justify-content":"space-between"}
-                                        # )
-        return input_div        
+        return self.ReusableInputs.getDatePeriodAndExcelDiv()        
+    
+    def getOutputDiv(self):
+        return html.Div(id='default-page-content')
 
     def getLinksDiv(self):
-        return vue_links_other_vues.getLinksDiv()
+        return self.ReusableLinks.getRowTypeLinksDiv()
+
+    def getLocationDiv(self):
+        return self.ReusableInputs.getLocationDiv()
+      
 
 
 class EmptyVue():
     def __init__(self):
-        self.elementsVue = ElementsVue()
+        self.name_vue = "index-"
+        self.ReusableInputs = reusable_inputs.ReusableInputs(self.name_vue)
+        self.ReusableLinks = reusable_links.ReusableLinks()
+        self.elementsVue = ElementsVue(self.ReusableInputs, self.ReusableLinks)
         
     def getEmptyDefaultVue(self):
-        elem_input_div = self.elementsVue.getDefaultInputDiv()  
-        all_the_vue = html.Div(elem_input_div)   
-        return all_the_vue
+        location = self.elementsVue.getLocationDiv()
+        page_content = self.elementsVue.getOutputDiv()
+        default_input_div = html.Div( children=[location, page_content])
+        return default_input_div  
 
     def getEmptyVue(self):
         elem_input_div = self.elementsVue.getInputDiv()  
@@ -58,8 +60,12 @@ class AppDash(EmptyVue):
     
     # def setCallback(self):
     #     @self.app.callback(
+    #         Output('page-content-home', 'children'),
+    #         self.getInputCallbacks()
     #     )
-    #     def update_themes(json_entered):   
+    #     def display_home(pathname):     
+    #         return ''
+    
     def setThisEmptyDefaultVue(self):
         return self.getEmptyDefaultVue()
 

@@ -19,14 +19,10 @@ myCatThemeAuthPath = paths_docs.CategoryAndThemeAuthorizedPath(config_json)
 # Access the documents, to get the value and update those. Need the paths to work.
 import accessors.access_docs as access_docs
 myAccessExcel = access_docs.AccessExcel(myExcelPath)
-<<<<<<< HEAD
-accessAuthorizedTST = access_docs.AccessTSTAuthorized(TSTAuthPath)
-authorizedTST_json = accessAuthorizedTST.getJson()
-=======
+myExcelToDataframe = access_docs.ExcelToDataframe(myExcelPath)
 myAccessCTAuthorized = access_docs.AccessCTAuthorized(myCatThemeAuthPath)
 authorizedCT_json = myAccessCTAuthorized.getJson()
 
->>>>>>> e970bffec6e60a935dbe260042bf627c10034e6f
 
 # Objects used to clean and convert the data into dataframe and objects readable for the dash app
 # import wrapper_dash.facilitator_dash.prepare_dashboard as prepare_dashboard
@@ -44,7 +40,8 @@ FileSaver = import_excel.FileSaver(myAccessExcel)
 
 
 from wrapper_dash import vue_index, vue_home
-from wrapper_dash import vue_dashboard_home, vue_modify_themes_file
+from wrapper_dash import vue_dashboard_home, vue_modify_categories_file
+from wrapper_dash import vue_notebook_excel
 
 
 # Dash Application
@@ -56,7 +53,9 @@ class AppDash():
         self.vueIndex = vue_index.AppDash(self.app)
         self.vueHome = vue_home.AppDash(self.app)
         self.vueDashboardHome = vue_dashboard_home.AppDash(self.app, DateToDataframe, ConvertDfToGraph, FileSaver)
-        self.vueThemesFile = vue_modify_themes_file.AppDash(self.app, myAccessCTAuthorized)
+        self.vueCategoriesFile = vue_modify_categories_file.AppDash(self.app, myAccessCTAuthorized)
+
+        self.vueNotebookExcel = vue_notebook_excel.AppDash(self.app, myExcelToDataframe)
     
 
 
@@ -70,12 +69,14 @@ class AppDash():
         def display_page(pathname):
             if pathname == '/' and len(pathname) == 1:
                 return self.vueIndex.setThisVue()
-            if pathname == '/home':
+            elif pathname == '/home':
                 return self.vueHome.setThisVue()
-            if pathname == '/dashhome':
+            elif pathname == '/dashhome':
                 return self.vueDashboardHome.setThisVue()
-            elif pathname == '/themes':
-                return self.vueThemesFile.setThisVue()
+            elif pathname == '/categories':
+                return self.vueCategoriesFile.setThisVue()
+            elif pathname == '/excel':
+                return self.vueNotebookExcel.setThisVue()
             else:
                 return '404'
             pass

@@ -12,17 +12,8 @@ class ResponseSqlToDataframe():
         # Else we simply return the dataframe completely empty
         if dataframe.empty == False:
             dataframe.columns = columns_name
-<<<<<<< HEAD
-            return dataframe
-        # Else we have to create a dataframe with empty values
-        else:
-            dataframe = self.getDataframeWithEmptyValues(columns_name)
-            dataframe.columns = columns_name
-            return dataframe
-=======
         return dataframe
 
->>>>>>> e970bffec6e60a935dbe260042bf627c10034e6f
 
     def getEquivalentColumns(self, wrapper_table):
         columns_name = wrapper_table.getNameColumns()

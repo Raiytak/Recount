@@ -4,54 +4,48 @@ from dash.dependencies import Input, Output, State
 
 import wrapper_dash.vue_links_other_vues as vue_links_other_vues
 
+import wrapper_dash.reusable_components.reusable_inputs as reusable_inputs
+import wrapper_dash.reusable_components.reusable_links as reusable_links
+
 
 class ElementsVue():
-    def __init__(self):
-        pass
+    def __init__(self, ReusableInputs, ReusableLinks):
+        self.ReusableInputs = ReusableInputs
+        self.ReusableLinks = ReusableLinks
 
 
     def getInputDiv(self):
-        location = dcc.Location(id='url-home', refresh=False)
-
-        page_content = html.Div(id='page-content-home')
-
-        input_div = html.Div( children=[location, page_content])
-                                    # style={
-                                    #     "display":"column",
-                                    #     "justify-content":"space-between"}
-                                        # )
-        return input_div        
+        return self.ReusableInputs.getDatePeriodAndExcelDiv()        
+    
+    def getOutputDiv(self):
+        return html.Div(id='page-content-home')
+        
 
     def getLinksDiv(self):
-        return vue_links_other_vues.getLinksDiv()
-
-    def getTextDiv(self):
-        link_page_dashhome = dcc.Link('Go to Page Dashboard Home', href='/dashhome')
-        link_page_home = dcc.Link('Go to Page Home', href='/home')
-        link_page_themes = dcc.Link('Go to Page Themes', href='/themes')
-
-        links_div = html.Div(children=[link_page_home, link_page_dashhome, link_page_themes],
-                                    style={
-                                        "display":"flex",
-                                        "justify-content":"space-between"}
-                                        )
-        return links_div
-
-    def getOtherTextArea(self):
-        return ''
+        return self.ReusableLinks.getRowTypeLinksDiv()
 
 
 
 class EmptyVue():
     def __init__(self):
-        self.elementsVue = ElementsVue()
+        self.name_vue = "home-page-"
+        self.ReusableInputs = reusable_inputs.ReusableInputs(self.name_vue)
+        self.ReusableLinks = reusable_links.ReusableLinks()
+        self.elementsVue = ElementsVue(self.ReusableInputs, self.ReusableLinks)
         
     def getEmptyVue(self):
         elem_input_div = self.elementsVue.getInputDiv()  
+        elem_output_div = self.elementsVue.getOutputDiv()  
+        top_vue = html.Div(children=[elem_input_div, elem_output_div])
+
         elem_links_div = self.elementsVue.getLinksDiv()     
-        all_the_vue = html.Div([elem_input_div, elem_links_div])   
+        bottom_vue = html.Div(elem_links_div)
+
+        all_the_vue = html.Div([top_vue, bottom_vue])   
         return all_the_vue
 
+    def getInputCallbacks(self):
+        return self.ReusableInputs.getLocationCallback()
 
 
 
@@ -66,7 +60,8 @@ class AppDash(EmptyVue):
     def setCallback(self):
         @self.app.callback(
             Output('page-content-home', 'children'),
-            Input("url-home", 'pathname'))
+            self.getInputCallbacks()
+        )
         def display_home(pathname):     
             return ''
 

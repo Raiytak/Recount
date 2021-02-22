@@ -4,84 +4,61 @@ from dash.dependencies import Input, Output, State
 
 import datetime
 
+import wrapper_dash.reusable_components.reusable_inputs as reusable_inputs
+import wrapper_dash.reusable_components.reusable_graphs as reusable_graphs
+
 
 
 class ElementsVue():
+    def __init__(self, ReusableInputs, ReusableGraphs):
+        self.ReusableInputs = ReusableInputs
+        self.ReusableGraphs = ReusableGraphs
+
     def getInputDiv(self):
-        periode_input = dcc.RadioItems(
-            id="input-radio",
-            options=[
-                {"label":"Week", "value":"week"},
-                {"label":"Month", "value":"month"},
-                {"label":"Quarter", "value":"semestre"}
-            ],
-            value='month'
-        )
-        date_input = dcc.DatePickerSingle(
-            id="input-date",
-            date = datetime.datetime(year=2019,month=9,day=1),
-            display_format="D/M/Y"
-        )
+        return self.ReusableInputs.getDatePeriodAndExcelDiv()
+    def getInputCallbacks(self):
+        return self.ReusableInputs.getDatePeriodAndExcelCallbacks()
 
-        excel_input = dcc.Upload(
-            id='upload-data',
-            children=html.Div('Import csv File'),
-            multiple=False
-        )
-        excel_input_div = html.Button(excel_input)
-
-        date_input_div = html.Div(  children=[date_input, periode_input],
-                                    style={
-                                        "display":"flex",
-                                        "justify-content":"space-between"})
-
-        input_div = html.Div(   children=[date_input_div,excel_input_div],
-                                style={
-                                        "display":"flex",
-                                        "justify-content":"space-between"})
-        return input_div
-
-    def getEmptyGraph(self, graph_type):
-        if graph_type=="scatter":
-            return dcc.Graph(id="scatter-output")
-        if graph_type=="pie":
-            return dcc.Graph(id="pie-output")
-        if graph_type=="mean":
-            return dcc.Graph(id="mean-output")
-        if graph_type=="food":
-            return dcc.Graph(id="food-output")
+    def getGraphDiv(self):
+        return self.ReusableGraphs.getDashboardHomeDiv()
+    def getGraphCallbacks(self):
+        return self.ReusableGraphs.getlDashboardHomeCallbacks()
         
+    def getOutputTypeDivs(self):
+        return self.ReusableGraphs.getDashboardHomeTypeGraphs()
+
 
 
 
 class EmptyVue():
     def __init__(self):
-        self.elementsVue = ElementsVue()
+        self.name_vue = "dashboard-home-"
+        self.ReusableInputs = reusable_inputs.ReusableInputs(self.name_vue)
+        self.ReusableGraphs = reusable_graphs.ReusableGraphs(self.name_vue)
+        self.ElementsVue = ElementsVue(self.ReusableInputs, self.ReusableGraphs)
         
     def getEmptyVue(self):
-        input_div = self.elementsVue.getInputDiv()
-        
-        scatter_graph = self.elementsVue.getEmptyGraph("scatter")
-        pie_graph = self.elementsVue.getEmptyGraph("pie")
-        upper_graphs = html.Div([scatter_graph, pie_graph],
-                                    style= {'display': 'flex',
-                                        "justify-content":"space-around"})
-        upper_dashboard = html.Div([input_div, upper_graphs],
-                                    style= {'display': 'block',
-                                        "justify-content":"space-around"})
-        
-        mean_graph = self.elementsVue.getEmptyGraph("mean")
-        food_graph = self.elementsVue.getEmptyGraph("food")
-        bottom_dashboard = html.Div([mean_graph, food_graph],
-                                    style= {'display': 'flex',
-                                        "justify-content":"space-around"})
+        input_div = self.ElementsVue.getInputDiv()
+        dashboard_div = self.ElementsVue.getGraphDiv()
         
         dashboard = html.Div([
-            upper_dashboard,
-            bottom_dashboard,
+            input_div,
+            dashboard_div,
         ])
         
         return dashboard
+
+
+    def getInputCallbacks(self):
+        return self.ElementsVue.getInputCallbacks()
+    def getOutputCallbacks(self):
+        return self.ElementsVue.getGraphCallbacks()
+        
+
+    def getOutputTypesDiv(self):
+        return self.ElementsVue.getOutputTypeDivs()
+         
+
 
 
 
@@ -95,29 +72,28 @@ class AppDash(EmptyVue):
         self.DateToDataframe = DateToDataframe
         self.ConvertDfToGraph = ConvertDfToGraph
         self.FileSaver = FileSaver
+        
         self.setCallback()
     
     def setCallback(self):
         @self.app.callback(
-            [Output("scatter-output", "figure"),
-            Output("pie-output", "figure"),
-            Output("mean-output", "figure"),
-            Output("food-output", "figure")],
-            [Input("input-date", 'date'),
-            Input("input-radio", 'value'),
-            Input('upload-data', 'contents')])
+            self.getOutputCallbacks(),
+            self.getInputCallbacks()
+            )
         def update_graph(selected_date_str, selected_periode, imported_file):     
-             
-            self.FileSaver.saveFile(imported_file)
             
+            # Processing the actions received form the user
+            self.FileSaver.saveFile(imported_file)
             dataframe = self.DateToDataframe.getDataframeFromDate(selected_date_str, selected_periode)
             list_dataframes = self.DateToDataframe.getListDataframeByWeekFromDate(selected_date_str, selected_periode)
 
 
-            scatter_graph = self.ConvertDfToGraph.convertDataframeToGraph(dataframe, "all-scatter")
-            pie_graph = self.ConvertDfToGraph.convertDataframeToGraph(dataframe, "category-pie")
-            mean_graph = self.ConvertDfToGraph.convertDataframeToGraph(list_dataframes, "mean-bar")
-            food_graph = self.ConvertDfToGraph.convertDataframeToGraph(list_dataframes, "food-bar")
+            list_types_of_divs = self.getOutputTypesDiv()
+
+            scatter_graph = self.ConvertDfToGraph.convertDataframeToGraph(dataframe, list_types_of_divs[0])
+            pie_graph = self.ConvertDfToGraph.convertDataframeToGraph(dataframe, list_types_of_divs[1])
+            mean_graph = self.ConvertDfToGraph.convertDataframeToGraph(list_dataframes, list_types_of_divs[2])
+            food_graph = self.ConvertDfToGraph.convertDataframeToGraph(list_dataframes, list_types_of_divs[3])
             
             return scatter_graph, pie_graph, mean_graph, food_graph
 

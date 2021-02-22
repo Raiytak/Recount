@@ -9,11 +9,11 @@ class ListDictToGraph(): #add metadata
     
     
     def getGraph(self, list_dict_of_expenses, type_graph): #main of class
-        if type_graph == "all-scatter":
+        if type_graph == "scatter-graph-all":
             graph = self.scatterGraph(list_dict_of_expenses)
             return graph
         
-        if type_graph == "category-pie":
+        if type_graph == "pie-chart-category":
             graph = self.pieGraph(list_dict_of_expenses)
             return graph
         
