@@ -81,6 +81,8 @@ class AppDash(EmptyVue):
         self.AccessExcel = self.ExcelToDataframe.AccessExcel
         self.FileSaver = FileSaver
 
+        self._counter = 0
+
         self.setCallback()
 
     
@@ -90,10 +92,13 @@ class AppDash(EmptyVue):
             self.getNotebookInputCallback())
         # def update_notebook(selected_date_str, selected_periode, imported_excel, data_excel):
         def update_notebook(data_excel):
-            # print(type(data_excel))
+            self._counter += 1
+
             # print(data_excel)
-            # self.updateCurrentNotebookData(data_excel)
-            # self.FileSaver.saveFileTemporary(data_excel) # prend de la puissance de calcul parce que sauvegarde a chaque interaction
+            # if self._counter == 10:
+            #     self._counter = 0
+            
+            self.FileSaver.saveTemporaryRawExcelFromInputData(data_excel) # prend de la puissance de calcul parce que sauvegarde a chaque interaction
             # self.FileSaver.saveImportedFile(imported_excel)
 
             return ""

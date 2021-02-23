@@ -17,7 +17,6 @@ import os
 class AccessExcel():
     def __init__(self, ExcelPath):
         self.ExcelPath = ExcelPath
-        self.cleanOldExcels()
         self.useExampleIfNoImportedExcel()
 
         self.removeAllOldFiles()
@@ -51,16 +50,6 @@ class AccessExcel():
         if self.ExcelPath.copiedExcelPath() == True:
             self.removeCopiedExcel()
     
-    def cleanOldExcels(self):
-        self.removeCopiedExcel()
-
-
-    # def getDataframeOfImportedExcel(self):
-    #     if self.ExcelPath.importedExcelExists() == True:
-    #         path_excel = self.ExcelPath.importedExcelPath()
-    #         return self.getDataframeOf(path_excel)
-    #     else:
-    #         return self.getDataframeOfRawExcel()
 
     def updateExcel(self):
         if self.ExcelPath.importedExcelExists() == True:
@@ -73,9 +62,6 @@ class ExcelToDataframe():
         self.AccessExcel = AccessExcel(ExcelPath)
         self.ExcelPath = self.AccessExcel.ExcelPath
         
-
-
-
     def getDataframeOf(self, path_excel):
         xl_file = pd.ExcelFile(path_excel)
         dfs = {sheet_name: xl_file.parse(sheet_name) 
