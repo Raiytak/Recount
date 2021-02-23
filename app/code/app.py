@@ -35,7 +35,7 @@ ConvertDfToGraph = main_convert_df_to_graph.DataframeToGraph(DataframeToListDict
 
 # Object used to save an excel uploaded by the user
 import wrapper_dash.facilitator_dash.import_excel as import_excel
-FileSaver = import_excel.FileSaver(myAccessExcel)   
+FileSaver = import_excel.FileSaver(myExcelToDataframe)     
 
 
 
@@ -55,7 +55,7 @@ class AppDash():
         self.vueDashboardHome = vue_dashboard_home.AppDash(self.app, DateToDataframe, ConvertDfToGraph, FileSaver)
         self.vueCategoriesFile = vue_modify_categories_file.AppDash(self.app, myAccessCTAuthorized)
 
-        self.vueNotebookExcel = vue_notebook_excel.AppDash(self.app, myExcelToDataframe)
+        self.vueNotebookExcel = vue_notebook_excel.AppDash(self.app, myExcelToDataframe, FileSaver)
     
 
 

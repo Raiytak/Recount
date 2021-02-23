@@ -8,6 +8,12 @@ class MainCleanerExcel():
         self.ReviewerDataframe = ReviewerDataframe
         
     def updateExcel(self):
+    #     try:
+    #         self.mainCleaner()
+    #     except Exception:
+    #         self.ExcelToDataframe.AccessExcel.removeCopiedExcel()
+    #         self.mainCleaner()
+    # def mainCleaner(self):
         dataframe = self.ExcelToDataframe.getDataframe()
         
         dataframe = self.CleanerDf.addDateEverywhere(dataframe)
@@ -30,10 +36,15 @@ class MainCleanerExcel():
         self.ReviewerDataframe.checkConformity(dataframe)
         
         # Save the dataframe create into the appropriate excel (this must be copy_expenses.xlsx)
-        dataframe.to_excel(self.ExcelToDataframe.AccessExcel.ExcelPath.copiedExcelPath())
+        self.saveDataframeToCopiedExcel(dataframe)
 
 
 
     def getDataframeAndEqCol(self):
         return self.ExcelToDataframe.getDataframeAndEqCol()
+
+
+    def saveDataframeToCopiedExcel(self, dataframe):
+        self.ExcelToDataframe.AccessExcel.removeCopiedExcel()
+        dataframe.to_excel(self.ExcelToDataframe.AccessExcel.ExcelPath.copiedExcelPath())
 

@@ -83,7 +83,7 @@ class AppDash(EmptyVue):
         def update_graph(selected_date_str, selected_periode, imported_file):     
             
             # Processing the actions received form the user
-            self.FileSaver.saveFile(imported_file)
+            # self.FileSaver.saveFile(imported_file)
             dataframe = self.DateToDataframe.getDataframeFromDate(selected_date_str, selected_periode)
             list_dataframes = self.DateToDataframe.getListDataframeByWeekFromDate(selected_date_str, selected_periode)
 

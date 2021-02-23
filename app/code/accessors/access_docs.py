@@ -9,13 +9,18 @@ from shutil import copyfile
 import pandas as pd
 import json
 
+import os
+
 
 
 
 class AccessExcel():
     def __init__(self, ExcelPath):
         self.ExcelPath = ExcelPath
+        self.cleanOldExcels()
         self.useExampleIfNoImportedExcel()
+
+        self.removeAllOldFiles()
     
     def useExampleIfNoImportedExcel(self):
         if self.ExcelPath.importedExcelExists():
@@ -25,22 +30,54 @@ class AccessExcel():
 
     def copyImportedExcel(self):
         copyfile(self.ExcelPath.importedExcelPath(), self.ExcelPath.copiedExcelPath())
-
+        copyfile(self.ExcelPath.importedExcelPath(), self.ExcelPath.rawCopiedExcelPath())
     def copyExampleExcel(self):
         copyfile(self.ExcelPath.exampleExcelPath(), self.ExcelPath.copiedExcelPath())
+        copyfile(self.ExcelPath.exampleExcelPath(), self.ExcelPath.rawCopiedExcelPath())
+
+
+    def removeFile(self, path_file):
+        try:
+            os.remove(path_file)
+        except FileNotFoundError:
+            pass
+    def removeCopiedExcel(self):
+        self.removeFile(self.ExcelPath.copiedExcelPath())
+    def removeImportedExcel(self):
+        self.removeFile(self.ExcelPath.importedExcelPath())
+    def removeAllOldFiles(self):
+        if self.ExcelPath.importedExcelExists() == True:
+            self.removeImportedExcel()
+        if self.ExcelPath.copiedExcelPath() == True:
+            self.removeCopiedExcel()
     
-    def getDataframeOfExcel(self):
-        path_excel = self.ExcelPath.copiedExcelPath()
-        if '.csv' in path_excel:
-            # Assume that the user uploaded a CSV file
-            df = pd.read_csv(io.StringIO(decoded.decode('utf-8')))
-        elif '.xlsx' in path_excel:
-            # Assume that the user uploaded an excel file
-            xl_file = pd.ExcelFile(path_excel)
-        # elif '.xls' in filename:
-            # Assume that the user uploaded an excel file
-            # df = pd.read_excel(io.BytesIO(decoded))
-            
+    def cleanOldExcels(self):
+        self.removeCopiedExcel()
+
+
+    # def getDataframeOfImportedExcel(self):
+    #     if self.ExcelPath.importedExcelExists() == True:
+    #         path_excel = self.ExcelPath.importedExcelPath()
+    #         return self.getDataframeOf(path_excel)
+    #     else:
+    #         return self.getDataframeOfRawExcel()
+
+    def updateExcel(self):
+        if self.ExcelPath.importedExcelExists() == True:
+            self.copyImportedExcel()
+
+
+# This class load the copy_expenses.xmlx file in code/data and converts it to a dataframe used by other functions
+class ExcelToDataframe():
+    def __init__(self, ExcelPath):
+        self.AccessExcel = AccessExcel(ExcelPath)
+        self.ExcelPath = self.AccessExcel.ExcelPath
+        
+
+
+
+    def getDataframeOf(self, path_excel):
+        xl_file = pd.ExcelFile(path_excel)
         dfs = {sheet_name: xl_file.parse(sheet_name) 
                 for sheet_name in xl_file.sheet_names}
         try:
@@ -48,25 +85,27 @@ class AccessExcel():
         except KeyError:
             return dfs["Sheet1"]
 
-
-# This class load the copy_expenses.xmlx file in code/data and converts it to a dataframe used by other functions
-class ExcelToDataframe():
-    def __init__(self, ExcelPath):
-        self.AccessExcel = AccessExcel(ExcelPath)
-        self.updatDataframe()
-        
+    def getDataframeOfExcel(self):
+        self.AccessExcel.updateExcel()
+        path_excel = self.ExcelPath.copiedExcelPath()
+        return self.getDataframeOf(path_excel)
     def getDataframe(self):
-        return self._dfExcel
+        return self.getDataframeOfExcel()
+
+    def getDataframeOfRawExcel(self):
+        path_excel = self.ExcelPath.rawCopiedExcelPath()
+        return self.getDataframeOf(path_excel)
+    def getDataframeOfExampleExcel(self):
+        path_excel = self.ExcelPath.exampleExcelPath()
+        return self.getDataframeOf(path_excel)
+    def getDataframeOfImportedFile(self):
+        return self.getDataframeOf(self.AccessExcel.ExcelPath.importedExcelPath())
     
     def getDataframeAndEqCol(self):
-        self.updatDataframe()
         equivalent_columns = self.getEquivalentColumns()
         dataframe = self.getDataframe()
         return dataframe, equivalent_columns
     
-    def updatDataframe(self):
-        dataframe = self.AccessExcel.getDataframeOfExcel()
-        self._dfExcel = dataframe
     
     # This works like this :
     #   - "column excel" : ["column sql"]

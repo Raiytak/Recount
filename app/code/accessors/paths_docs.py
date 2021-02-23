@@ -43,11 +43,16 @@ class ExcelPath(ApplicationDataPath):
         self._source_excel_path = self.importedExcelPath()
 
     def nameImportedExcel(self):
-        return "imported_excel"
+        return "imported_excel.xlsx"
+
+    def nameImportedExcelOfTypeCSVTemporary(self):
+        return "imported_temporary_excel.csv"
+
+        
         
     def importedExcelPath(self):
         path_file = self.getDataPath()
-        name_file = "imported_expenses.xlsx"
+        name_file = self.nameImportedExcel()
         path_excel = path_file + "/" + name_file
         return path_excel
     
@@ -56,6 +61,12 @@ class ExcelPath(ApplicationDataPath):
         name_file = "copy_expenses.xlsx"
         project_excel = path_file + "/" + name_file
         return project_excel
+    
+    def rawCopiedExcelPath(self):
+        path_file = self.getDataPath()
+        name_file = "raw_copy_expenses.xlsx"
+        raw_copy_excel = path_file + "/" + name_file
+        return raw_copy_excel
 
     def exampleExcelPath(self):
         path_file = self.getMainPath()
@@ -66,6 +77,12 @@ class ExcelPath(ApplicationDataPath):
 
     def importedExcelExists(self):
         is_present = os.path.exists(self.importedExcelPath())
+        return is_present
+    def copiedExcelExists(self):
+        is_present = os.path.exists(self.copiedExcelPath())
+        return is_present
+    def rawCopiedExcelExists(self):
+        is_present = os.path.exists(self.rawCopiedExcelPath())
         return is_present
 
 

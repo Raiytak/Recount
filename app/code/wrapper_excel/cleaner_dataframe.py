@@ -20,7 +20,10 @@ class CleanerDataframe():
         def convertDatetimeToSQLFormat(datetime_elem):
             time_sql_format = datetime_elem.strftime("%Y-%m-%d")
             return time_sql_format
-        dataframe["Date"] = dataframe["Date"].apply(convertDatetimeToSQLFormat)
+        try:
+            dataframe["Date"] = dataframe["Date"].apply(convertDatetimeToSQLFormat)
+        except AttributeError:
+            pass
         return dataframe
     
     def removeSummationLines(self, dataframe):
@@ -57,6 +60,10 @@ class CleanerDataframe():
         list_columns = ["Sum Euros", "Sum Dollars",
                         "Excess E", "Excess D", "TemporaryDescription"]
         dataframe = dataframe.drop(columns=list_columns)
+        try:
+            dataframe = dataframe.drop(columns=["Unnamed: 0"])
+        except Exception as e:
+            print(e)
         return dataframe
         
     
