@@ -40,14 +40,17 @@ class ReusableNotebook():
         notebook_excel_div = dash_table.DataTable(
             id=self.notebook_name,
             columns=[
-                    {"name": i, "id": i, "editable":False} if i == "ID"
-                    else {"name": i, "id": i, "type":"numeric"} if (i == "Expense Euros" or i == "Expense Dollars" or i == "Sum Euros" or i == "Sum Dollars") 
-                    else {"name": i, "id": i, "type":"text"} if (i == "Description" or i == "Category" or i == "Trip") 
-                    else {"name": i, "id": i, "type":"datetime"} if i == "Date" 
-                    else {"name": i, "id": i}
+                    {"name": i, "id": i, "editable":False, "hideable":True, "renamable":True} if i == "ID"
+                    else {"name": i, "id": i, "type":"numeric", "hideable":True} if (i == "Expense Euros" or i == "Expense Dollars" or i == "Sum Euros" or i == "Sum Dollars") 
+                    else {"name": i, "id": i, "type":"text", "hideable":True} if (i == "Description" or i == "Category" or i == "Trip") 
+                    else {"name": i, "id": i, "type":"datetime", "hideable":True} if i == "Date" 
+                    else {"name": i, "id": i, "hideable":True}
                     for i in dataframe.columns],
             data=self.getData(),
             editable=True,
+
+            # row_selectable="multi",
+            row_deletable=True,
 
             export_columns='all',
             export_format='xlsx',
@@ -65,3 +68,11 @@ class ReusableNotebook():
 
     def getDashNotebookCallbackAsOutput(self):
         return Output(self.notebook_name, 'data')
+
+
+    def getDashNotebookCallbackAsStateData(self):
+        return State(self.notebook_name, 'data')
+    def getDashNotebookCallbackAsStateColumns(self):
+        return State(self.notebook_name, 'columns')
+
+

@@ -49,13 +49,21 @@ class ElementsVue():
         return self.ReusableNotebook.getDashNotebookCallback()
     def getNotebookCallbackAsOutput(self):
         return self.ReusableNotebook.getDashNotebookCallbackAsOutput()
+    def getNotebookCallbackAsStateData(self):
+        return self.ReusableNotebook.getDashNotebookCallbackAsStateData()
+    def getNotebookCallbackAsStateColumn(self):
+        return self.ReusableNotebook.getDashNotebookCallbackAsStateColumns()
 
     def getMessageToUserUpdateCallback(self):
         return self.ReusableOutputs.getMessageToUserCallback()
     def getMessageToUserImportExcelInfoCallback(self):
         return self.ReusableOutputs.getMessageToUserImportExcelInfoCallback()
 
-        
+    
+    def getAddRowDiv(self):
+        return html.Button('Add Row', id='add-rows-button-notebook', n_clicks=0)
+    def getAddRowCallback(self):
+        return Input('add-rows-button-notebook', 'n_clicks')
 
 
 
@@ -71,19 +79,25 @@ class EmptyVue():
         input_div = self.elementsVue.getInputDiv()
         # output_div = self.elementsVue.getOutputDiv()
         excel_notebook = self.elementsVue.getNotebookDiv()
+        add_row_div = self.elementsVue.getAddRowDiv()
 
-        total_vue = html.Div([input_div, excel_notebook])
+        total_vue = html.Div([input_div, excel_notebook, add_row_div])
         return total_vue
 
 
     def getUpdateInputCallbacks(self):
         return self.elementsVue.getInputCallbacks()
-
     def getNotebookAsInputCallback(self):
         return self.elementsVue.getNotebookCallback()
+    def getAddRowCallback(self):
+        return self.elementsVue.getAddRowCallback()
 
     def getNotebookAsOutputCallback(self):
         return self.elementsVue.getNotebookCallbackAsOutput()
+    def getNotebookCallbackAsStateColumn(self):
+        return self.elementsVue.getNotebookCallbackAsStateColumn()
+    def getNotebookCallbackAsStateData(self):
+        return self.elementsVue.getNotebookCallbackAsStateData()
 
     def getMessageToUserUpdateCallback(self):
         return self.elementsVue.getMessageToUserUpdateCallback()
@@ -102,7 +116,8 @@ class AppDash(EmptyVue):
         self.AccessExcel = self.ExcelToDataframe.AccessExcel
         self.FileSaver = FileSaver
 
-        self._counter = 0
+        self._counter_copied_excel = 0
+        self._counter_add_row = 0
 
         self.setCallback()
 
@@ -113,28 +128,46 @@ class AppDash(EmptyVue):
             [self.getNotebookAsInputCallback(), self.getUpdateInputCallbacks()]
             )
         # def update_notebook(selected_date_str, selected_periode, imported_excel, data_excel):
-        def update_data(data_excel, n_clicks_submit):
-            if self._counter != n_clicks_submit:
+        def update_copied_excel(data_notebook, n_clicks_submit):
+            if self._counter_copied_excel != n_clicks_submit:
                 print("data submited")
                 print(n_clicks_submit)
-                self._counter == n_clicks_submit
-                message_to_user = self.FileSaver.saveTemporaryRawExcelFromInputData(data_excel) # prend de la puissance de calcul parce que sauvegarde a chaque interaction
+                self._counter_copied_excel == n_clicks_submit
+                message_to_user = self.FileSaver.saveTemporaryRawExcelFromInputData(data_notebook) # prend de la puissance de calcul parce que sauvegarde a chaque interaction
                 return message_to_user
             return ""
 
 
         @self.app.callback(
             [self.getMessageToUserImportExcelInfoCallback(), self.getNotebookAsOutputCallback()],
-            self.ReusableInputs.getImportExcelCallback())
-        def update_notebook(imported_excel):     
-            # Save the imported excel, if there is one to save
-            message_to_user = self.FileSaver.saveImportedFile(imported_excel)
-            # Update the imported excel, if there is an imported excel present
+            [self.ReusableInputs.getImportExcelCallback(), self.getAddRowCallback()],
+            self.getNotebookCallbackAsStateData(),
+            self.getNotebookCallbackAsStateColumn()
+            )
+        def import_excel_and_update_notebook(imported_excel, add_row_n_clicks, data_notebook, columns_notebook):   
+            message_to_user = ""
+            data_for_output = data_notebook
 
-            # dataframme = self.AccessExcel.getDataframeOfRawExcel()
-            dataframme = self.ReusableNotebook.getDataframe()
-            data_for_output = self.FileSaver.translateDataframeToData(dataframme)
+            if imported_excel != None:
+                # Save the imported excel, if there is one to save
+                message_to_user = self.FileSaver.saveImportedFile(imported_excel)
+                # Update the imported excel, if there is an imported excel present
+
+                # dataframme = self.AccessExcel.getDataframeOfRawExcel()
+                dataframme = self.ReusableNotebook.getDataframe()
+                data_for_output = self.FileSaver.translateDataframeToData(dataframme)
             
+            if self._counter_add_row != add_row_n_clicks:
+                self._counter_add_row = add_row_n_clicks
+                next_id = data_notebook[-1]["ID"]+1
+                print(next_id)
+                data_notebook.append({
+                    c['id']:('' if c['id'] != "ID" else next_id)
+                    for c in columns_notebook 
+                    })
+                message_to_user = "all is ok" 
+                data_for_output = data_notebook
+
             return message_to_user, data_for_output
 
 
