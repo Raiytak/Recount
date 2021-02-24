@@ -4,6 +4,8 @@ import dash_html_components as html
 import dash_core_components as dcc
 from dash.dependencies import Input, Output, State
 
+import pandas as pd
+
 
 
 class ReusableNotebook():
@@ -14,7 +16,18 @@ class ReusableNotebook():
         self.notebook_name = self.name_vue+"notebook-excel"
 
     def getDataframe(self):
-        return self.ExcelToDataframe.getDataframeOfRawExcel()
+        dataframe =  self.ExcelToDataframe.getDataframeOfRawExcel()
+        dataframe = self.changeFormatOfDataframe(dataframe)
+        return dataframe
+
+    def changeFormatOfDataframe(self, dataframe):
+        try:
+            dataframe["Date"] = pd.to_datetime(dataframe["Date"]).dt.strftime('%Y-%m-%d')
+            return dataframe
+        except Exception as e:
+            print(" ->- Error reusable_notebbok -<- ")
+            print(str(e))
+            return dataframe
 
     def getData(self):
         dataframe = self.getDataframe()

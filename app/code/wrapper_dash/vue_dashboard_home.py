@@ -80,10 +80,10 @@ class AppDash(EmptyVue):
             self.getOutputCallbacks(),
             self.getInputCallbacks()
             )
-        def update_graph(selected_date_str, selected_periode, imported_file):     
+        def update_graph(selected_date_str, selected_periode, imported_excel):     
             
             # Processing the actions received form the user
-            # self.FileSaver.saveFile(imported_file)
+            self.FileSaver.saveImportedFile(imported_excel)
             dataframe = self.DateToDataframe.getDataframeFromDate(selected_date_str, selected_periode)
             list_dataframes = self.DateToDataframe.getListDataframeByWeekFromDate(selected_date_str, selected_periode)
 

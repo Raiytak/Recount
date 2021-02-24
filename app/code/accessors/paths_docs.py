@@ -83,12 +83,10 @@ class ExcelPath(ApplicationDataPath):
     def pathExists(self, my_path):
         is_present = os.path.exists(my_path)
         return is_present
-    def importedExcelExists(self):
-        return self.pathExists(self.importedExcelPath())
-    def copiedExcelExists(self):
-        return self.pathExists(self.copiedExcelPath())
     def rawCopiedExcelExists(self):
         return self.pathExists(self.rawCopiedExcelPath())
+    def copiedExcelExists(self):
+        return self.pathExists(self.copiedExcelPath())
 
 
 

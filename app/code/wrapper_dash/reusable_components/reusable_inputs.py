@@ -15,6 +15,7 @@ class ReusableSingleInputs():
         self.date_div_period_id = self.name_vue+"input-radio"
         self.date_div_date_id = self.name_vue+"input-date"
         self.import_excel_id = self.name_vue+'upload-data'
+        self.submit_id = self.name_vue+'submit-button'
         self.location_id = 'default-url'
 
 
@@ -22,8 +23,8 @@ class ReusableSingleInputs():
     def getDateDiv(self):
         date_input = dcc.DatePickerSingle(
             self.date_div_date_id,
-            # date = datetime.datetime(year=2019,month=9,day=1),
-            date = datetime.datetime.today()-relativedelta(months=5),
+            date = datetime.datetime(year=2019,month=9,day=1),
+            # date = datetime.datetime.today()-relativedelta(months=5),
             display_format="D/M/Y"
         )
         return date_input
@@ -50,13 +51,24 @@ class ReusableSingleInputs():
     def getImportExcelDiv(self):
         excel_input = dcc.Upload(
             id=self.import_excel_id,
-            children=html.Div('Import csv File'),
+            children=html.Div('Import excel File'),
             multiple=False
         )
         excel_input_div = html.Button(excel_input)
         return excel_input_div
     def getImportExcelCallback(self):
         callback = Input(self.import_excel_id, 'contents')
+        return callback
+
+    def getUpdateDataDiv(self):
+        update_input = html.Button(
+            id=self.submit_id,
+            children='Update/Submit data',
+            n_clicks=0
+        )
+        return update_input
+    def getUpdateDataCallback(self):
+        callback = Input(self.submit_id, 'n_clicks')
         return callback
 
 

@@ -8,12 +8,7 @@ class MainCleanerExcel():
         self.ReviewerDataframe = ReviewerDataframe
         
     def updateExcel(self):
-    #     try:
-    #         self.mainCleaner()
-    #     except Exception:
-    #         self.ExcelToDataframe.AccessExcel.removeCopiedExcel()
-    #         self.mainCleaner()
-    # def mainCleaner(self):
+        self.ExcelToDataframe.AccessExcel._updateExcel()
         dataframe = self.ExcelToDataframe.getDataframe()
         
         dataframe = self.CleanerDf.addDateEverywhere(dataframe)
@@ -45,6 +40,6 @@ class MainCleanerExcel():
 
 
     def saveDataframeToCopiedExcel(self, dataframe):
-        self.ExcelToDataframe.AccessExcel.removeCopiedExcel()
+        # self.ExcelToDataframe.AccessExcel.removeCopiedExcel()
         dataframe.to_excel(self.ExcelToDataframe.AccessExcel.ExcelPath.copiedExcelPath())
 

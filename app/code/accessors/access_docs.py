@@ -17,19 +17,18 @@ import os
 class AccessExcel():
     def __init__(self, ExcelPath):
         self.ExcelPath = ExcelPath
-        self.useExampleIfNoImportedExcel()
+        self.useExampleIfNoExcel()
 
-        self.removeAllOldFiles()
+        # self.removeAllOldFiles()
     
-    def useExampleIfNoImportedExcel(self):
-        if self.ExcelPath.importedExcelExists():
-            self.copyImportedExcel()
+    def useExampleIfNoExcel(self):
+        if self.ExcelPath.rawCopiedExcelExists():
+            self.copyRawExcel()
         else:
             self.copyExampleExcel()
 
-    def copyImportedExcel(self):
-        copyfile(self.ExcelPath.importedExcelPath(), self.ExcelPath.copiedExcelPath())
-        copyfile(self.ExcelPath.importedExcelPath(), self.ExcelPath.rawCopiedExcelPath())
+    def copyRawExcel(self):
+        copyfile(self.ExcelPath.rawCopiedExcelPath(), self.ExcelPath.copiedExcelPath())
     def copyExampleExcel(self):
         copyfile(self.ExcelPath.exampleExcelPath(), self.ExcelPath.copiedExcelPath())
         copyfile(self.ExcelPath.exampleExcelPath(), self.ExcelPath.rawCopiedExcelPath())
@@ -42,18 +41,18 @@ class AccessExcel():
             pass
     def removeCopiedExcel(self):
         self.removeFile(self.ExcelPath.copiedExcelPath())
-    def removeImportedExcel(self):
-        self.removeFile(self.ExcelPath.importedExcelPath())
+    def removeRawCopiedExcel(self):
+        self.removeFile(self.ExcelPath.rawCopiedExcelPath())
     def removeAllOldFiles(self):
-        if self.ExcelPath.importedExcelExists() == True:
-            self.removeImportedExcel()
+        if self.ExcelPath.rawCopiedExcelExists() == True:
+            self.removeRawCopiedExcel()
         if self.ExcelPath.copiedExcelPath() == True:
             self.removeCopiedExcel()
     
 
-    def updateExcel(self):
-        if self.ExcelPath.importedExcelExists() == True:
-            self.copyImportedExcel()
+    def _updateExcel(self):
+        if self.ExcelPath.rawCopiedExcelExists() == True:
+            self.copyRawExcel()
 
 
 # This class load the copy_expenses.xmlx file in code/data and converts it to a dataframe used by other functions
@@ -72,7 +71,6 @@ class ExcelToDataframe():
             return dfs["Sheet1"]
 
     def getDataframeOfExcel(self):
-        self.AccessExcel.updateExcel()
         path_excel = self.ExcelPath.copiedExcelPath()
         return self.getDataframeOf(path_excel)
     def getDataframe(self):
@@ -84,8 +82,6 @@ class ExcelToDataframe():
     def getDataframeOfExampleExcel(self):
         path_excel = self.ExcelPath.exampleExcelPath()
         return self.getDataframeOf(path_excel)
-    def getDataframeOfImportedFile(self):
-        return self.getDataframeOf(self.AccessExcel.ExcelPath.importedExcelPath())
     
     def getDataframeAndEqCol(self):
         equivalent_columns = self.getEquivalentColumns()
