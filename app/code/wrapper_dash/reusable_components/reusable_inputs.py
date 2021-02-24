@@ -8,15 +8,49 @@ from dateutil.relativedelta import *
 
 
 
-class ReusableSingleInputs():
+
+class UniqueReusableSingleInputs():
     def __init__(self, name_vue):
         self.name_vue = name_vue
+
+        self.add_div_div = self.name_vue+'add-div'
+        self.remove_div_div = self.name_vue+'remove-div'
+
+    def getCallbackClicksOf(self, id_div):
+        callback = Input(id_div, 'n_clicks')
+        return callback
+
+    def getAddDivDiv(self, name_div, div_children):
+        id_div = self.add_div_div+name_div
+        add_div = html.Button(
+            id=self.add_div_div,
+            children=div_children,
+            n_clicks=0
+        )
+        return add_div, id_div
+
+    def getRemoveDivDiv(self, name_div, div_children):
+        id_div = self.remove_div_div+name_div
+        remove_div = html.Button(
+            id=id_div,
+            children=div_children,
+            n_clicks=0
+        )
+        return remove_div, id_div
+
+
+
+class ReusableSingleInputs(UniqueReusableSingleInputs):
+    def __init__(self, name_vue):
+        super().__init__(name_vue)
 
         self.date_div_period_id = self.name_vue+"input-radio"
         self.date_div_date_id = self.name_vue+"input-date"
         self.import_excel_id = self.name_vue+'upload-data'
         self.submit_id = self.name_vue+'submit-button'
         self.location_id = 'default-url'
+        self.add_div_div = self.name_vue+'add-div'
+        self.remove_div_div = self.name_vue+'remove-div'
 
 
 
@@ -83,7 +117,12 @@ class ReusableSingleInputs():
 
 
 
-class ReusableInputs(ReusableSingleInputs):
+
+
+
+
+
+class ReusableInputs(ReusableSingleInputs, UniqueReusableSingleInputs):
     def __init__(self, name_vue):
         super().__init__(name_vue)
 

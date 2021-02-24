@@ -95,6 +95,11 @@ class CategoryAndThemeAuthorizedPath(ApplicationDataPath):
         # path_conv = self.getDataPath() + "/themes_subthemes_authorized.json"
         path_conv = self.getDataPath() + "/categories/categories_themes_authorized.json"
         return path_conv
+
+    def getCategoryAndThemeTestPath(self):
+        # path_conv = self.getDataPath() + "/themes_subthemes_authorized.json"
+        path_conv = self.getDataPath() + "/categories/categories_themes_authorized_test.json"
+        return path_conv
     
     
 

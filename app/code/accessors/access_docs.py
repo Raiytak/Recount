@@ -147,6 +147,13 @@ class AccessCTAuthorized():
         return json_formatted_str
 
 
+    def getTestJson(self):
+        data = {}
+        with open(self.TSTAuth.getCategoryAndThemeTestPath(), "r") as json_file:
+            data = json.load(json_file)
+        return data
+
+
 
 class AccessNotebookConfig():
     def __init__(self, NotebookConfigPath):
@@ -169,6 +176,8 @@ class AccessNotebookConfig():
         data = self.getJson()
         json_formatted_str = json.dumps(data, indent=4) 
         return json_formatted_str
+
+        
                 
                 
                 
