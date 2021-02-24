@@ -68,11 +68,11 @@ class ElementsVue():
 
 
 class EmptyVue():
-    def __init__(self, ExcelToDataframe):
+    def __init__(self, ExcelToDataframe, ConfigNotebookExcelSaver):
         self.name_vue = "notebook-excel-"
         self.ReusableInputs = reusable_inputs.ReusableInputs(self.name_vue)
         self.ReusableOutputs = reusable_outputs.ReusableOutputs(self.name_vue)
-        self.ReusableNotebook = reusable_notebook.ReusableNotebook(self.name_vue, ExcelToDataframe)
+        self.ReusableNotebook = reusable_notebook.ReusableNotebook(self.name_vue, ExcelToDataframe, ConfigNotebookExcelSaver)
         self.elementsVue = ElementsVue(ExcelToDataframe, self.ReusableInputs, self.ReusableOutputs, self.ReusableNotebook)
         
     def getEmptyVue(self):
@@ -109,12 +109,11 @@ class EmptyVue():
 
 # Dash Application
 class AppDash(EmptyVue):
-    def __init__(self, app, ExcelToDataframe, FileSaver):
-        super().__init__(ExcelToDataframe)
+    def __init__(self, app, ExcelToDataframe, FileSaver, ConfigNotebookExcelSaver):
+        super().__init__(ExcelToDataframe, ConfigNotebookExcelSaver)
         self.app = app
-        self.ExcelToDataframe = ExcelToDataframe
-        self.AccessExcel = self.ExcelToDataframe.AccessExcel
         self.FileSaver = FileSaver
+        self.ConfigNotebookExcelSaver = ConfigNotebookExcelSaver
 
         self._counter_copied_excel = 0
         self._counter_add_row = 0
@@ -125,15 +124,17 @@ class AppDash(EmptyVue):
     def setCallback(self):
         @self.app.callback(
             self.getMessageToUserUpdateCallback(),
-            [self.getNotebookAsInputCallback(), self.getUpdateInputCallbacks()]
+            [self.getNotebookAsInputCallback(), self.getUpdateInputCallbacks()],
+            self.getNotebookCallbackAsStateColumn()
             )
         # def update_notebook(selected_date_str, selected_periode, imported_excel, data_excel):
-        def update_copied_excel(data_notebook, n_clicks_submit):
+        def update_copied_excel(data_notebook, n_clicks_submit, columns_notebook):
             if self._counter_copied_excel != n_clicks_submit:
-                print("data submited")
-                print(n_clicks_submit)
                 self._counter_copied_excel == n_clicks_submit
                 message_to_user = self.FileSaver.saveTemporaryRawExcelFromInputData(data_notebook) # prend de la puissance de calcul parce que sauvegarde a chaque interaction
+                
+                self.ConfigNotebookExcelSaver.updateColumnsName(columns_notebook)
+                
                 return message_to_user
             return ""
 

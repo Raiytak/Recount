@@ -25,13 +25,6 @@ class ApplicationDataPath():
         path_main_folder = self.config_json["paths"]["PATH_TO_MAIN_FOLDER"]
         return path_main_folder
 
-    def popEnd(self, name_directory):
-        size = len(name_directory)
-        for i in range(size-1,0,-1):
-            if name_directory[i] == "/":
-                break
-        return name_directory[0:i]
-
 
 # Path to the excels used : 
 #   the source excel (from the user or excel_example) 
@@ -92,7 +85,7 @@ class ExcelPath(ApplicationDataPath):
 
 class DescrToThemePath(ApplicationDataPath):        
     def getDescriptionToThemePath(self):
-        path_conv = self.getDataPath() + "/convert_descr_to_theme.json"
+        path_conv = self.getDataPath() + "/categories/convert_descr_to_theme.json"
         return path_conv
     
 
@@ -100,7 +93,19 @@ class DescrToThemePath(ApplicationDataPath):
 class CategoryAndThemeAuthorizedPath(ApplicationDataPath):        
     def getCategoryAndThemePath(self):
         # path_conv = self.getDataPath() + "/themes_subthemes_authorized.json"
-        path_conv = self.getDataPath() + "/categories_themes_authorized.json"
+        path_conv = self.getDataPath() + "/categories/categories_themes_authorized.json"
         return path_conv
     
+    
+
+
+class NotebookConfigPath(ApplicationDataPath):        
+    def getNotebookConfigPath(self):
+        # path_conv = self.getDataPath() + "/themes_subthemes_authorized.json"
+        path_conf = self.getDataPath() + "/notebook_excel/config_notebook.json"
+        return path_conf
+    
+
+
+
 

@@ -15,6 +15,7 @@ config_json = myAccessConfig.getConfig()
 import accessors.paths_docs as paths_docs
 myExcelPath = paths_docs.ExcelPath(config_json)
 myCatThemeAuthPath = paths_docs.CategoryAndThemeAuthorizedPath(config_json)
+myNotebookExcelConfigPath = paths_docs.NotebookConfigPath(config_json)
 
 # Access the documents, to get the value and update those. Need the paths to work.
 import accessors.access_docs as access_docs
@@ -22,20 +23,22 @@ myAccessExcel = access_docs.AccessExcel(myExcelPath)
 myExcelToDataframe = access_docs.ExcelToDataframe(myExcelPath)
 myAccessCTAuthorized = access_docs.AccessCTAuthorized(myCatThemeAuthPath)
 authorizedCT_json = myAccessCTAuthorized.getJson()
-
+myAccessNotebookExcelConfig = access_docs.AccessNotebookConfig(myNotebookExcelConfigPath)
 
 # Objects used to clean and convert the data into dataframe and objects readable for the dash app
 # import wrapper_dash.facilitator_dash.prepare_dashboard as prepare_dashboard
-import wrapper_dash.facilitator_dash.main_convert_df_to_graph as main_convert_df_to_graph
-import wrapper_dash.facilitator_dash.convert_ld_to_graph as convert_ld_to_graph
 import wrapper_dash.facilitator_dash.convert_df_to_ld as convert_df_to_ld
 DataframeToListDict = convert_df_to_ld.DataframeToListOfDicts()
+import wrapper_dash.facilitator_dash.convert_ld_to_graph as convert_ld_to_graph
 ListDictToGraph = convert_ld_to_graph.ListDictToGraph(authorizedCT_json)
+import wrapper_dash.facilitator_dash.main_convert_df_to_graph as main_convert_df_to_graph
 ConvertDfToGraph = main_convert_df_to_graph.DataframeToGraph(DataframeToListDict, ListDictToGraph)
 
 # Object used to save an excel uploaded by the user
 import wrapper_dash.facilitator_dash.import_excel as import_excel
-FileSaver = import_excel.FileSaver(myExcelToDataframe)     
+FileSaver = import_excel.FileSaver(myExcelToDataframe)    
+import wrapper_dash.facilitator_dash.save_config as save_config
+ConfigNotebookExcelSaver = save_config.ConfigNotebookExcelSaver(myAccessNotebookExcelConfig)     
 
 
 
@@ -55,7 +58,7 @@ class AppDash():
         self.vueDashboardHome = vue_dashboard_home.AppDash(self.app, DateToDataframe, ConvertDfToGraph, FileSaver)
         self.vueCategoriesFile = vue_modify_categories_file.AppDash(self.app, myAccessCTAuthorized)
 
-        self.vueNotebookExcel = vue_notebook_excel.AppDash(self.app, myExcelToDataframe, FileSaver)
+        self.vueNotebookExcel = vue_notebook_excel.AppDash(self.app, myExcelToDataframe, FileSaver, ConfigNotebookExcelSaver)
     
 
 

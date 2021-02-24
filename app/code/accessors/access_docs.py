@@ -145,6 +145,30 @@ class AccessCTAuthorized():
         data = self.getJson()
         json_formatted_str = json.dumps(data, indent=4) 
         return json_formatted_str
+
+
+
+class AccessNotebookConfig():
+    def __init__(self, NotebookConfigPath):
+        self.NotebookConfigPath = NotebookConfigPath
+    
+    def getJson(self):
+        data = {}
+        with open(self.NotebookConfigPath.getNotebookConfigPath(), "r") as json_file:
+            data = json.load(json_file)
+        return data
+    
+    def updateJson(self, data):
+        with open(self.NotebookConfigPath.getNotebookConfigPath(), "w") as json_file:
+            try:
+                json.dump(data, json_file, indent=4)
+            except TypeError:
+                print("JSON of wrong type :\n", data)
+
+    def getPrettyJson(self):
+        data = self.getJson()
+        json_formatted_str = json.dumps(data, indent=4) 
+        return json_formatted_str
                 
                 
                 

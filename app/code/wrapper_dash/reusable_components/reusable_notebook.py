@@ -9,8 +9,9 @@ import pandas as pd
 
 
 class ReusableNotebook():
-    def __init__(self, name_vue, ExcelToDataframe):
+    def __init__(self, name_vue, ExcelToDataframe, ConfigNotebookExcelSaver):
         self.ExcelToDataframe = ExcelToDataframe
+        self.ConfigNotebookExcelSaver = ConfigNotebookExcelSaver
 
         self.name_vue = name_vue
         self.notebook_name = self.name_vue+"notebook-excel"
@@ -36,15 +37,25 @@ class ReusableNotebook():
     def getDataOfDataframe(self, dataframe):
         return dataframe.to_dict('records')
 
+
+    def getConfigJson(self):
+        return self.ConfigNotebookExcelSaver.getConfig()
+        
+    def getColumnsNameFromConfig(self):
+        config_json = self.getConfigJson()
+        column_names = config_json["columns_name"]
+        return column_names
+
     def getDashNotebookDivFromDataframe(self, dataframe):
+        columns_name = self.getColumnsNameFromConfig()
         notebook_excel_div = dash_table.DataTable(
             id=self.notebook_name,
             columns=[
-                    {"name": i, "id": i, "editable":False, "hideable":True, "renamable":True} if i == "ID"
-                    else {"name": i, "id": i, "type":"numeric", "hideable":True} if (i == "Expense Euros" or i == "Expense Dollars" or i == "Sum Euros" or i == "Sum Dollars") 
-                    else {"name": i, "id": i, "type":"text", "hideable":True} if (i == "Description" or i == "Category" or i == "Trip") 
-                    else {"name": i, "id": i, "type":"datetime", "hideable":True} if i == "Date" 
-                    else {"name": i, "id": i, "hideable":True}
+                         {"name": columns_name[i], "id": i, "editable":False, "hideable":True, "renamable":True} if i == "ID"
+                    else {"name": columns_name[i], "id": i, "type":"numeric", "hideable":True, "renamable":True} if (i == "Expense Euros" or i == "Expense Dollars" or i == "Sum Euros" or i == "Sum Dollars") 
+                    else {"name": columns_name[i], "id": i, "type":"text", "hideable":True, "renamable":True} if (i == "Description" or i == "Category" or i == "Trip") 
+                    else {"name": columns_name[i], "id": i, "type":"datetime", "hideable":True, "renamable":True} if i == "Date" 
+                    else {"name": columns_name[i], "id": i, "hideable":True, "renamable":True}
                     for i in dataframe.columns],
             data=self.getData(),
             editable=True,

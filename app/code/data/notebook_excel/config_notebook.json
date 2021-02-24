@@ -1,0 +1,18 @@
+
+{
+    "columns_name":{
+        "ID":"ID",
+        "Expense Euros":"Dépenses en Euros",
+        "Expense Dollars":"Dépenses en Dollars",
+        "Description":"Description",
+        "Date":"Date",
+        "Sum Euros":"Somme en Euros",
+        "Sum Dollars":"Somme en Dollars",
+        "Category":"Catégorie",
+        "Excess E":"Excès Euros",
+        "Excess D":"Excès Dollars",
+        "Type":"Moyen de payement",
+        "Trip":"Voyage"
+    }
+    
+}
