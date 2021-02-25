@@ -17,13 +17,16 @@ myExcelPath = paths_docs.ExcelPath(config_json)
 myCatThemeAuthPath = paths_docs.CategoryAndThemeAuthorizedPath(config_json)
 myNotebookExcelConfigPath = paths_docs.NotebookConfigPath(config_json)
 
-# Access the documents, to get the value and update those. Need the paths to work.
+# Access the documents, to get the values, dataframe and update the docs. Need the paths to work.
 import accessors.access_docs as access_docs
 myAccessExcel = access_docs.AccessExcel(myExcelPath)
-myExcelToDataframe = access_docs.ExcelToDataframe(myExcelPath)
 myAccessCTAuthorized = access_docs.AccessCTAuthorized(myCatThemeAuthPath)
-authorizedCT_json = myAccessCTAuthorized.getJson()
 myAccessNotebookExcelConfig = access_docs.AccessNotebookConfig(myNotebookExcelConfigPath)
+authorizedCT_json = myAccessCTAuthorized.getJson()
+
+import wrapper_excel.convert_excel_to_df as convert_excel_to_df
+myExcelToDataframe = convert_excel_to_df.ExcelToDataframe(myAccessExcel)
+
 
 # Objects used to clean and convert the data into dataframe and objects readable for the dash app
 # import wrapper_dash.facilitator_dash.prepare_dashboard as prepare_dashboard

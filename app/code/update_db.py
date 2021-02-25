@@ -7,27 +7,31 @@ def updatingByRemovingAllExistingRowsOfTable(wrapperTable):
     return updateDecorator
 
 
+
 import accessors.access_config as access_config
 myAccessConfig = access_config.AccessConfig()
 config_json = myAccessConfig.getConfig()
 
 import accessors.paths_docs as paths_docs
-import accessors.access_docs as access_docs
+myExcelPath = paths_docs.ExcelPath(config_json)
+myDescrToThemePath = paths_docs.DescrToThemePath(config_json)
+myCatThemeAuthPath = paths_docs.CategoryAndThemeAuthorizedPath(config_json)
 
+import accessors.access_docs as access_docs
+myAccessDescrToTheme = access_docs.AccessDescrToTheme(myDescrToThemePath)
+myAccessCTAuthorized = access_docs.AccessCTAuthorized(myCatThemeAuthPath)
+myAccessExcel = access_docs.AccessExcel(myExcelPath)
+
+
+
+import wrapper_excel.convert_excel_to_df as convert_excel_to_df
 import wrapper_excel.main_cleaner as main_cleaner
 import wrapper_excel.cleaner_dataframe as cleaner_dataframe
 import wrapper_excel.fill_blanks as fill_blanks
 import wrapper_excel.check_conformity as check_conformity
 
 
-myExcelPath = paths_docs.ExcelPath(config_json)
-myDescrToThemePath = paths_docs.DescrToThemePath(config_json)
-myCatThemeAuthPath = paths_docs.CategoryAndThemeAuthorizedPath(config_json)
-
-myExcelToDataframe = access_docs.ExcelToDataframe(myExcelPath)
-myAccessDescrToTheme = access_docs.AccessDescrToTheme(myDescrToThemePath)
-myAccessCTAuthorized = access_docs.AccessCTAuthorized(myCatThemeAuthPath)
-
+myExcelToDataframe = convert_excel_to_df.ExcelToDataframe(myAccessExcel)
 myCleanerDataframe = cleaner_dataframe.CleanerDataframe()
 myIntelligentFill = fill_blanks.IntelligentFill(myAccessDescrToTheme)
 myReviewerDataframe = check_conformity.ReviewerDataframe(myAccessCTAuthorized)
