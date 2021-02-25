@@ -16,7 +16,15 @@
     "other": {
         "un":["post", "present", "printer", "hairdresser", "withdrawal", "authorization"],
         "deux":["a"],
-        "trois":["aba", "baba"]
+        "trois":{
+            "trois":{
+                "quatre":{
+                    "cinq":{
+                        "six":["aba", "baba"]
+                    }
+                }
+            }
+        }
     }
 
 }

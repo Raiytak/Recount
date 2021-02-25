@@ -11,6 +11,8 @@ class ParserJsonToHtml():
         self.ReusableInputs = ReusableInputs
         self.ReusableOutputs = ReusableOutputs
 
+        self.max_depth = 4
+
 
 
     def getFullColumnStyle(self):
@@ -63,14 +65,22 @@ class ParserJsonToHtml():
 
     def getToolkitOf(self, name_parent, name_div, depth):
         name_toolkit = name_parent + "-" + name_div
-        hx_toolkit = html.Div(
-            children=[
-                self.getHDivOfDepth(name_parent, name_div, depth),
-                self.getAddDivDiv(name_toolkit, depth),
-                self.getRemoveDivDiv(name_toolkit, depth)
-            ],
-            style=self.getFullColumnStyle()
-        )
+        if depth < 4:
+            hx_toolkit = html.Div(
+                children=[
+                    self.getHDivOfDepth(name_parent, name_div, depth),
+                    self.getAddDivDiv(name_toolkit, depth),
+                    self.getRemoveDivDiv(name_toolkit, depth)
+                ],
+                style=self.getFullColumnStyle()
+            )
+        else:
+            hx_toolkit = html.Div(
+                children=[
+                    self.getHDivOfDepth(name_parent, name_div, depth)
+                ],
+                style=self.getFullColumnStyle()
+            )
         return hx_toolkit
 
     # root for the start of name_parent
@@ -96,7 +106,10 @@ class ParserJsonToHtml():
 
             elif type(elements_of_dict) == dict:
                 depth +=1
-                html_embody_child = self.getEmbodyOfDict(key, elements_of_dict, depth)
+                if depth > self.max_depth:
+                    html_embody_child = self.getFinalGroupOfHDivOfListAndDepth(key, elements_of_dict.keys(), depth)
+                else:
+                    html_embody_child = self.getEmbodyOfDict(key, elements_of_dict, depth)
 
                 html_embody = html.Div(
                     children=[
