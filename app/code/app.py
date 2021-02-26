@@ -16,12 +16,14 @@ import accessors.paths_docs as paths_docs
 myExcelPath = paths_docs.ExcelPath(config_json)
 myCatThemeAuthPath = paths_docs.CategoryAndThemeAuthorizedPath(config_json)
 myNotebookExcelConfigPath = paths_docs.NotebookConfigPath(config_json)
+myStandardButtonsConfigPath = paths_docs.StandardButtonsConfigPath(config_json)
 
 # Access the documents, to get the values, dataframe and update the docs. Need the paths to work.
 import accessors.access_docs as access_docs
 myAccessExcel = access_docs.AccessExcel(myExcelPath)
 myAccessCTAuthorized = access_docs.AccessCTAuthorized(myCatThemeAuthPath)
 myAccessNotebookExcelConfig = access_docs.AccessNotebookConfig(myNotebookExcelConfigPath)
+myAccessStandardButtonsConfig = access_docs.AccessStandardButtonsConfig(myStandardButtonsConfigPath)
 authorizedCT_json = myAccessCTAuthorized.getJson()
 
 import wrapper_excel.convert_excel_to_df as convert_excel_to_df
@@ -40,8 +42,10 @@ ConvertDfToGraph = main_convert_df_to_graph.DataframeToGraph(DataframeToListDict
 # Object used to save an excel uploaded by the user
 import wrapper_dash.facilitator_dash.import_excel as import_excel
 FileSaver = import_excel.FileSaver(myExcelToDataframe)    
+
 import wrapper_dash.facilitator_dash.save_config as save_config
-ConfigNotebookExcelSaver = save_config.ConfigNotebookExcelSaver(myAccessNotebookExcelConfig)     
+ConfigNotebookExcelSaver = save_config.ConfigNotebookExcelSaver(myAccessNotebookExcelConfig) 
+StandardButtonsConfigSaver = save_config.StandardButtonsConfigSaver(myAccessStandardButtonsConfig)     
 
 
 
@@ -61,7 +65,7 @@ class AppDash():
         self.vueDashboardHome = vue_dashboard_home.AppDash(self.app, DateToDataframe, ConvertDfToGraph, FileSaver)
         self.vueCategoriesFile = vue_modify_categories_file.AppDash(self.app, myAccessCTAuthorized)
 
-        self.vueNotebookExcel = vue_notebook_excel.AppDash(self.app, myExcelToDataframe, FileSaver, ConfigNotebookExcelSaver)
+        self.vueNotebookExcel = vue_notebook_excel.AppDash(self.app, myExcelToDataframe, FileSaver, ConfigNotebookExcelSaver, StandardButtonsConfigSaver)
     
 
 

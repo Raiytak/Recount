@@ -93,7 +93,7 @@ class ReusableSingleOutputs(UniqueReusableSingleOutputs):
 
 
     def getMessageToUserDiv(self):
-        output_div = html.P(id=self.msg_div, children='')
+        output_div = html.P(id=self.msg_div, children=' ')
         return output_div
     def getMessageToUserCallback(self):
         return Output(self.msg_div, "children")

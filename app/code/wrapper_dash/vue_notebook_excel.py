@@ -9,37 +9,45 @@ import datetime
 import wrapper_dash.reusable_components.reusable_inputs as reusable_inputs
 import wrapper_dash.reusable_components.reusable_outputs as reusable_outputs
 import wrapper_dash.reusable_components.reusable_notebook as reusable_notebook
+import wrapper_dash.reusable_components.reusable_standard_buttons as reusable_standard_buttons
 
 
 
 
 class ElementsVue():
-    def __init__(self, ExcelToDataframe, ReusableInputs, ReusableOutputs, ReusableNotebook):
+    def __init__(self, ExcelToDataframe, ReusableInputs, ReusableOutputs, ReusableNotebook, ReusableStandardButtons):
         self.ReusableInputs = ReusableInputs
         self.ReusableOutputs = ReusableOutputs
         self.ExcelToDataframe = ExcelToDataframe
         self.ReusableNotebook = ReusableNotebook
+        self.ReusableStandardButtons = ReusableStandardButtons
 
     def getInputDiv(self):
-        update_div = self.ReusableInputs.getUpdateDataDiv()
+        update_data_div = self.ReusableStandardButtons.getUpdateDataDiv()
         update_msg_box = self.ReusableOutputs.getMessageToUserDiv()
-        update_div = html.Div(children=[update_div, update_msg_box])
+        update_div = html.Div(children=[update_data_div, update_msg_box])
 
-        upload_excel_div = self.ReusableInputs.getImportExcelDiv()
+        edit_button = self.ReusableStandardButtons.getEditButtonsAndColumnsDiv()
+        upload_excel_div = self.ReusableStandardButtons.getImportExcelDiv()
         upload_msg_box_upload_excel = self.ReusableOutputs.getMessageToUserImportExcelInfoDiv()
         upload_div = html.Div(children=[upload_excel_div, upload_msg_box_upload_excel])
 
         update_div_formated = html.Div(  
             children=[
+                edit_button,
                 update_div,
                 upload_div
                 ],
             style={
                     "display":"flex",
-                    "justify-content":"space-around"})
+                    "justify-content":"space-between"
+                    }
+            )
+
+
         return update_div_formated
     def getInputCallbacks(self):
-        return self.ReusableInputs.getUpdateDataCallback()
+        return self.ReusableStandardButtons.inputCallback_UpdateData_n_clicks()
 
     def getNotebookDiv(self):
         notebook_excel = self.ReusableNotebook.getDashNotebookDiv()
@@ -67,13 +75,18 @@ class ElementsVue():
 
 
 
+
 class EmptyVue():
-    def __init__(self, ExcelToDataframe, ConfigNotebookExcelSaver):
+    def __init__(self, ExcelToDataframe, ConfigNotebookExcelSaver, StandardButtonsConfigSaver):
         self.name_vue = "notebook-excel-"
         self.ReusableInputs = reusable_inputs.ReusableInputs(self.name_vue)
         self.ReusableOutputs = reusable_outputs.ReusableOutputs(self.name_vue)
         self.ReusableNotebook = reusable_notebook.ReusableNotebook(self.name_vue, ExcelToDataframe, ConfigNotebookExcelSaver)
-        self.elementsVue = ElementsVue(ExcelToDataframe, self.ReusableInputs, self.ReusableOutputs, self.ReusableNotebook)
+        self.ReusableStandardButtons = reusable_standard_buttons.ReusableStandardButtons(self.name_vue, StandardButtonsConfigSaver)
+
+        self.StandardButtonsConfigSaver = StandardButtonsConfigSaver
+
+        self.elementsVue = ElementsVue(ExcelToDataframe, self.ReusableInputs, self.ReusableOutputs, self.ReusableNotebook, self.ReusableStandardButtons)
         
     def getEmptyVue(self):
         input_div = self.elementsVue.getInputDiv()
@@ -107,16 +120,19 @@ class EmptyVue():
 
 
 
+
+
 # Dash Application
 class AppDash(EmptyVue):
-    def __init__(self, app, ExcelToDataframe, FileSaver, ConfigNotebookExcelSaver):
-        super().__init__(ExcelToDataframe, ConfigNotebookExcelSaver)
+    def __init__(self, app, ExcelToDataframe, FileSaver, ConfigNotebookExcelSaver, StandardButtonsConfigSaver):
+        super().__init__(ExcelToDataframe, ConfigNotebookExcelSaver, StandardButtonsConfigSaver)
         self.app = app
         self.FileSaver = FileSaver
         self.ConfigNotebookExcelSaver = ConfigNotebookExcelSaver
 
         self._counter_copied_excel = 0
         self._counter_add_row = 0
+        self._content_editable = ""
 
         self.setCallback()
 
@@ -125,23 +141,26 @@ class AppDash(EmptyVue):
         @self.app.callback(
             self.getMessageToUserUpdateCallback(),
             [self.getNotebookAsInputCallback(), self.getUpdateInputCallbacks()],
-            self.getNotebookCallbackAsStateColumn()
+            [self.getNotebookCallbackAsStateColumn()]
             )
         # def update_notebook(selected_date_str, selected_periode, imported_excel, data_excel):
         def update_copied_excel(data_notebook, n_clicks_submit, columns_notebook):
             if self._counter_copied_excel != n_clicks_submit:
                 self._counter_copied_excel == n_clicks_submit
-                message_to_user = self.FileSaver.saveTemporaryRawExcelFromInputData(data_notebook) # prend de la puissance de calcul parce que sauvegarde a chaque interaction
+                # message_to_user = self.FileSaver.saveTemporaryRawExcelFromInputData(data_notebook) # prend de la puissance de calcul parce que sauvegarde a chaque interaction
                 
-                self.ConfigNotebookExcelSaver.updateColumnsName(columns_notebook)
-                
+                # print(update_button_state)
+                # self.ConfigNotebookExcelSaver.updateColumnsName(columns_notebook)
+                message_to_user = "done"
+                self.ReusableStandardButtons.saveAllButtons()
+
                 return message_to_user
             return ""
 
 
         @self.app.callback(
             [self.getMessageToUserImportExcelInfoCallback(), self.getNotebookAsOutputCallback()],
-            [self.ReusableInputs.getImportExcelCallback(), self.getAddRowCallback()],
+            [self.ReusableStandardButtons.inputCallback_ImportExcel_contents(), self.getAddRowCallback()],
             self.getNotebookCallbackAsStateData(),
             self.getNotebookCallbackAsStateColumn()
             )
@@ -170,6 +189,30 @@ class AppDash(EmptyVue):
                 data_for_output = data_notebook
 
             return message_to_user, data_for_output
+
+
+
+
+
+        @self.app.callback(
+            self.ReusableStandardButtons.outputcallbackToMakeAllButtonsEditable(),
+            self.ReusableStandardButtons.inputcallbackToMakeAllButtonsEditable(),
+            self.ReusableStandardButtons.statecallbackToMakeAllButtonsEditable(),
+            )
+        def editate_all_buttons(check_value, upd_data_t, ed_col_t, imp_ex_t):  
+            if check_value != None:
+                if check_value == ["checked"]:
+                    return self.ReusableStandardButtons.outputStartEditateButtons()
+                # This case means that the checkbox has been unchecked
+                elif check_value == []:
+                    texts_to_save = [upd_data_t, ed_col_t, imp_ex_t]
+                    list_ids = self.ReusableStandardButtons.id_statecallbackToMakeAllButtonsEditable()
+
+                    self.StandardButtonsConfigSaver.saveListIdsListChildren(list_ids, texts_to_save)
+                    return self.ReusableStandardButtons.outputEndEditateButtons()
+
+            return self.ReusableStandardButtons.outputEndEditateButtons()
+        
 
 
     def setThisVue(self):

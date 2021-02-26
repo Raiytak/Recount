@@ -1,0 +1,11 @@
+{
+    "edit-button-text": {
+        "value": "Check to edit the buttons"
+    },
+    "upload-data-text": {
+        "value": "IMPORT EXCEL FILE"
+    },
+    "submit-button-text": {
+        "value": "UPDATE"
+    }
+}

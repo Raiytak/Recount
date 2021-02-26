@@ -48,9 +48,13 @@ class ReusableSingleInputs(UniqueReusableSingleInputs):
         self.date_div_date_id = self.name_vue+"input-date"
         self.import_excel_id = self.name_vue+'upload-data'
         self.submit_id = self.name_vue+'submit-button'
+
         self.location_id = 'default-url'
+
         self.add_div_div = self.name_vue+'add-div'
         self.remove_div_div = self.name_vue+'remove-div'
+
+        self.edit_buttons_id = self.name_vue+'edit-buttons-div'
 
 
 
@@ -93,24 +97,60 @@ class ReusableSingleInputs(UniqueReusableSingleInputs):
     def getImportExcelCallback(self):
         callback = Input(self.import_excel_id, 'contents')
         return callback
+    def getImportExcelStateCallback(self):
+        callback = State(self.import_excel_id, 'children')
+        return callback
 
     def getUpdateDataDiv(self):
         update_input = html.Button(
             id=self.submit_id,
-            children='Update/Submit data',
-            n_clicks=0
+            children='Update',
+            n_clicks=0,
+            contentEditable="False",
+            disabled=False
         )
         return update_input
     def getUpdateDataCallback(self):
         callback = Input(self.submit_id, 'n_clicks')
         return callback
+    def getUpdateDataStateCallback(self):
+        callback = State(self.submit_id, 'children')
+        return callback
+
+    def getSaveConfigDiv(self):
+        update_input = html.Button(
+            id=self.submit_id,
+            children='Save Shape',
+            n_clicks=0,
+            editable=True
+        )
+        return update_input
+    def getSaveConfigCallback(self):
+        callback = Input(self.submit_id, 'n_clicks')
+        return callback
 
 
     def getLocationDiv(self):
-        location_div = dcc.Location(self.location_id, refresh=False)
+        location_div = dcc.Location(self.location_id, refresh=True)
         return location_div        
     def getLocationCallback(self):
         callback = Input(self.location_id, 'pathname')
+        return callback
+        
+
+
+    def getEditButtonsAndColumnsDiv(self):
+        edit_button_div = dcc.Checklist(
+            id=self.edit_buttons_id,
+            options=[
+                {
+                    'label': 'Edit','value': 'checked'
+                    }
+            ]
+        )
+        return edit_button_div        
+    def getEditButtonsAndColumnsCallback(self):
+        callback = Input(self.edit_buttons_id, 'value')
         return callback
 
 
@@ -122,7 +162,7 @@ class ReusableSingleInputs(UniqueReusableSingleInputs):
 
 
 
-class ReusableInputs(ReusableSingleInputs, UniqueReusableSingleInputs):
+class ReusableInputs(ReusableSingleInputs):
     def __init__(self, name_vue):
         super().__init__(name_vue)
 

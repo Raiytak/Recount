@@ -133,6 +133,31 @@ class AccessNotebookConfig():
         return json_formatted_str
 
         
+
+
+class AccessStandardButtonsConfig():
+    def __init__(self, StandardButtonsConfigPath):
+        self.StandardButtonsConfigPath = StandardButtonsConfigPath
+    
+    def getJson(self):
+        data = {}
+        with open(self.StandardButtonsConfigPath.getStandardButtonsConfigPath(), "r") as json_file:
+            data = json.load(json_file)
+        return data
+    
+    def updateJson(self, data):
+        with open(self.StandardButtonsConfigPath.getStandardButtonsConfigPath(), "w") as json_file:
+            try:
+                json.dump(data, json_file, indent=4)
+            except TypeError:
+                print("JSON of wrong type :\n", data)
+
+    def getPrettyJson(self):
+        data = self.getJson()
+        json_formatted_str = json.dumps(data, indent=4) 
+        return json_formatted_str
+
+        
                 
                 
                 

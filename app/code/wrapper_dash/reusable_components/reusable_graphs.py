@@ -24,16 +24,48 @@ class ReusableGraphs():
 
 
     def getScatterGraphDiv(self):
-        scatter_graph = dcc.Graph(id=self.scatter_id)
+        scatter_graph = dcc.Graph(
+            id=self.scatter_id,
+            config={
+                "edits":{
+                    "axisTitleText":True,
+                    "titleText":True
+                }
+            }
+            )
         return scatter_graph
     def getPieChartGraphDiv(self):
-        pie_chart_graph = dcc.Graph(id=self.pie_chart_id)
+        pie_chart_graph = dcc.Graph(
+            id=self.pie_chart_id,
+            config={
+                "edits":{
+                    "axisTitleText":True,
+                    "titleText":True
+                }
+            }
+            )
         return pie_chart_graph
     def getMeanBarGraphDiv(self):
-        mean_bar_graph = dcc.Graph(id=self.mean_bar_id)
+        mean_bar_graph = dcc.Graph(
+            id=self.mean_bar_id,
+            config={
+                "edits":{
+                    "axisTitleText":True,
+                    "titleText":True
+                }
+            }
+            )
         return mean_bar_graph
     def getFoodBarGraphDiv(self):
-        food_bar_graph = dcc.Graph(id=self.food_bar_id)
+        food_bar_graph = dcc.Graph(
+            id=self.food_bar_id,
+            config={
+                "edits":{
+                    "axisTitleText":True,
+                    "titleText":True
+                }
+            }
+            )
         return food_bar_graph
 
     def getDashboardHomeDiv(self):
