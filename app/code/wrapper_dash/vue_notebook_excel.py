@@ -22,26 +22,6 @@ class ElementsVue():
         self.ReusableNotebook = ReusableNotebook
         self.ReusableStandardButtons = ReusableStandardButtons
         
-    def getInputCallbacks(self):
-        return self.ReusableStandardButtons.inputCallback_UpdateData_n_clicks()
-
-    def getNotebookDiv(self):
-        notebook_excel = self.ReusableNotebook.getDashNotebookDiv()
-        notebook_excel_div = html.Div(id="notebook-excel", children=notebook_excel)
-        return notebook_excel_div
-    def getNotebookCallback(self):
-        return self.ReusableNotebook.getDashNotebookCallback()
-    def getNotebookCallbackAsOutput(self):
-        return self.ReusableNotebook.getDashNotebookCallbackAsOutput()
-    def getNotebookCallbackAsStateData(self):
-        return self.ReusableNotebook.statecallback_Notebook_data()
-    def getNotebookCallbackAsStateColumn(self):
-        return self.ReusableNotebook.statecallback_Notebook_columns()
-
-    def getMessageToUserUpdateCallback(self):
-        return self.ReusableOutputs.getMessageToUserCallback()
-    def getMessageToUserImportExcelInfoCallback(self):
-        return self.ReusableOutputs.getMessageToUserImportExcelInfoCallback()
 
 
 
@@ -62,27 +42,6 @@ class EmptyVue():
         
     def getEmptyVue(self):
         return self.ReusableNotebook.getEmptyVue()
-
-
-    def getUpdateInputCallbacks(self):
-        return self.ReusableNotebook.getInputCallbacks()
-    def getNotebookAsInputCallback(self):
-        return self.ReusableNotebook.getNotebookCallback()
-    def getAddRowCallback(self):
-        return self.ReusableNotebook.getAddRowCallback()
-
-    def getNotebookAsOutputCallback(self):
-        return self.elementsVue.getNotebookCallbackAsOutput()
-    def getNotebookCallbackAsStateColumn(self):
-        return self.elementsVue.getNotebookCallbackAsStateColumn()
-    def getNotebookCallbackAsStateData(self):
-        return self.elementsVue.getNotebookCallbackAsStateData()
-
-    def getMessageToUserUpdateCallback(self):
-        return self.elementsVue.getMessageToUserUpdateCallback()
-    def getMessageToUserImportExcelInfoCallback(self):
-        return self.elementsVue.getMessageToUserImportExcelInfoCallback()
-
 
 
 
@@ -120,16 +79,22 @@ class AppDash(EmptyVue):
 
         @self.app.callback(
             self.ReusableNotebook.AddRow.outputcallbacks(),
+
             self.ReusableNotebook.AddRow.inputcallbacks(),
+            self.ReusableStandardButtons.ImportExcel.inputcallbacks(),
+
             self.ReusableNotebook.AddRow.statecallbacks()
             )
-        def add_row_notebook(add_row_n_clicks, data_notebook, columns_notebook):  
+        def add_row_notebook(add_row_n_clicks, imported_excel, data_notebook, columns_notebook):  
             message_to_user = ""
             data_for_output = data_notebook
             if add_row_n_clicks != self._counter_add_row:
                 print("ici")
                 self._counter_add_row = add_row_n_clicks
                 message_to_user, data_for_output = self.ReusableNotebook.AddRow.add_row_notebook(data_notebook, columns_notebook)
+            elif imported_excel != None:
+                # Update the notebook using imported excel
+                data_for_output = self.ReusableNotebook.getNotebookData()
             return message_to_user, data_for_output
 
 
@@ -140,7 +105,7 @@ class AppDash(EmptyVue):
         def import_excel(imported_excel):  
             message_to_user = ""
             if imported_excel != None:
-                message_to_user, data_for_output = self.ReusableStandardButtons.ImportExcel.import_excel(imported_excel)
+                message_to_user = self.ReusableStandardButtons.ImportExcel.import_excel(imported_excel)
             return message_to_user
 
 

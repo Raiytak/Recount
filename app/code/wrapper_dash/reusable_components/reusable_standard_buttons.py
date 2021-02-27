@@ -14,27 +14,16 @@ class UniqueReusableSingleStandardButtons():
     def __init__(self, name_vue, StandardButtonsConfigSaver):
         self.name_vue = name_vue
 
-        self.ReusableSingleInputs = reusable_inputs.ReusableSingleInputs("button-"+self.name_vue)
-        self.ReusableSingleOutputs = reusable_outputs.ReusableSingleOutputs("button-"+self.name_vue)
-
         self.StandardButtonsConfigSaver = StandardButtonsConfigSaver
         self.ReusableStyles = reusable_styles.ReusableStyles()
 
-        self._conf = self.getConfig()
-        self.add_div_div = self.name_vue+'add-div'
-        self.remove_div_div = self.name_vue+'remove-div'
+        self._conf = self.StandardButtonsConfigSaver.getConfig()
 
         # self.UniqueReusableSingleInputs = reusable_inputs.UniqueReusableSingleInputs("-button-"+self.name_vue)
         # self.UniqueReusableSingleOutputs = reusable_outputs.UniqueReusableSingleOutputs("-button-"+self.name_vue)
 
 
-    def getConfig(self):
-        return self.StandardButtonsConfigSaver.getConfig()
 
-    def setConfig(self, data):
-        return self.StandardButtonsConfigSaver.setConfig(data)
-
-    # def get
 
 
 class ReusableSingleStandardButtons(UniqueReusableSingleStandardButtons):
@@ -202,8 +191,7 @@ class ReusableStandardButtons(ReusableSingleStandardButtons):
     def getImportExcelDiv(self):
         excel_input = self.getImportExcelUpload()
         excel_input_div = html.Button(
-            children=excel_input,
-            style=self.ReusableStyles.syleSimpleFlex()
+            children=excel_input
             )
         excel_msg_div = self.getMessageToUserImportExcelDiv()
         excel_div = html.Div(
@@ -325,7 +313,7 @@ class ImportExcel():
     def outputcallbacks(self):
         return self.ReusableStandardButtons.outputcallback_MessageToUserImportExcel_value()
     def inputcallbacks(self):
-        return self.ReusableStandardButtons.inputCallback_ImportExcel_contents()
+        return [self.ReusableStandardButtons.inputCallback_ImportExcel_contents()]
     # def statecallback(self):
 
     def import_excel(self, imported_excel):   
@@ -334,31 +322,7 @@ class ImportExcel():
             # Save the imported excel, if there is one to save
             message_to_user = self.ImportExcelFileSaver.saveImportedFile(imported_excel)
             self.ImportExcelFileSaver.updateDbs()
-            # Update the imported excel
-        data_for_output = self.getNotebookData()
-        return message_to_user, data_for_output
-
-
-    def changeFormatOfDataframe(self, dataframe):
-        try:
-            dataframe["Date"] = pd.to_datetime(dataframe["Date"]).dt.strftime('%Y-%m-%d')
-            return dataframe
-        except Exception as e:
-            return dataframe
-
-    def getDataframe(self):
-        dataframe =  self.ImportExcelFileSaver.ExcelToDataframe.getDataframeOfRawExcel()
-        dataframe = self.changeFormatOfDataframe(dataframe)
-        return dataframe
-
-    def translateDataframeToNotebookData(self, dataframe):
-        data_for_output = dataframe.to_dict('records')
-        return data_for_output
-
-    def getNotebookData(self):
-        dataframe = self.getDataframe()
-        data_for_output = self.translateDataframeToNotebookData(dataframe)
-        return data_for_output
+        return message_to_user
 
 
 

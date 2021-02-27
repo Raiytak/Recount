@@ -4,9 +4,7 @@ import dash_html_components as html
 import dash_core_components as dcc
 from dash.dependencies import Input, Output, State
 
-
-import wrapper_dash.reusable_components.reusable_inputs as reusable_inputs
-import wrapper_dash.reusable_components.reusable_outputs as reusable_outputs
+import pandas as pd
 
 
 class FunctionsForReusableNotebook():
@@ -16,9 +14,6 @@ class FunctionsForReusableNotebook():
 
         self.ExcelToDataframe = ExcelToDataframe
         self.ConfigNotebookExcelSaver = ConfigNotebookExcelSaver
-        
-        self.ReusableSingleInputs = reusable_inputs.ReusableSingleInputs(self.name_vue) #TODO change
-        self.ReusableOutputs = reusable_outputs.ReusableOutputs(self.name_vue) #TODO change
 
         self.ReusableStandardButtons = ReusableStandardButtons
         self.EditButtons = self.ReusableStandardButtons.EditButtons
@@ -36,13 +31,22 @@ class FunctionsForReusableNotebook():
         data_for_output = data_notebook
 
         return message_to_user, data_for_output
-### TO desapear
+
+
+
+
+    def changeFormatOfDataframe(self, dataframe):
+        try:
+            dataframe["Date"] = pd.to_datetime(dataframe["Date"]).dt.strftime('%Y-%m-%d')
+            return dataframe
+        except Exception as e:
+            print(e)
+            return dataframe
 
     def getDataframe(self):
         dataframe =  self.ExcelToDataframe.getDataframeOfRawExcel()
         dataframe = self.changeFormatOfDataframe(dataframe)
         return dataframe
-
 
     def translateDataframeToNotebookData(self, dataframe):
         data_for_output = dataframe.to_dict('records')
@@ -53,21 +57,6 @@ class FunctionsForReusableNotebook():
         data_for_output = self.translateDataframeToNotebookData(dataframe)
         return data_for_output
 
-
-    def changeFormatOfDataframe(self, dataframe):
-        try:
-            dataframe["Date"] = pd.to_datetime(dataframe["Date"]).dt.strftime('%Y-%m-%d')
-            return dataframe
-        except Exception as e:
-            return dataframe
-
-### TO desapear
-    def getData(self):
-        dataframe = self.getDataframe()
-        return self.getDataOfDataframe(dataframe)
-
-    def getDataOfDataframe(self, dataframe):
-        return dataframe.to_dict('records')
 
 
     def getConfigJson(self):
@@ -88,17 +77,21 @@ class ReusableSingleElementsNotebook(FunctionsForReusableNotebook):
         self.add_row_button = self.name_vue + 'add-rows-button'
         self.add_row_button_message = self.add_row_button + '-message'
 
+
+
     def getAddRowButton(self):
         return html.Button('Add Row', id=self.add_row_button, n_clicks=0)
-    def getAddRowCallback(self):
+    def inputcallback_AddRow_n_clicks(self):
         return Input(self.add_row_button, 'n_clicks')
+
     def getAddRowMessageDiv(self):
         add_row_message = html.Div(
             id=self.add_row_button_message,
             )
         return add_row_message
-    def getAddRowMessageCallback(self):
+    def outputcallback_AddRowMessage_children(self):
         return Output(self.add_row_button_message, 'children')
+
     def getAddRowDiv(self):
         add_row_div_total = html.Div(
             children=[
@@ -124,16 +117,16 @@ class ReusableSingleElementsNotebook(FunctionsForReusableNotebook):
             id=self.notebook_name,
             columns=[
                          {"name": columns_name[i], "id": i, "editable":False, "hideable":True, "renamable":True} if i == "ID"
-                    # else {"name": columns_name[i], "id": i, "type":"numeric", "hideable":True, "renamable":True} if (i == "Expense Euros" or i == "Expense Dollars" or i == "Sum Euros" or i == "Sum Dollars") 
+                    else {"name": columns_name[i], "id": i, "type":"numeric", "hideable":True, "renamable":True} if (i == "Expense Euros" or i == "Expense Dollars") 
                     else {"name": columns_name[i], "id": i, "type":"text", "hideable":True, "renamable":True} if (i == "Description" or i == "Category" or i == "Trip") 
                     else {"name": columns_name[i], "id": i, "type":"datetime", "hideable":True, "renamable":True} if i == "Date" 
                     else {"name": columns_name[i], "id": i, "hideable":True, "renamable":True}
                     for i in dataframe.columns],
-            data=self.getData(),
+            data=self.getNotebookData(),
             editable=True,
 
-            # row_selectable="multi",
             row_deletable=True,
+            # cell_selectable=True,
 
             export_columns='all',
             export_format='xlsx',
@@ -149,12 +142,9 @@ class ReusableSingleElementsNotebook(FunctionsForReusableNotebook):
 
 
 
-    def getDashNotebookCallback(self):
-        return Input(self.notebook_name, 'data')
 
-    def getDashNotebookCallbackAsOutput(self):
+    def outputcallback_Notebook_data(self):
         return Output(self.notebook_name, 'data')
-
 
     def statecallback_Notebook_data(self):
         return State(self.notebook_name, 'data')
@@ -211,12 +201,12 @@ class AddRow():
     # Part to do the actions on check/uncheck of the checkbox
     def outputcallbacks(self):
         list_outputs = [
-            self.ReusableNotebook.getAddRowMessageCallback(),
-            self.ReusableNotebook.getDashNotebookCallbackAsOutput()
+            self.ReusableNotebook.outputcallback_AddRowMessage_children(),
+            self.ReusableNotebook.outputcallback_Notebook_data()
             ]
         return list_outputs
     def inputcallbacks(self):
-        return self.ReusableNotebook.getAddRowCallback()
+        return self.ReusableNotebook.inputcallback_AddRow_n_clicks()
     def statecallbacks(self):
         list_states = [
             self.ReusableNotebook.statecallback_Notebook_data(),
