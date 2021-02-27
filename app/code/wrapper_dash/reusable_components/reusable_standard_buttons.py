@@ -26,17 +26,19 @@ class UniqueReusableSingleStandardButtons():
 
 
 
+
 class ReusableSingleStandardButtons(UniqueReusableSingleStandardButtons):
     def __init__(self, name_vue, StandardButtonsConfigSaver):
         super().__init__(name_vue, StandardButtonsConfigSaver)
 
-        self.edit_button = "edit-button"
+        self.edit_button = self.name_vue+"-edit-button"
         self.edit_button_text = self.edit_button+"-text"
-        self.update_id = 'update-button'
+
+        self.update_id = self.name_vue+'-update-button'
         self.update_text_id = self.update_id+"-text"
         self.update_msg_div = self.update_id + "-message"
 
-        self.import_excel_id = 'upload-data'
+        self.import_excel_id = self.name_vue+'-upload-data'
         self.import_excel_text_id = self.import_excel_id+"-text"
         self.import_excel_msg_div = self.import_excel_id + "-message"
 
@@ -287,19 +289,66 @@ class EditButtons():
     def statecallbacks(self):
         return self.statecallbackToMakeAllButtonsEditable()
 
-    def edit_buttons(self, check_value, upd_data_t, ed_col_t, imp_ex_t,  msg_user_update, msg_user_import):  
+    def edit_buttons(self, check_value, list_ids, texts_to_save):  
         if check_value != None:
             if check_value == ["checked"]:
                 return self.outputStartEditButtons()
             # This case means that the checkbox has been unchecked
             elif check_value == []:
-                texts_to_save = [upd_data_t, ed_col_t, imp_ex_t, msg_user_update, msg_user_import]
-                list_ids = self.id_statecallbackToMakeAllButtonsEditable()
+                # list_ids = self.id_statecallbackToMakeAllButtonsEditable()
 
                 self.ReusableStandardButtons.StandardButtonsConfigSaver.saveListIdsListChildren(list_ids, texts_to_save)
                 return self.outputEndEditButtons()
 
         return self.outputEndEditButtons()
+
+    def outputcallbacks_categories(self):
+        outputs = [
+            self.ReusableStandardButtons.outputCallback_UpdateDataText_disabled(),
+            self.ReusableStandardButtons.outputcallback_MessageToUserUpdate_disabled(),
+
+            self.ReusableStandardButtons.outputCallback_EditButtonsAndColumnsText_disabled(),
+
+            self.ReusableStandardButtons.outputCallback_UpdateData_disabled(),
+                ]
+        return outputs
+    def inputcallbacks_categories(self):
+        return self.inputcallbacks()
+    def statecallbacks_categories(self):
+        states = [
+                self.ReusableStandardButtons.stateCallback_UpdateDataText_value(),
+                self.ReusableStandardButtons.stateCallback_EditButtonsAndColumns_text(),
+
+                self.ReusableStandardButtons.statecallback_MessageToUserUpdate_value()
+                ]
+        return states
+    def id_statecallbacks_categories(self):
+        list_ids = [
+            self.ReusableStandardButtons.update_text_id,
+            self.ReusableStandardButtons.edit_button_text,
+
+            self.ReusableStandardButtons.update_msg_div,
+        ]
+        return list_ids
+
+    def outputStartEditButtons_categories(self):
+        return False,False,False, True
+
+    def outputEndEditButtons_categories(self):
+        return True,True,True, False
+
+    def edit_buttons_categories(self, check_value, list_ids, texts_to_save):  
+        if check_value != None:
+            if check_value == ["checked"]:
+                return self.outputStartEditButtons_categories()
+            # This case means that the checkbox has been unchecked
+            elif check_value == []:
+                # list_ids = self.id_statecallbackToMakeAllButtonsEditable()
+
+                self.ReusableStandardButtons.StandardButtonsConfigSaver.saveListIdsListChildren(list_ids, texts_to_save)
+                return self.outputEndEditButtons_categories()
+
+        return self.outputEndEditButtons_categories()
 
 
 

@@ -64,7 +64,7 @@ class AppDash():
         self.vueIndex = vue_index.AppDash(self.app)
         self.vueHome = vue_home.AppDash(self.app)
         self.vueDashboardHome = vue_dashboard_home.AppDash(self.app, DateToDataframe, ConvertDfToGraph, ImportExcelFileSaver)
-        self.vueCategoriesFile = vue_modify_categories_file.AppDash(self.app, myAccessCTAuthorized)
+        self.vueCategoriesFile = vue_modify_categories_file.AppDash(self.app, myAccessCTAuthorized, StandardButtonsConfigSaver)
 
         self.vueNotebookExcel = vue_notebook_excel.AppDash(self.app, myExcelToDataframe, ImportExcelFileSaver, ConfigNotebookExcelSaver, StandardButtonsConfigSaver)
     

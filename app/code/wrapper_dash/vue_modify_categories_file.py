@@ -5,36 +5,37 @@ from dash.dependencies import Input, Output, State
 
 import wrapper_dash.reusable_components.reusable_inputs as reusable_inputs
 import wrapper_dash.reusable_components.reusable_outputs as reusable_outputs
+import wrapper_dash.reusable_components.reusable_standard_buttons as reusable_standard_buttons
 
 import wrapper_dash.facilitator_dash.parser_json_to_html as parser_json_to_html
 
 
 class ElementsVue():
-    def __init__(self, accessAuthorizedTST, ReusableInputs, ReusableOutputs, ParserJsonToHtml):
+    def __init__(self, accessAuthorizedTST, ReusableInputs, ReusableOutputs, ReusableStandardButtons, ParserJsonToHtml):
         self.accessAuthorizedTST = accessAuthorizedTST
         self.ReusableInputs = ReusableInputs
         self.ReusableOutputs = ReusableOutputs
+        self.ReusableStandardButtons = ReusableStandardButtons
         self.ParserJsonToHtml = ParserJsonToHtml
 
-    def getTextAreaDiv(self):
-        text_area = dcc.Textarea(
-            id='textarea-state',
-            value=self.accessAuthorizedTST.getPrettyJson(),
-            style={'width': '60%', 'height': 200},
+
+    def getUpperVueDiv(self):
+        update_div = self.ReusableStandardButtons.getUpdateDataDiv()
+        edit_button = self.ReusableStandardButtons.getEditButtonsAndColumnsDiv()
+
+        update_div_formated = html.Div(  
+            children=[
+                edit_button,
+                update_div
+                ],
+            style={
+                    "display":"flex",
+                    "justify-content":"space-between"
+                    }
             )
 
-        # my_button = html.Div('Import csv File')
-        submit_button = html.Button('Submit', id='submit-button', n_clicks=0)
 
-        output_div = html.Div(id='output_div', style={'whiteSpace': 'pre-line'})
-
-        input_div = html.Div(  children=[text_area, submit_button, output_div],
-                                    # style={
-                                    #     "display":"column",
-                                    #     "justify-content":"space-between"}
-                                        )
-
-        return text_area        
+        return update_div_formated
 
     def getFullColumnStyle(self):
         style_returned = {
@@ -127,19 +128,22 @@ class ElementsVue():
 
 
 class EmptyVue():
-    def __init__(self, accessAuthorizedTST):
-        self.name_vue = "dashboard-home-"
+    def __init__(self, accessAuthorizedTST, StandardButtonsConfigSaver):
+        self.name_vue = "dashboard-home"
+
         self.ReusableInputs = reusable_inputs.ReusableInputs(self.name_vue)
         self.ReusableOutputs = reusable_outputs.ReusableOutputs(self.name_vue)
+        self.ReusableStandardButtons = reusable_standard_buttons.ReusableStandardButtons(self.name_vue, StandardButtonsConfigSaver)
+
         self.ParserJsonToHtml = parser_json_to_html.ParserJsonToHtml(self.ReusableInputs, self.ReusableOutputs)
-        self.elementsVue = ElementsVue(accessAuthorizedTST, self.ReusableInputs, self.ReusableOutputs, self.ParserJsonToHtml)
+        self.elementsVue = ElementsVue(accessAuthorizedTST, self.ReusableInputs, self.ReusableOutputs, self.ReusableStandardButtons, self.ParserJsonToHtml)
         
     def getEmptyVue(self):
-        text_area_div = self.elementsVue.getTextAreaDiv()   
+        upper_div = self.elementsVue.getUpperVueDiv()   
         ground_zero = self.elementsVue.getGroundZero()     
         empty_vue = html.Div(
             children=[
-                text_area_div,
+                upper_div,
                 ground_zero
             ]
         )
@@ -151,8 +155,8 @@ class EmptyVue():
 
 # Dash Application
 class AppDash(EmptyVue):
-    def __init__(self, app, accessAuthorizedTST):
-        super().__init__(accessAuthorizedTST)
+    def __init__(self, app, accessAuthorizedTST, StandardButtonsConfigSaver):
+        super().__init__(accessAuthorizedTST, StandardButtonsConfigSaver)
         self.app = app
         self.setCallback()
     
@@ -165,6 +169,26 @@ class AppDash(EmptyVue):
         def update_categories(json_entered):     
             # print(json_entered)
             return ""
+
+
+        @self.app.callback(
+            self.ReusableStandardButtons.EditButtons.outputcallbacks_categories(),
+            self.ReusableStandardButtons.EditButtons.inputcallbacks_categories(),
+            self.ReusableStandardButtons.EditButtons.statecallbacks_categories()
+            )
+        def edit_buttons_categories(check_value, upd_data_t, ed_col_t, msg_user_update):  
+            texts_to_save = [upd_data_t, ed_col_t,  msg_user_update]
+            list_ids = self.ReusableStandardButtons.EditButtons.id_statecallbacks_categories()
+
+            return self.ReusableStandardButtons.EditButtons.edit_buttons_categories(check_value, list_ids, texts_to_save)
+        
+        # @self.app.callback(
+        #     self.ReusableStandardButtons.UpdateButton.outputcallbacks(),
+        #     self.ReusableStandardButtons.UpdateButton.inputcallbacks()
+        #     )
+        # def do_update(n_clicks_submit, data_notebook, columns_notebook):
+        #     message_to_user = "Helloo"
+        #     return message_to_user
 
     def setThisVue(self):
         return self.getEmptyVue()

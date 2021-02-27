@@ -1,23 +1,29 @@
 {
-    "edit-button-text": {
+    "notebook-excel-edit-button-text": {
         "value": "Check to edit the buttons"
     },
-    "upload-data-text": {
+    "notebook-excel-upload-data-text": {
         "value": "IMPORT EXCEL FILE"
     },
-    "submit-button-text": {
-        "value": "UPDATE"
+    "notebook-excel-update-button-text": {
+        "value": "SUBMIT NOTEBOOK"
     },
-    "update-button-text": {
+    "notebook-excel-upload-data": {
         "value": "Update done"
     },
-    "upload-data": {
-        "value": "Update done"
-    },
-    "update-button-message": {
+    "notebook-excel-update-button-message": {
         "value": ""
     },
-    "upload-data-message": {
+    "notebook-excel-upload-data-message": {
+        "value": "File imported"
+    },
+    "dashboard-home-update-button-text": {
+        "value": "SAVE CATEGORIES"
+    },
+    "dashboard-home-edit-button-text": {
+        "value": "Check to edit the buttons"
+    },
+    "dashboard-home-update-button-message": {
         "value": ""
     }
 }

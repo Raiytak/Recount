@@ -4,10 +4,9 @@ from dash.dependencies import Input, Output, State
 
 
 import datetime
+import time
 
 
-import wrapper_dash.reusable_components.reusable_inputs as reusable_inputs
-import wrapper_dash.reusable_components.reusable_outputs as reusable_outputs
 import wrapper_dash.reusable_components.reusable_notebook as reusable_notebook
 import wrapper_dash.reusable_components.reusable_standard_buttons as reusable_standard_buttons
 
@@ -15,30 +14,19 @@ import wrapper_dash.reusable_components.reusable_standard_buttons as reusable_st
 
 
 class ElementsVue():
-    def __init__(self, ExcelToDataframe, ReusableInputs, ReusableOutputs, ReusableNotebook, ReusableStandardButtons):
-        self.ReusableInputs = ReusableInputs
-        self.ReusableOutputs = ReusableOutputs
-        self.ExcelToDataframe = ExcelToDataframe
-        self.ReusableNotebook = ReusableNotebook
-        self.ReusableStandardButtons = ReusableStandardButtons
-        
-
-
+    def __init__(self):  
+        pass
 
 
 
 class EmptyVue():
     def __init__(self, ExcelToDataframe, ImportExcelFileSaver, ConfigNotebookExcelSaver, StandardButtonsConfigSaver):
-        self.name_vue = "notebook-excel-"
-        self.ImportExcelFileSaver = ImportExcelFileSaver
-        self.ReusableInputs = reusable_inputs.ReusableInputs(self.name_vue)
-        self.ReusableOutputs = reusable_outputs.ReusableOutputs(self.name_vue)
-        self.ReusableStandardButtons = reusable_standard_buttons.ReusableStandardButtons(self.name_vue, StandardButtonsConfigSaver, self.ImportExcelFileSaver)
+        self.name_vue = "notebook-excel"
+
+        self.ReusableStandardButtons = reusable_standard_buttons.ReusableStandardButtons(self.name_vue, StandardButtonsConfigSaver, ImportExcelFileSaver)
         self.ReusableNotebook = reusable_notebook.ReusableNotebook(self.name_vue, ExcelToDataframe, ConfigNotebookExcelSaver, self.ReusableStandardButtons)
 
-        self.StandardButtonsConfigSaver = StandardButtonsConfigSaver
-
-        self.elementsVue = ElementsVue(ExcelToDataframe, self.ReusableInputs, self.ReusableOutputs, self.ReusableNotebook, self.ReusableStandardButtons)
+        self.elementsVue = ElementsVue()
         
     def getEmptyVue(self):
         return self.ReusableNotebook.getEmptyVue()
@@ -53,6 +41,7 @@ class AppDash(EmptyVue):
         super().__init__(ExcelToDataframe, ImportExcelFileSaver, ConfigNotebookExcelSaver, StandardButtonsConfigSaver)
         self.app = app
         self.ConfigNotebookExcelSaver = ConfigNotebookExcelSaver
+        self.ImportExcelFileSaver = ImportExcelFileSaver
 
         self._counter_copied_excel = 0
         self._counter_add_row = 0
@@ -70,6 +59,8 @@ class AppDash(EmptyVue):
         def do_update(n_clicks_submit, data_notebook, columns_notebook):
             message_to_user = ""
             if self._counter_copied_excel != n_clicks_submit:
+                import os
+                os.wait(1)
                 message_to_user = self.ImportExcelFileSaver.saveNotebookDataTorawExcel(data_notebook) 
                 self.ConfigNotebookExcelSaver.updateColumnsName(columns_notebook)
             #     self.ImportExcelFileSaver.updateDbs() # prend de la puissance de calcul parce que sauvegarde a chaque interaction
@@ -89,11 +80,11 @@ class AppDash(EmptyVue):
             message_to_user = ""
             data_for_output = data_notebook
             if add_row_n_clicks != self._counter_add_row:
-                print("ici")
                 self._counter_add_row = add_row_n_clicks
                 message_to_user, data_for_output = self.ReusableNotebook.AddRow.add_row_notebook(data_notebook, columns_notebook)
             elif imported_excel != None:
                 # Update the notebook using imported excel
+                time.sleep(2)
                 data_for_output = self.ReusableNotebook.getNotebookData()
             return message_to_user, data_for_output
 
@@ -106,6 +97,7 @@ class AppDash(EmptyVue):
             message_to_user = ""
             if imported_excel != None:
                 message_to_user = self.ReusableStandardButtons.ImportExcel.import_excel(imported_excel)
+
             return message_to_user
 
 
@@ -115,7 +107,10 @@ class AppDash(EmptyVue):
             self.ReusableStandardButtons.EditButtons.statecallbacks()
             )
         def edit_buttons(check_value, upd_data_t, ed_col_t, imp_ex_t,  msg_user_update, msg_user_import):  
-            return self.ReusableStandardButtons.EditButtons.edit_buttons(check_value, upd_data_t, ed_col_t, imp_ex_t,  msg_user_update, msg_user_import)
+            texts_to_save = [upd_data_t, ed_col_t, imp_ex_t,  msg_user_update, msg_user_import]
+            list_ids = self.ReusableStandardButtons.EditButtons.id_statecallbackToMakeAllButtonsEditable()
+
+            return self.ReusableStandardButtons.EditButtons.edit_buttons(check_value, list_ids, texts_to_save)
         
 
 

@@ -1,0 +1,624 @@
+﻿"ID"	"Expense Euros"	"Expense Dollars"	"Description"	"Date"		"Category"	"Type"	"Trip"
+1	246,55 €		"Campus Laval  : 1er loyer du CAMPUS LAVAL"	01/08/2019		"housing:rent"		
+2	545,23 €		"Avion : billet France -> Québec"			"transport:plane"		
+3	30 €		"Equipement fnac, oreiller"	04/08/2019		"equipement:other"		
+4	135 €		"Pharmacie crème visage + dermatologue"	06/08/2019		"health"		
+5	16 €		"Mcdo"	10/08/2019		"alimentary"		
+6	50 €		"Leclerc"			"alimentary"		
+7	30 €		"Franprix"	15/08/2019		"alimentary"		
+8	10 €		"Casino"	17/08/2019		"alimentary"		
+9		6,5	"transport bus arrivée"	22/08/2019		"transport"		
+10		117,5	"chambre mois d'août"			"housing"		
+11		10,34	"bonbon reese (test carte bleue)"			"alimentary"		
+12		6,61	"adaptateur"			"equipement"		
+13		10	"Mcdo"			"alimentary"		
+14		23	"Thé gingembre 1 boite"	23/08/2019		"alimentary"		
+15		183,79	"Levis : 2 jeans, un foncé et un couleur jean"			"equipement"		
+16		102,59	"Walmart : brosse à dents, crocks, rasoirs"			"equipement:other"		
+17		17,19	"shampoing Ives Rocher"			"health"		
+18		39,36	"Walmart : tasse, bol, bouilloire, boule à thé, manger"			"equipement"		
+19		68,96	"jean et short sport"			"equipement"		
+20		8,75	"carte bus 1 jour"			"transport"		
+21		6,72	"frappé starbuck"			"alimentary"		
+22		18	"PFK : mauvais"			"alimentary"		
+23		8,25	"Queue de castor : poutine"			"alimentary"		
+24		20,66	"Thinkkitchen : fouet, passoire"	24/08/2019		"equipement"		
+25		30,17	"Le creuset : gant et protège main cuisine"			"equipement"		
+26		18,37	"H&M : 2 t-shirt"			"equipement"		
+27		6,2	"Bus vieux port, feu d'artifice"			"transport"		
+28		11,1	"Tim Horton"			"alimentary"		
+29		60,22	"Walmart : draps + oreiller"			"equipement"		
+30		8,25	"Murphy's : bar"			"alimentary"		
+31		20	"retrait espèce"	25/08/2019		"other:withdrawal"		
+32		49,18	"Metro : nourriture"			"alimentary"		
+33		6,2	"Transport bus"	26/08/2019		"transport"		
+34		14,25	"Bar : mètre bière"			"alimentary"		
+35		22,42	"Poutineville : grosse poutine"			"alimentary"		
+36		10,58	"Poutineville : Tiphanie"			"alimentary"		
+37		197,74	"Sport Experts : chaussures et maillot de bain"			"equipement"		
+38		25,25	"Metro : cuisine et barbecue"	27/08/2019		"alimentary"		
+39		6,33	"Lvlop"			"leasure"		
+40		6,2	"Transport bus"			"transport"		
+41		45,98	"Epicerie européenne"			"alimentary"		
+42		47,53	"Metro : courses cuisine et manger"	28/08/2019		"alimentary"		
+43		357,86	"Creuset : Casserole et poele"			"equipement"		
+44		41,81	"Walmart : équipement papier cuisson …"			"equipement"		
+45		10	"Linge"			"equipement"		
+46		6,2	"Bus"	29/08/2019		"transport"		
+47		18,24	"Coop Zone : feuilles cahier"					
+48		16,2	"Dollarama"					
+49		3,44	"Poste canada : enveloppes blanches"					
+50		120,6	"Lpu"					
+51		51,44	"Amazon : balance et mixeur"					
+52		50	"OVH : nom domaine"					
+53		11,05	"Lvlop"	30/08/2019				
+54		4,03	"Bière magasin près lvlop"					
+55		6,2	"Bus"					
+56		14,83	"La place : thé et autre"					
+57		42,11	"Metro : nourriture"	31/08/2019				
+58		7	"Pub Universitaire"					
+59								
+60		7	"Pub Universitaire : soirée"	03/09/2019		"leasure:pub"		
+61		57,57	"Metro : nourriture"			"alimentary:food"		
+62								
+63		59,9	"Iga : nourriture"	05/09/2019		"alimentary:food"		
+64								
+65		147,06	"ThinkKitchen : équipement"	06/09/2019		"equipement:cooking"		
+66		10,45	"Métro : alimentation"			"alimentary:food"		
+67		10,01	"T-shirt laval x2"			"equipement:dress"		
+68		168	"Amazon : livres cours"					
+69								
+70		20,47	"Métro : Fruits légumes"	07/09/2019		"alimentary:food"		
+71								
+72		10	"Imprimante"	08/09/2019		"other:printer"		
+73		9	"Ciné : Ça"			"leasure:movie_theater"		
+74								
+75		20	"Mcdo"	09/09/2019		"alimentary:restaurant"		
+76								
+77		9,25	"Métro : légume"			"alimentary:food"		
+78								
+79		55,9	"SAQ : vodka et kraken (rhum)"	11/09/2019				
+80		30	"Coiffeur Cité"					
+81		16,5	"Pub U"					
+82		60	"Amazon : raquette ping pong"					
+83								
+84		60,83	"Metro : courses"	12/09/2019				
+85								
+86		31,04	"Dollarama : plats en verre"	13/09/2019		"equipement:cooking"		
+87		60,34	"IGA : cuisine"			"alimentary:pastry"		
+88		26,42	"Métro : cuisine"			"alimentary:food"		
+89		14,92	"Escompte : bière"			"alimentary:alcohol"		
+90		42,97	"Épicerie européenne"			"alimentary:gluttony"		
+91		14,92	"Anniv bougies + autre"			"other:present"		
+92		13,92	"?"			"other"		
+93								
+94		26	"Mcdo : rentrant de soirée"	15/09/2019		"alimentary:restaurant"		
+95		23	"Shogun : Japonais à volonter"			"alimentary:restaurant"		
+96								
+97		1080	"Campus Laval : Payement des loyers de oct., nov. et déc."	17/09/2019		"housing:rent"		
+98		32	"Amazon : jeu d'échec"			"leasure:board_game"		
+99								
+100		8,96	"Pub U : ailes de poulet + bière"	18/09/2019		"alimentary:restaurant"		
+101								
+102		24,74	"Metro : alimentaire"	19/09/2019		"alimentary:food"		
+103								
+104		35,25	"SAQ : alcool"	20/09/2019		"alimentary:alcohol"		
+105		5,59	"Chez Alphonse : provision départ baleines"			"alimentary:gluttony"		
+106		11,54	"Walmart : provision départ baleines"			"alimentary:gluttony"		
+107		13,8	"Décathlon : thermos"			"equipement:sport"		
+108		25	"Mcdo :"			"alimentary:restaurant"		
+109								
+110		6,9	"Frisson : glace 2 boules"	21/09/2019		"alimentary:gluttony"		
+111		12,15	"Epicerie tadusac"			"alimentary:gluttony"		
+112								
+113		10,34	"Métro : viande"	23/09/2019		"alimentary:food"		
+114		28,63	"Coiffeur cité : gomme"			"other:hairdresser"		
+115		28,74	"Yves Rocher : masques"			"health:cream"		
+116		59,71	"Walmart : crème, solaire, coussin, lampe"			"health:cream"		
+117		27,88	"Dollarama : paniers"			"equipement:other"		
+118								
+119	600		"ENSEA : inscription"	25/09/2019		"school:registration"		
+120	91		"CVEC : inscription ENSEA"			"school:registration"		
+121	-600		"Remboursement parents"			"reimbursement:119"		
+122	-91		"Remboursement parents"			"reimbursement:120"		
+123								
+124		35,02	"Walmart : courses"	26/09/2019		"alimentary:food"		
+125		12,95	"Métro : courses"			"alimentary:food"		
+126		23,68	"Livres + affaires"			"school:supplies"		
+127		3,04	"lettre"			"other:post"		
+128		70,09	"H&M : vêtements haut"			"equipement:dress"		
+129								
+130		20	"Coinomatic : argent pour machine à laver"	27/09/2019		"housing:laundry"		
+131								
+132		13,47	"Métro : courses cuisine"	29/09/2019		"alimentary:food"		
+133								
+134		41,36	"IGA : courses + pâtisserie"	30/09/2019		"alimentary:food"		
+135		14	"ESTA"			"transport:authorization"		"NY.19.10"
+136								
+137								
+138		6,39	"Frisson : glace"	03/10/2019		"alimentary:gluttony"		
+139		160,69	"Desjardins : marathon Québec"			"leasure:activity"		
+140								
+141		53,24	"Metro courses"	04/10/2019		"alimentary:food"		
+142		9	"Clap (cinéma, Joker)"			"leasure:movie_theater"		
+143								
+144		3	"lvlop"	05/10/2019		"leasure:out"		
+145		42,21	"Metro courses"			"alimentary:food"		
+146								
+147		25	"Mcdo : Uber eats"	09/10/2019		"alimentary:restaurant"		
+148								
+149		22	"Amazon : brassard course"	10/10/2019		"equipement:sport"		
+150	222,3		"Remboursement : Aurélien logement New York; NY.19.10"			"housing:hotel"		"NY.19.10"
+151	189,36		"Busbud : bus aller retour NewYork; NY.19.10"			"transport:bus"		"NY.19.10"
+152	4,72		"Frisson : glace"			"alimentary:gluttony"		
+153								
+154		57,48	"Sport Experts : sac course"	11/10/2019		"equipement:sport"		
+155		40,31	"Metro courses"			"alimentary:food"		
+156	10,8		"Mcdo"			"alimentary:restaurant"		
+157	7,11		"RAMQ"			"health:insurance"		
+158								
+159		14	"Sport Experts : gourde"	12/10/2019		"equipement:sport"		
+160								
+161	32,11		"Mcdo : Uber eats"	13/10/2019		"alimentary:restaurant"		
+162								
+163		29,99	"Métro courses"	14/10/2019		"alimentary:food"		
+164	530,75		"Remboursement Aymeric Cuba vol + hotel inclus; cuba.19.10"			"transport:plane"		"CUBA.19.10"
+165								
+166		7	"Pub U"	16/10/2019		"leasure:pub"		
+167		20	"Photo marathon"			"other"		
+168								
+169	21,19		"Retrait borne : pour le pauvre qui m'a indiqué le chemin"	18/10/2019		"other"		"NY.19.10"
+170	11,16		"Wendy's"			"alimentary:restaurant"		"NY.19.10"
+171	9,26		"Chipotle"			"alimentary:restaurant"		"NY.19.10"
+172	5,42		"US frontière payement"			"transport:authorization"		"NY.19.10"
+173								
+174	38,2		"World trade center 1 : visite du dernier étage"	19/10/2019		"leasure:visit"		"NY.19.10"
+175	67,54		"Nintendo : peluches"			"other:present"		"NY.19.10"
+176	9,48		"Wendy's"			"alimentary:restaurant"		"NY.19.10"
+177	5,4		"Métro Newyorkais"			"transport:train"		"NY.19.10"
+178	18,25		"Five Guys"			"alimentary:restaurant"		"NY.19.10"
+179								
+180	2,7		"Métro Newyorkais"	20/10/2019		"transport:train"		"NY.19.10"
+181	11,54		"Tacobell"			"alimentary:restaurant"		"NY.19.10"
+182	12,8		"Shake Shack"			"alimentary:restaurant"		"NY.19.10"
+183								
+184	16,7		"Five Guys"	21/10/2019		"alimentary:restaurant"		"NY.19.10"
+185	15		"Pizza, remboursement Aurélien via Bastien"			"alimentary:restaurant"		"NY.19.10"
+186								
+187				22/10/2019				
+188		43,44	"Skream : concert boite nuit electro"			"leasure:out"		
+189								
+190		27,51	"Poste : envoi colis Amélie et Clara"	23/10/2019		"other:post"		
+191		43,52	"Métro : courses"			"alimentary:food"		
+192								
+193		4,8	"Walmart : bouchons oreilles"	25/10/2019		"equipement:other"		
+194		48,27	"Costume Luigi et jeu compagnon"			"leasure:board_game"		
+195								
+196								
+197	8,68		"Starbucks : café + gâteau"	27/10/2019		"alimentary:gluttony"		
+198								
+199	22		"Taxi + boite pirates"	28/10/2019		"leasure:out"		"CUBA.19.10"
+200								
+201								
+202				29/10/2019				
+203								
+204	20		"Leçon de plongée dans la piscine"	30/10/2019		"leasure:activity"		"CUBA.19.10"
+205								
+206	85		"Plongée dans la baie des cochons"	31/10/2019		"leasure:activity"		"CUBA.19.10"
+207								
+208	41		"Visite de la Havane"	01/11/2019		"leasure:visit"		"CUBA.19.10"
+209								
+210	21,22		"Rhum"	04/11/2019		"alimentary:alcohol"		"CUBA.19.10"
+211								
+212		30,23	"Métro : courses petit dej et légumes"	05/11/2019		"alimentary:food"		
+213	8,96		"A&W"			"alimentary:restaurant"		
+214								
+215		126,4	"Walmart : brosse à dents électrique et couette hiver"	06/11/2019		"equipement:bedding"		
+216		13,27	"Pub U : ailes de poulet"			"alimentary:restaurant"		
+217								
+218		79,17	"Métro : courses cuisine et légumes"	08/11/2019		"alimentary:food"		
+219								
+220		44,05	"Métro courses"	09/11/2019		"alimentary:food"		
+221								
+222		93,13	"Decathlon : balle gym, tapis, patins à glace"	15/11/2019		"equipement:sport"		
+223		53,98	"Ikea : protege couette, bougies"			"equipement:bedding"		
+224		4,03	"Ikea : hotdogs"			"alimentary:gluttony"		
+225		2,3	"Ikea : hotdogs"			"alimentary:gluttony"		
+226								
+227		29,13	"Desjardins affaires scolaires pour rangement"	16/11/2019		"school:supplies"		
+228		61,1	"Métro courses"			"alimentary:food"		
+229								
+230		80	"Retrait distributeur"	17/11/2019		"other:withdrawal"		
+231		140	"Achat téléphone Liam Iphone 7 (espèce)"			"equipement:phone"		
+232		33,35	"Shogun sushi : jap illimité"			"alimentary:restaurant"		
+233								
+234		37	"Chalet : avance Mcdo"	22/11/2019		"alimentary:restaurant"		"Chalet.19.11"
+235		25,01	"Bières pour le chalet"			"alimentary:alcohol"		"Chalet.19.11"
+236		-37	"Remboursement avance chalet"			"reimbursement:234"		"Chalet.19.11"
+237		105	"Chalet tout compris"			"housing:hotel"		"Chalet.19.11"
+238								
+239		80,64	"Provigo : courses"	28/11/2019		"alimentary:food"		
+240		16	"Amazon : pompe vélo"			"equipement:sport"		
+241	30		"Peluches pour noël"			"other:present"		
+242		24	"Poste : lettre recommandée désabonnement le Monde"			"other:post"		
+243		35	"Livre Plouf"			"leasure:book"		
+244								
+245		17,25	"Lvlop : aprem gaming"	29/11/2019		"leasure:out"		
+246		29,16	"Épicerie européenne : thé et gingembre"			"alimentary:gluttony"		
+247								
+248								
+249		190,85	"MEC : collant et 2 paires de chaussettes hiver"	01/12/2019		"equipement:sport"		
+250								
+251		10	"Apport solde linge"	03/12/2019		"housing:laundry"		
+252		15	"Crypt of the necrdancer"			"leasure:video_game"		
+253								
+254		109,06	"IGA courses"	05/12/2019		"alimentary:food"		
+255		-30	"Remboursement Étienne courses"			"reimbursement:254"		
+256		124,49	"Sport Expert : bas pour la course et gants en merino"			"equipement:sport"		
+257								
+258		95,01	"IGA courses"	09/12/2019		"alimentary:food"		
+259								
+260		13,25	"Poste : lettres pour noël pour la famille"	10/12/2019		"other:post"		
+261								
+262	8		"Amazon : barres céréales testées fin marathon, nouveau test"	12/12/2019		"alimentary:food_test"		
+263		5	"Marché de Noël : pain au fromage"			"alimentary:gluttony"		
+264		20	"Pub St Alexandre : bière"			"leasure:pub"		
+265								
+266		11,42	"Cadeau Papa et Yann"	15/12/2019		"other:present"		
+267		11,5	"Pub St Patrick"			"leasure:pub"		
+268								
+269		5,46	"Dollarama : paniers pour ranger"	16/12/2019		"equipement:other"		
+270		60,17	"Librairie Renaud-Bray : 5 livres"			"leasure:book"		
+271		21,62	"Metro : courses légères"			"alimentary:food"		
+272		-10	"Remboursement Étienne bacon et œufs Metro courses"			"reimbursement:271"		
+273								
+274		40	"Frigo Poche acheté"	17/12/2019		"equipement:furniture"		
+275								
+276		73,59	"Metro : courses semaine"	18/12/2019		"alimentary:food"		
+277								
+278		25,75	"Metro : courses cuisine"	19/12/2019		"alimentary:pastry"		
+279		-12	"Remboursement Étienne Metro"			"reimbursement:278"		
+280		227,63	"Sport Experts : haut coupe vent et caleçons"			"equipement:sport"		
+281								
+282		39,07	"Épicerie européenne : thé et biscuits"	22/12/2019		"alimentary:gluttony"		
+283		39,67	"Épicerie européenne : avance pour le repas de noël"			"alimentary:gluttony"		
+284		114,68	"Metro : courses et avance pour le repas de noël"			"alimentary:gluttony"		
+285		-114	"Remboursement Noël"			"reimbursement:284"	"cash"	
+286		-39	"Remboursement Noël"			"reimbursement:283"		
+287								
+288		1080	"Campus Laval : Loyer résidence"	25/12/2019		"housing:rent"		
+289		-185,85	"MEC : remboursement commande"			"reimbursement:249"		
+290		65,54	"MEC : achat chaussettes hiver"			"equipement:sport"		
+291								
+292		12,75	"Thinkkitchen : plaque pour gâteaux"	26/12/2019		"equipement:cooking"		
+293		57,92	"Metro : course et beaucoup pour la cuisine"			"alimentary:food"		
+294		9	"Cinéma : Star Wars"			"leasure:movie_theater"		
+295		33,47	"Coiffeur"			"other:hairdresser"		
+296								
+297		45,38	"Metro : courses pour repas du 31"	31/12/2019		"alimentary:food"		
+298	-24		"Remboursement repas 31 Kenan"			"reimbursement:297"		
+299								
+300		20	"Apport solde linge"	01/01/2020		"housing:laundry"		
+301								
+302		51,29	"Metro : courses"	05/01/2020		"alimentary:food"		
+303								
+304		22,28	"Mcdo : bouffe après le Shackeur"	08/01/2020		"alimentary:restaurant"		
+305								
+306		120,6	"Bus : payment du semestre"	09/01/2020		"transport:bus"		
+307		6,7	"Bus : ticket aller retour"			"transport:bus"		
+308								
+309		58,13	"Metro : courses"	10/01/2020		"alimentary:food"		
+310								
+311		20	"Coop Zone : matériel scolaire"	11/01/2020		"school:supplies"	"cash"	
+312								
+313		63,14	"Metro : courses"	14/01/2020		"alimentary:food"		
+314								
+315		7,2	"Univrac : lentilles et amandes"	15/01/2020		"alimentary:food"	"cash"	
+316		54,83	"Metro : courses"			"alimentary:food"		
+317								
+318		547	"Avion : voyage à Chicago"	16/01/2020		"transport:plane"		"CHICAGO.20.01"
+319		6,1	"Metro : pâtisserie"			"alimentary:pastry"		
+320								
+321		16,94	"A&W : avec Louis"	18/01/2020		"alimentary:restaurant"		
+322								
+323	60		"Amazon : livres de cours"	20/01/2020		"school:supplies"		
+324		147	"Dentiste : dent cassée en patinant"			"health:emergency"		
+325								
+326		9	"Clap : film 1917"	25/01/2020		"leasure:movie_theater"		
+327		20	"Mcdo"			"alimentary:restaurant"		
+328								
+329	20,97		"Steam : Northgard"	26/01/2020		"leasure:video_game"		
+330		88,96	"Metro : courses"			"alimentary:food"		
+331		174,7	"Sport Expert : "			"equipement:sport"		
+332								
+333		12	"Chez Alphonse : fruits secs"	29/01/2020		"alimentary:food"		
+334								
+335		9,25	"Dollarama : panier pour rangement"	30/01/2020		"equipement"		
+336		3,79	"Metro : bananes"			"alimentary:food"		
+337								
+338		9,47	"Café au temps perdu : date avec Ellie"	02/02/2020				
+339		13,79	"Metro : préservatifs"					
+340								
+341		11,75	"Chez Alphonse : fruits secs"	03/02/2020				
+342								
+343		6	"Coop Zone : aaptateur prise américaine"	04/02/2020				
+344								
+345	50		"Amazon : livre"	05/02/2020		"equipement"		
+346								
+347		16	"A&W"	06/02/2020		"alimentary:restaurant"		"CHICAGO.20.01"
+348	20		"Bus illimité"			"transport:bus"		"CHICAGO.20.01"
+349	9,59		"Wendy's"			"alimentary:restaurant"		"CHICAGO.20.01"
+350								
+351	17,21		"Five Guys : restaurant"	07/02/2020		"alimentary:restaurant"		"CHICAGO.20.01"
+352	9,7		"Mcdo"			"alimentary:restaurant"		"CHICAGO.20.01"
+353								
+354	17,37		"Domino's : pizza"	08/02/2020		"alimentary:restaurant"		"CHICAGO.20.01"
+355								
+356	5		"Rudy's bar : pizza pâte chicago"	09/02/2020		"alimentary:restaurant"		"CHICAGO.20.01"
+357	3,5		"Dunkin' Donuts : donuts"			"alimentary:gluttony"		"CHICAGO.20.01"
+358								
+359	10		"Panda Express : bol"	10/02/2020		"alimentary:restaurant"		"CHICAGO.20.01"
+360								
+361		10	"Chez Alphonse : fruits secs"	12/02/2020		"alimentary:food"		
+362								
+363		4	"Coop Zone : papier"	13/02/2020		"school:supplies"		
+364								
+365		102,96	"Metro : courses"	14/02/2020		"alimentary:food"		
+366								
+367	30		"Logement pour Montréal"	15/02/2020		"housing:hotel"		
+368		116	"Québec : CAQ"			"other:authorization"		
+369								
+370		32,84	"Metro : courses"	17/02/2020		"alimentary:food"		
+371								
+372		7	"Chez Alphonse : fruits secs"	19/02/2020		"alimentary:food"		
+373								
+374		14,22	"Chez Alphonse : fruits secs"	26/02/2020		"alimentary:food"		
+375		59,55	"Coop zone : livres et piles"			"school:supplies"		
+376								
+377		56,18	"Epicerie européenne : thé, fromage et gingembre"	27/02/2020		"alimentary:gluttony"		
+378								
+379		25,13	"Poutineville"	29/02/2020		"alimentary:restaurant"		
+380								
+381		1080	"Campus Laval : loyer"	01/03/2020		"housing:rent"		
+382								
+383		60,26	"Metro : courses"	02/03/2020		"alimentary:food"		
+384		41,9	"Archambault : livres"			"leasure:book"		
+385		40	"Retrait liquide"			"other:withdrawal"		
+386		1,5	"Steam : jeu vidéo"			"leasure:video_game"		
+387								
+388		48,3	"Avance Van Gogh pour Marie et Jacques"	04/03/2020		"leasure:out"		"MONTREAL.20.03"
+389		44	"Avance New City Gaz pour Marie et Jacques"			"leasure:out"		"MONTREAL.20.03"
+390		-48	"Remboursement avance Van Gogh"			"reimbursement:388"		"MONTREAL.20.03"
+391		-44	"Remboursement avance New City Gaz "			"reimbursement:389"		"MONTREAL.20.03"
+392								
+393		19,5	"Transport Montréal"	05/03/2020		"transport:bus"		"MONTREAL.20.03"
+394		176,72	"Metro : courses pour road trip"					"MONTREAL.20.03"
+395		-176,72	"Remboursement"			"reimbursement:394"		"MONTREAL.20.03"
+396		15,23	"Sandwich boucherie"	06/03/2020		"alimentary:restaurant"		"MONTREAL.20.03"
+397		6,66	"Five Guys : milkshake"			"alimentary:gluttony"		"MONTREAL.20.03"
+398								
+399		6	"Nougat"	07/03/2020		"alimentary:gluttony"		"MONTREAL.20.03"
+400								
+401		82,79	"Sofitel Montreal : brunch"	08/03/2020		"alimentary:restaurant"		"MONTREAL.20.03"
+402								
+403		32,83	"Walmart : préservatifs et lubrifiant"	10/03/2020		"equipement:other"		
+404		41,84	"Coiffeur"			"other:hairdresser"		
+405								
+406		8	"Attestation d'inscription"	11/03/2020		"school:registration"		
+407		15,4	"Poste : lettre pour CAQ"			"other:post"		
+408		14,87	"Univrac : fruits secs"			"alimentary:food"		
+409								
+410	60,17		"Studio Universal : souvenirs"	13/03/2020		"other:present"		"LA.20.03"
+411								
+412	3,71		"Mcdo : sundae"	14/03/2020		"alimentary:gluttony"		"LA.20.03"
+413	10,51		"Panda Express : manger"			"alimentary:restaurant"		"LA.20.03"
+414	10		"In and Out"			"alimentary:restaurant"		"LA.20.03"
+415								
+416	18,25		"Five Guys"	15/03/2020		"alimentary:restaurant"		"LA.20.03"
+417	-2,5		"Remboursement Five Guys frites"			"reimbursement:416"		"LA.20.03"
+418	10,8		"Korean BBQ"			"alimentary:restaurant"		"LA.20.03"
+419								
+420	11,68		"Burger King"	16/03/2020		"alimentary:restaurant"		"LA.20.03"
+421								
+422								
+423	30,3		"Wendy's : avance"	17/03/2020		"alimentary:restaurant"		"LA.20.03"
+424	-20,2		"Remboursement Wendy's"			"reimbursement:423"		"LA.20.03"
+425								
+426								
+427	15,81		"Delaware North : burger"	18/03/2020		"alimentary:restaurant"		"LA.20.03"
+428								
+429	7		"Steam : DLC Crypt"	20/03/2020		"leasure:video_game"		
+430								
+431		114,11	"Metro : courses"	22/03/2020		"alimentary:food"		
+432								
+433	106,92		"Remboursement logement Aurélien LA"	23/03/2020		"housing:hotel"		
+434	142,71		"Remboursement voiture essence Clément LA"			"transport:car"		
+435								
+436		35,42	"Épicerie européenne : courses"	02/04/2020		"alimentary:gluttony"		
+437								
+438		121,6	"Metro : courses"	03/04/2020		"alimentary:food"		
+439								
+440		111,67	"Metro : courses"	14/04/2020		"alimentary:food"		
+441								
+442	10		"Netflix"	17/04/2020		"leasure:streaming"		
+443								
+444		47,31	"Metro : courses"	18/04/2020		"alimentary:food"		
+445								
+446		65,35	"Metro : courses"	27/04/2020		"alimentary:food"		
+447		44,08	"Metro : courses"			"alimentary:food"		
+448								
+449		75,66	"Metro : courses"	07/05/2020		"alimentary:food"		
+450								
+451		185	"MEC : chaussures + chaussettes (1 paire chaque)"	09/05/2020		"equipement:sport"		
+452								
+453		51,54	"Metro : courses"	13/05/2020		"alimentary:food"		
+454								
+455		38,49	"Metro : courses et extra"	15/05/2020		"alimentary:food"		
+456		10	"Coinomatic : argent pour machine à laver"			"housing:laundry"		
+457								
+458	12,5		"Steam : Ratropolis"	16/05/2020		"leasure:video_game"		
+459								
+460		68,52	"Épicerie européenne : courses"	20/05/2020		"alimentary:gluttony"		
+461								
+462		117,81	"Metro : courses"	22/05/2020		"alimentary:food"		
+463								
+464		1,25	"Poste : papiers pour permi étude manquants"	28/05/2020		"other:post"		
+465		76,51	"Walmart : équipement et affaires scolaires"			"equipement:other"		
+466		30,3	"Metro : courses et extra"			"alimentary:food"		
+467								
+468		55,04	"Épicerie européenne : courses"	02/06/2020		"alimentary:food"		
+469								
+470		5	"Metro : courses"	03/06/2020		"alimentary:food"		
+471		100,71	"Metro : courses"			"alimentary:food"		
+472		7,9	"Frisson : glaces"			"alimentary:gluttony"		
+473								
+474		90	"Cité médicale : osthéopathie"	04/06/2020		"health:osteopath"		
+475								
+476		360	"Campus Laval : loyer"	05/06/2020		"housing:rent"		
+477								
+478		83,47	"Metro : courses"	08/06/2020				
+479								
+480		220	"Clinique dentaire Trudel B : Dentiste"	10/06/2020		"health:dentist"		
+481								
+482		20	"Mcdo"	12/06/2020				
+483		7,6	"Frisson : glaces"			"alimentary:gluttony"		
+484								
+485		94,69	"Metro : courses"	13/06/2020				
+486								
+487		20	"Coinomatic : argent pour machine à laver"	14/06/2020				
+488								
+489		33,28	"Walmart : balais"	15/06/2020		"equipement:other"		
+490								
+491		24,6	"Walmart : achat lime à ongle, fil dentaire et ciseau ongle"	16/06/2020		"equipement:other"		
+492		41,39	"Coiffeur : coupe de cheveux"			"other:hairdresser"		
+493								
+494		25,13	"Shogun sushi : restaurant"	17/06/2020		"alimentary:restaurant"		
+495								
+496		74,36	"Épicerie européenne : courses"	18/06/2020				
+497								
+498		23,41	"Masque pour pandémie Corona"	22/06/2020		"equipement:other"		
+499		10,2	"Mary's popcorn : popcorn"			"alimentary:gluttony"		
+500								
+501		37,09	"Épicerie européenne : courses"	26/06/2020				
+502		95,02	"IGA : courses"			"alimentary:food"		
+503								
+504		20,74	"Metro : courses"	01/07/2020		"alimentary:food"		
+505								
+506		9	"Boulangerie : pains au raisin"	03/07/2020		"alimentary:gluttony"		
+507								
+508		7,89	"Frisson : glace"	04/07/2020		"alimentary:gluttony"		
+509		49,78	"Metro : courses"					
+510								
+511		42,52	"Sport Expert : corde à sauter et chaussettes course"	07/07/2020		"equipement:sport"		
+512		49,03	"Metro : courses"			"alimentary:food"		
+513								
+514		23,21	"Best buy : clavier qwerty"	08/07/2020		"equipement:computer"		
+515		67,03	"Metro : courses"			"alimentary:food"		
+516		110	"Peps : nutritionniste"			"health:doctor"		
+517								
+518		1120	"Campus Laval : loyer"	10/07/2020				
+519		24,8	"RTC : Ticket pour le bus"			"transport:bus"		
+520		48,69	"Epicerie europeenne"			"alimentary:gluttony"		
+521		8,4	"Le Crac : flocon d'avoinne, noix et echalotte"			"alimentary:food"		
+522		40,23	"Rogers : ligne telephonique"			"equipement:phone"		
+523								
+524		14,12	"Metro : courses"	14/07/2020		"alimentary:food"		
+525								
+526		28,36	"Uber Eats : Mcdo"	15/07/2020		"alimentary:restaurant"		
+527								
+528		43,67	"Marshalls : chaussettes et caleçons"	16/07/2020		"equipement:dress"		
+529		48,85	"Globo Chaussures : chaussures Geox de ville"			"equipement:dress"		
+530		37,75	"Metro : courses"			"alimentary:food"		
+531								
+532		28,73	"Marshalls : remboursement caleçons"	19/07/2020		"reimbursement:529"		
+533		34,48	"Marshalls : caleçons"			"equipement:dress"		
+534		17,25	"Sport Expert : short course"			"equipement:sport"		
+535								
+536		270,4	"Desjardin : assurance maladie et hospitalisation"	20/07/2020		"health:insurance"		
+537		44,65	"Metro : courses"					
+538		11	"Peps : piscine"			"leasure:activity"		
+539								
+540		56,42	"Épicerie Européenne"	21/07/2020		"alimentary:gluttony"		
+541		20,54	"Le Crac : flocon d'avoinne, miel et papaye + mangue séchée"					
+542								
+543		33,7	"Domino's : pizza"	22/07/2020		"alimentary:gluttony"		
+544								
+545		30,36	"Metro : courses"	24/07/2020				
+546								
+547		6,84	"Jus Jugo Juice : smoothie"	25/07/2020		"alimentary:gluttony"		
+548								
+549		1560	"Retrait borne"	28/07/2020		"other:withdrawal"		
+550								
+551		19,05	"Five Guys : midi"	29/07/2020		"alimentary:restaurant"		
+552		17,77	"Pétro-Canada : plein essence"			"transport:car"		
+553		26,69	"Pétro-Canada : plein essence"			"transport:car"		
+554		18	"Indigo : place de stationnement"			"transport:car"		
+555		38,25	"Discount : location voiture"			"transport:car"		
+556		1575	"Dell : achat pc portable au détaillant"			"equipement:computer"	"cash"	
+557								
+558		45,98	"Coop Zone : achat clé usb 64Go"	30/07/2020		"equipement:computer"		
+559		92,02	"Provigo : courses"			"alimentary:food"		
+560		100	"Peps : nutritionniste"			"health:doctor"		
+561								
+562		"30.73"	"Le Crac : flocon d'avoinne, papaye + mangue séchée"	03/08/2020		"alimentary:food"		
+563		"39.55"	"Épicerie Européenne"			"alimentary:food"		
+564		10	"Coinomatic : argent pour machine à laver"					
+565								
+566		10	"Netflix : abonnement"	07/08/2020		"leasure:streaming"		
+567								
+568		"68.24"	"Provigo : courses"	08/08/2020		"alimentary:food"		
+569								
+570		300	"Médecin généraliste"	09/08/2020		"health:doctor"		
+571								
+572		"20.22"	"Provigo : courses"	11/08/2020		"alimentary:food"		
+573								
+574		"40.78"	"Provigo : courses"	14/08/2020		"alimentary:food"		
+575								
+576		"8.95"	"TIm Horton : Donuts"	16/08/2020		"alimentary:gluttony"		
+577		"34.84"	"Metro : courses"			"alimentary:food"		
+578								
+579		85	"Peps : kine"	18/08/2020		"health:doctor"		
+580								
+581		"48.81"	"Provigo : courses"	20/08/2020				
+582		"8.43"	"Metro : courses"					
+583		"20.15"	"Lvlop : aprem gaming"	22/08/2020				
+584								
+585								
+586		"21.85"	"Shogun sushi : restaurant"	25/08/2020				
+587		7	"Café "					
+588		"12.40"	"RTC : Ticket pour le bus"	26/08/2020				
+589								
+590								
+591								
+592								
+593								
+594								
+595								
+596								
+597								
+598								
+599								
+600								
+601								
+602								
+603								
+604								
+605								
+606								
+607								
+608								
+609								
+610								
+611								
+612								
+613								
+614								
+615								
+616								
+617								
+618								
+619								
+620								
+621								
+622								
+623								
