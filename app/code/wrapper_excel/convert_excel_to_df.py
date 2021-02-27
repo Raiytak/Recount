@@ -21,9 +21,14 @@ class ExcelToDataframe():
         dfs = {sheet_name: xl_file.parse(sheet_name) 
                 for sheet_name in xl_file.sheet_names}
         try:
-            return dfs["Feuil1"]
+            dataframe = dfs["Feuil1"]
         except KeyError:
-            return dfs["Sheet1"]
+            dataframe = dfs["Sheet1"]
+        list_columns = dataframe.columns
+        for column_name in list_columns:
+            if "Unnamed" in column_name:
+                dataframe = dataframe.drop(columns=column_name)
+        return dataframe
 
     def getDataframeOfExcel(self):
         path_excel = self.ExcelPath.copiedExcelPath()

@@ -7,5 +7,17 @@
     },
     "submit-button-text": {
         "value": "UPDATE"
+    },
+    "update-button-text": {
+        "value": "Update done"
+    },
+    "upload-data": {
+        "value": "Update done"
+    },
+    "update-button-message": {
+        "value": ""
+    },
+    "upload-data-message": {
+        "value": ""
     }
 }

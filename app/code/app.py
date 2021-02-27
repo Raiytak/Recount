@@ -1,6 +1,7 @@
 import dash
 from dash.dependencies import Input, Output
 
+import update_db
 
 import communication_db
 DateToDataframe = communication_db.DateToDataframe()
@@ -41,7 +42,7 @@ ConvertDfToGraph = main_convert_df_to_graph.DataframeToGraph(DataframeToListDict
 
 # Object used to save an excel uploaded by the user
 import wrapper_dash.facilitator_dash.import_excel as import_excel
-FileSaver = import_excel.FileSaver(myExcelToDataframe)    
+ImportExcelFileSaver = import_excel.ImportExcelFileSaver(myExcelToDataframe, update_db)    
 
 import wrapper_dash.facilitator_dash.save_config as save_config
 ConfigNotebookExcelSaver = save_config.ConfigNotebookExcelSaver(myAccessNotebookExcelConfig) 
@@ -62,10 +63,10 @@ class AppDash():
 
         self.vueIndex = vue_index.AppDash(self.app)
         self.vueHome = vue_home.AppDash(self.app)
-        self.vueDashboardHome = vue_dashboard_home.AppDash(self.app, DateToDataframe, ConvertDfToGraph, FileSaver)
+        self.vueDashboardHome = vue_dashboard_home.AppDash(self.app, DateToDataframe, ConvertDfToGraph, ImportExcelFileSaver)
         self.vueCategoriesFile = vue_modify_categories_file.AppDash(self.app, myAccessCTAuthorized)
 
-        self.vueNotebookExcel = vue_notebook_excel.AppDash(self.app, myExcelToDataframe, FileSaver, ConfigNotebookExcelSaver, StandardButtonsConfigSaver)
+        self.vueNotebookExcel = vue_notebook_excel.AppDash(self.app, myExcelToDataframe, ImportExcelFileSaver, ConfigNotebookExcelSaver, StandardButtonsConfigSaver)
     
 
 

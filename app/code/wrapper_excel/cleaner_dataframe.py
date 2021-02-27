@@ -59,11 +59,16 @@ class CleanerDataframe():
         #                 "Excess E", "Excess D"]
         list_columns = ["Sum Euros", "Sum Dollars",
                         "Excess E", "Excess D", "TemporaryDescription"]
-        dataframe = dataframe.drop(columns=list_columns)
-        try:
-            dataframe = dataframe.drop(columns=["Unnamed: 0"])
-        except Exception as e:
-            print(e)
+        for column_name in list_columns:
+            try:
+                dataframe = dataframe.drop(columns=column_name)
+            except Exception as e:
+                pass
+        list_columns_df = dataframe.columns
+        for column_name in list_columns_df:
+            if "Unnamed" in column_name:
+                dataframe = dataframe.drop(columns=column_name)
+
         return dataframe
         
     

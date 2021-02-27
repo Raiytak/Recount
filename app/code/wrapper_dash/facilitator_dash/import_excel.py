@@ -4,16 +4,18 @@ import base64
 import csv
 import pandas as pd
 
-import update_db
 
-
-class FileSaver():
-    def __init__(self, ExcelToDataframe):
+class ImportExcelFileSaver():
+    def __init__(self, ExcelToDataframe, update_db):
         self.ExcelToDataframe = ExcelToDataframe
         self.AccessExcel = self.ExcelToDataframe.AccessExcel
         self.ExcelPath = self.AccessExcel.ExcelPath
 
+        self.update_db = update_db
 
+
+    def getDataframe(self):
+        return self.ExcelToDataframe.getDataframeOfRawExcel()
 
     def getContentTypeAndStringOfImportedFile(self, file_imported):
         content_type, content_string_encoded = file_imported.split(',')
@@ -48,6 +50,11 @@ class FileSaver():
             raise TypeError
 
 
+
+    def updateDbs(self):
+        self.update_db.updateAll()
+
+
     def saveImportedFile(self, file_imported):
         # If there is nothing to save, the function stops
         if file_imported != None:
@@ -55,8 +62,6 @@ class FileSaver():
                 content_type, content_decoded = self.decodeImportedFile(file_imported)
                 self.checkIsAXlsxFile(content_type)
                 self.saveContentStringIntoXlsxFile(content_type, content_decoded)
-                
-                update_db.updateAll()
                 return 'File imported'
 
             except TypeError:
@@ -67,12 +72,12 @@ class FileSaver():
 
 
 
-    def saveTemporaryRawExcelFromInputData(self, data_excel):
+    # def saveTemporaryRawExcelFromInputData(self, data_excel):
+    def saveNotebookDataTorawExcel(self, data_excel):
         # If there is nothing to save, the function stops
         try:
             dataframe = pd.DataFrame(data_excel)
             dataframe.to_excel(self.ExcelPath.rawCopiedExcelPath(), index=False)
-            update_db.updateAll()
         except Exception:
             # print(" >>> An error has occcured during the update.<<<\n >>> Please check the values you have inserted <<<")
             return " >>> An error has occcured during the update. Please check the values you have inserted <<<"
@@ -81,6 +86,6 @@ class FileSaver():
 
 
 
-    def translateDataframeToData(self, dataframe):
+    def translateDataframeToNotebookData(self, dataframe):
         data_for_output = dataframe.to_dict('records')
         return data_for_output

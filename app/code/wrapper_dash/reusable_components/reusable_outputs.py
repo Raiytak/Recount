@@ -86,23 +86,9 @@ class ReusableSingleOutputs(UniqueReusableSingleOutputs):
         super().__init__(name_vue)
 
         self.msg_div = self.name_vue+"message-to-user"
-        self.msg_import_excel_div = self.name_vue+"message-to-user--import-excel"
+        self.msg_import_excel_div = self.name_vue+"-import-excel"
+        self.msg_update_div = self.name_vue+"-Update"
 
-
-
-
-
-    def getMessageToUserDiv(self):
-        output_div = html.P(id=self.msg_div, children=' ')
-        return output_div
-    def getMessageToUserCallback(self):
-        return Output(self.msg_div, "children")
-
-    def getMessageToUserImportExcelInfoDiv(self):
-        output_div = html.P(id=self.msg_import_excel_div, children='')
-        return output_div
-    def getMessageToUserImportExcelInfoCallback(self):
-        return Output(self.msg_import_excel_div, "children")
 
 
 
