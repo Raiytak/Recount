@@ -39,6 +39,13 @@ class ReusableStyles():
             }
         return style_standard_button
 
+    def styleStandardPlainTextHidden(self):
+        style_standard_button = self.styleStandardPlainText()
+        style_standard_button["opacity"]=0
+        return style_standard_button
+
+
+
     def syleSimpleFlex(self):
         style_standard_button = {
             "display": "flex",

@@ -116,8 +116,8 @@ class AppDash(EmptyVue):
             self.ReusableStandardButtons.EditButtons.inputcallbacks_categories(),
             self.ReusableStandardButtons.EditButtons.statecallbacks_categories()
             )
-        def edit_buttons_categories(check_value, upd_data_t, ed_col_t, msg_user_update):  
-            texts_to_save = [upd_data_t, ed_col_t,  msg_user_update]
+        def edit_buttons_categories(check_value):  
+            texts_to_save = []
             list_ids = self.ReusableStandardButtons.EditButtons.id_statecallbacks_categories()
 
             return self.ReusableStandardButtons.EditButtons.edit_buttons_categories(check_value, list_ids, texts_to_save)

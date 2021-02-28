@@ -57,14 +57,13 @@ class AppDash(EmptyVue):
             [self.ReusableNotebook.statecallback_Notebook_data(), self.ReusableNotebook.statecallback_Notebook_columns()]
             )
         def do_update(n_clicks_submit, data_notebook, columns_notebook):
-            message_to_user = ""
+            style_message_to_user = self.ReusableStandardButtons.ReusableStyles.styleStandardPlainTextHidden()
             if self._counter_copied_excel != n_clicks_submit:
-                import os
-                os.wait(1)
-                message_to_user = self.ImportExcelFileSaver.saveNotebookDataTorawExcel(data_notebook) 
+                message_import = self.ImportExcelFileSaver.saveNotebookDataTorawExcel(data_notebook) 
+                style_message_to_user = self.ReusableStandardButtons.ReusableStyles.styleStandardPlainText()
                 self.ConfigNotebookExcelSaver.updateColumnsName(columns_notebook)
             #     self.ImportExcelFileSaver.updateDbs() # prend de la puissance de calcul parce que sauvegarde a chaque interaction
-            return message_to_user
+            return style_message_to_user
 
 
 
@@ -76,17 +75,18 @@ class AppDash(EmptyVue):
 
             self.ReusableNotebook.AddRow.statecallbacks()
             )
-        def add_row_notebook(add_row_n_clicks, imported_excel, data_notebook, columns_notebook):  
-            message_to_user = ""
+        def add_row_notebook(add_row_n_clicks, imported_excel, data_notebook, columns_notebook): 
+            style_message_to_user = self.ReusableStandardButtons.ReusableStyles.styleStandardPlainTextHidden()
             data_for_output = data_notebook
             if add_row_n_clicks != self._counter_add_row:
                 self._counter_add_row = add_row_n_clicks
                 message_to_user, data_for_output = self.ReusableNotebook.AddRow.add_row_notebook(data_notebook, columns_notebook)
+                style_message_to_user = self.ReusableStandardButtons.ReusableStyles.styleStandardPlainText()
             elif imported_excel != None:
                 # Update the notebook using imported excel
                 time.sleep(2)
                 data_for_output = self.ReusableNotebook.getNotebookData()
-            return message_to_user, data_for_output
+            return style_message_to_user, data_for_output
 
 
         @self.app.callback(
@@ -106,8 +106,8 @@ class AppDash(EmptyVue):
             self.ReusableStandardButtons.EditButtons.inputcallbacks(),
             self.ReusableStandardButtons.EditButtons.statecallbacks()
             )
-        def edit_buttons(check_value, upd_data_t, ed_col_t, imp_ex_t,  msg_user_update, msg_user_import):  
-            texts_to_save = [upd_data_t, ed_col_t, imp_ex_t,  msg_user_update, msg_user_import]
+        def edit_buttons(check_value):  
+            texts_to_save = []
             list_ids = self.ReusableStandardButtons.EditButtons.id_statecallbackToMakeAllButtonsEditable()
 
             return self.ReusableStandardButtons.EditButtons.edit_buttons(check_value, list_ids, texts_to_save)

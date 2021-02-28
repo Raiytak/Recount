@@ -89,8 +89,8 @@ class ReusableSingleElementsNotebook(FunctionsForReusableNotebook):
             id=self.add_row_button_message,
             )
         return add_row_message
-    def outputcallback_AddRowMessage_children(self):
-        return Output(self.add_row_button_message, 'children')
+    def outputcallback_AddRowMessage_style(self):
+        return Output(self.add_row_button_message, 'style')
 
     def getAddRowDiv(self):
         add_row_div_total = html.Div(
@@ -201,7 +201,7 @@ class AddRow():
     # Part to do the actions on check/uncheck of the checkbox
     def outputcallbacks(self):
         list_outputs = [
-            self.ReusableNotebook.outputcallback_AddRowMessage_children(),
+            self.ReusableNotebook.outputcallback_AddRowMessage_style(),
             self.ReusableNotebook.outputcallback_Notebook_data()
             ]
         return list_outputs

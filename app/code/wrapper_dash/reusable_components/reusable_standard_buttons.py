@@ -63,7 +63,7 @@ class ReusableSingleStandardButtons(UniqueReusableSingleStandardButtons):
         id_text_div = self.edit_button_text
         text_div = dcc.Input(
             id=id_text_div,
-            value=self._conf[id_text_div]["value"],
+            value="Check to edit the buttons",
             disabled=True,
             style=self.ReusableStyles.styleStandardPlainText(),
             persistence=True
@@ -83,25 +83,27 @@ class ReusableSingleStandardButtons(UniqueReusableSingleStandardButtons):
     def getMessageToUserUpdateDiv(self):
         output_div = dcc.Input(
             id=self.update_msg_div,
-            value='',
-            style=self.ReusableStyles.styleStandardPlainText()
+            value='Update done',
+            style=self.ReusableStyles.styleStandardPlainTextHidden(),
+            persistence=True
             )
         return output_div
     def outputcallback_MessageToUserUpdate_disabled(self):
         return Output(self.update_msg_div, "disabled")
-    def outputcallback_MessageToUserUpdate_value(self):
-        return Output(self.update_msg_div, "value")
-    def statecallback_MessageToUserUpdate_value(self):
-        return State(self.update_msg_div, "value")
+    def outputcallback_MessageToUserUpdate_style(self):
+        return Output(self.update_msg_div, "style")
+    # def statecallback_MessageToUserUpdate_value(self):
+    #     return State(self.update_msg_div, "value")
 
 
     def getUpdateDataTextDiv(self):
         update_text_id = self.update_text_id
         update_text_div = dcc.Input(
             id=self.update_text_id,
-            value=self._conf[update_text_id]["value"],
+            value="SUBMIT NOTEBOOK",
             disabled=True,
-            style=self.ReusableStyles.styleStandardButtonText()
+            style=self.ReusableStyles.styleStandardButtonText(),
+            persistence=True
             )
         return update_text_div
     def outputCallback_UpdateDataText_disabled(self):
@@ -118,8 +120,9 @@ class ReusableSingleStandardButtons(UniqueReusableSingleStandardButtons):
     def getMessageToUserImportExcelDiv(self):
         output_div = dcc.Input(
             id=self.import_excel_msg_div,
-            value='',
-            style=self.ReusableStyles.styleStandardPlainText()
+            value='Import done',
+            style=self.ReusableStyles.styleStandardPlainTextHidden(),
+            persistence=True
             )
         return output_div
     def outputcallback_MessageToUserImportExcel_disabled(self):
@@ -133,9 +136,10 @@ class ReusableSingleStandardButtons(UniqueReusableSingleStandardButtons):
         excel_text_id = self.import_excel_text_id
         excel_text_div = dcc.Input(
             id=excel_text_id,
-            value=self._conf[excel_text_id]["value"],
+            value="IMPORT EXCEL",
             disabled=True,
-            style=self.ReusableStyles.styleStandardButtonText()
+            style=self.ReusableStyles.styleStandardButtonText(),
+            persistence=True
         )
         return excel_text_div
     def outputCallback_ImportExcelText_disabled(self):
@@ -145,21 +149,6 @@ class ReusableSingleStandardButtons(UniqueReusableSingleStandardButtons):
         callback = State(self.import_excel_text_id, 'value')
         return callback
 
-
-    def getImportExcelUpload(self):
-        excel_input_id = self.import_excel_id
-        excel_input = dcc.Upload(
-            id=excel_input_id,
-            children=self.getImportExcelTextDiv(),
-            multiple=False,
-        )
-        return excel_input
-    def inputCallback_ImportExcel_contents(self):
-        callback = Input(self.import_excel_id, 'contents')
-        return callback
-    def outputCallback_ImportExcel_disabled(self):
-        callback = Output(self.import_excel_id, 'disabled')
-        return callback
 
 
 
@@ -189,6 +178,21 @@ class ReusableStandardButtons(ReusableSingleStandardButtons):
         return all_div
 
 
+
+    def getImportExcelUpload(self):
+        excel_input_id = self.import_excel_id
+        excel_input = dcc.Upload(
+            id=excel_input_id,
+            children=self.getImportExcelTextDiv(),
+            multiple=False,
+        )
+        return excel_input
+    def inputCallback_ImportExcel_contents(self):
+        callback = Input(self.import_excel_id, 'contents')
+        return callback
+    def outputCallback_ImportExcel_disabled(self):
+        callback = Output(self.import_excel_id, 'disabled')
+        return callback
 
 
     def getImportExcelDiv(self):
@@ -257,22 +261,22 @@ class EditButtons():
         return inputs
     def statecallbackToMakeAllButtonsEditable(self):
         states = [
-                self.ReusableStandardButtons.stateCallback_UpdateDataText_value(),
-                self.ReusableStandardButtons.stateCallback_EditButtonsAndColumns_text(),
-                self.ReusableStandardButtons.stateCallback_ImportExcelText_value(),
+                # self.ReusableStandardButtons.stateCallback_UpdateDataText_value(),
+                # self.ReusableStandardButtons.stateCallback_EditButtonsAndColumns_text(),
+                # self.ReusableStandardButtons.stateCallback_ImportExcelText_value(),
 
-                self.ReusableStandardButtons.statecallback_MessageToUserUpdate_value(),
-                self.ReusableStandardButtons.statecallback_MessageToUserImportExcel_value()
+                # self.ReusableStandardButtons.statecallback_MessageToUserUpdate_value(),
+                # self.ReusableStandardButtons.statecallback_MessageToUserImportExcel_value()
                 ]
         return states
     def id_statecallbackToMakeAllButtonsEditable(self):
         list_ids = [
-            self.ReusableStandardButtons.update_text_id,
-            self.ReusableStandardButtons.edit_button_text,
-            self.ReusableStandardButtons.import_excel_text_id,
+            # self.ReusableStandardButtons.update_text_id,
+            # self.ReusableStandardButtons.edit_button_text,
+            # self.ReusableStandardButtons.import_excel_text_id,
 
-            self.ReusableStandardButtons.update_msg_div,
-            self.ReusableStandardButtons.import_excel_msg_div
+            # self.ReusableStandardButtons.update_msg_div,
+            # self.ReusableStandardButtons.import_excel_msg_div
         ]
         return list_ids
 
@@ -317,18 +321,18 @@ class EditButtons():
         return self.inputcallbacks()
     def statecallbacks_categories(self):
         states = [
-                self.ReusableStandardButtons.stateCallback_UpdateDataText_value(),
-                self.ReusableStandardButtons.stateCallback_EditButtonsAndColumns_text(),
+                # self.ReusableStandardButtons.stateCallback_UpdateDataText_value(),
+                # self.ReusableStandardButtons.stateCallback_EditButtonsAndColumns_text(),
 
-                self.ReusableStandardButtons.statecallback_MessageToUserUpdate_value()
+                # self.ReusableStandardButtons.statecallback_MessageToUserUpdate_value()
                 ]
         return states
     def id_statecallbacks_categories(self):
         list_ids = [
-            self.ReusableStandardButtons.update_text_id,
-            self.ReusableStandardButtons.edit_button_text,
+            # self.ReusableStandardButtons.update_text_id,
+            # self.ReusableStandardButtons.edit_button_text,
 
-            self.ReusableStandardButtons.update_msg_div,
+            # self.ReusableStandardButtons.update_msg_div,
         ]
         return list_ids
 
@@ -382,7 +386,7 @@ class UpdateButton():
 
     # 
     def outputcallbacks(self):
-        return self.ReusableStandardButtons.outputcallback_MessageToUserUpdate_value()
+        return self.ReusableStandardButtons.outputcallback_MessageToUserUpdate_style()
     def inputcallbacks(self):
         return self.ReusableStandardButtons.inputCallback_UpdateData_n_clicks()
 
