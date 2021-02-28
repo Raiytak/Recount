@@ -60,67 +60,7 @@ class ElementsVue():
 
 
     def getGroundZero(self):
-        ground_zero = 'ground-zero'
-        h1_div, h1_div_id = self.ReusableOutputs.getH1Div(ground_zero)
-        h2_div, h2_div_id = self.ReusableOutputs.getH2Div(ground_zero)
-        h3_div, h3_div_id = self.ReusableOutputs.getH3Div(ground_zero)
-        h4_div, h4_div_id = self.ReusableOutputs.getH4Div(ground_zero)
-
-        h3_toolkit = html.Div(
-            children=[
-                h3_div,
-                self.getAddDivDiv(ground_zero+'-h3-', '+'),
-                self.getRemoveDivDiv(ground_zero+'-h3-', '-')
-            ],
-            style=self.getFullColumnStyle()
-        )
-        h3_embody = html.Div(
-            children=[
-                h3_toolkit,
-                h4_div
-            ],
-            style=self.getLittleLeftAndBiggerRightStyle()
-        )
-
-        h2_toolkit = html.Div(
-            children=[
-                h2_div,
-                self.getAddDivDiv(ground_zero+'-h2-', '+'),
-                self.getRemoveDivDiv(ground_zero+'-h2-', '-')
-            ],
-            style=self.getFullColumnStyle()
-        )
-        h2_embody = html.Div(
-            children=[
-                h2_toolkit,
-                h3_embody
-            ],
-            style=self.getLittleLeftAndBiggerRightStyle()
-        )
-
-        h1_toolkit = html.Div(
-            children=[
-                h1_div,
-                self.getAddDivDiv(ground_zero+'-h1-'),
-                self.getRemoveDivDiv(ground_zero+'-h1-')
-            ],
-            style=self.getFullColumnStyle()
-        )
-        h1_embody = html.Div(
-            children=[
-                h1_toolkit,
-                h2_embody
-            ],
-            style=self.getLittleLeftAndBiggerRightStyle()
-        )
-
-        global_vue = h1_embody
-
-
-
         parsed_vue = self.ParserJsonToHtml.getEmbodyOfDict("root", self.accessAuthorizedTST.getTestJson(), 1)
-
-
 
         return parsed_vue
 

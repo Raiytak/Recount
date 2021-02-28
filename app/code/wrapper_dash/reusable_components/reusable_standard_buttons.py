@@ -65,7 +65,8 @@ class ReusableSingleStandardButtons(UniqueReusableSingleStandardButtons):
             id=id_text_div,
             value=self._conf[id_text_div]["value"],
             disabled=True,
-            style=self.ReusableStyles.styleStandardPlainText()
+            style=self.ReusableStyles.styleStandardPlainText(),
+            persistence=True
         )
         return text_div           
     def outputCallback_EditButtonsAndColumnsText_disabled(self):

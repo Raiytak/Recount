@@ -85,10 +85,6 @@ class ReusableSingleOutputs(UniqueReusableSingleOutputs):
     def __init__(self, name_vue):
         super().__init__(name_vue)
 
-        self.msg_div = self.name_vue+"message-to-user"
-        self.msg_import_excel_div = self.name_vue+"-import-excel"
-        self.msg_update_div = self.name_vue+"-Update"
-
 
 
 
