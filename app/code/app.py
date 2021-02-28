@@ -1,5 +1,7 @@
 import dash
+import dash_auth
 from dash.dependencies import Input, Output
+from flask import request
 
 import update_db
 
@@ -8,9 +10,12 @@ DateToDataframe = communication_db.DateToDataframe()
 
 
 # Import the config file
-import accessors.access_config as access_config
+import config.access_config as access_config
 myAccessConfig = access_config.AccessConfig()
 config_json = myAccessConfig.getConfig()
+import config.access_users as access_users
+myAccessUsers = access_users.AccessUsers(config_json)
+USERS_IDENTIFICATION = myAccessUsers.getUsers()
 
 # Get the different paths of the files used in the app.
 import accessors.paths_docs as paths_docs
@@ -60,6 +65,7 @@ class AppDash():
     def __init__(self):
         external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
         self.app = dash.Dash(__name__, external_stylesheets=external_stylesheets, suppress_callback_exceptions=True)
+        self.setAuthentification()
 
         self.vueIndex = vue_index.AppDash(self.app)
         self.vueHome = vue_home.AppDash(self.app)
@@ -102,3 +108,12 @@ class AppDash():
     def run(self):
         self.app.run_server(debug=True)
         
+
+    def setAuthentification(self):
+
+        VALID_USERNAME_PASSWORD_PAIRS = USERS_IDENTIFICATION
+
+        auth = dash_auth.BasicAuth(
+            self.app,
+            VALID_USERNAME_PASSWORD_PAIRS
+        )

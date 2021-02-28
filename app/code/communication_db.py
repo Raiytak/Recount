@@ -4,7 +4,7 @@ from dateutil.relativedelta import relativedelta
 import wrapper_sql.wrapper_sql as wrapper_sql
 import wrapper_sql.response_to_dataframe as response_to_dataframe
 
-import accessors.access_config as access_config
+import config.access_config as access_config
 myAccessConfig = access_config.AccessConfig()
 config_json = myAccessConfig.getConfig()
 
@@ -73,8 +73,11 @@ class DateToDataframe:
         elif periode == "semestre":
             end_date += relativedelta(months=4)
             end_date -= relativedelta(days=1)
+        elif periode == "annual":
+            end_date += relativedelta(years=1)
+            end_date -= relativedelta(days=1)
         else:
-            print("Period not accepted : \nonly 'week', 'month' and 'semestre' are authoriezd")
+            print("Period not accepted : \nonly 'week', 'month', 'semestre'  and 'year' are authorized")
             raise Exception
         return end_date
     

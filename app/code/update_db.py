@@ -8,7 +8,7 @@ def updatingByRemovingAllExistingRowsOfTable(wrapperTable):
 
 
 
-import accessors.access_config as access_config
+import config.access_config as access_config
 myAccessConfig = access_config.AccessConfig()
 config_json = myAccessConfig.getConfig()
 

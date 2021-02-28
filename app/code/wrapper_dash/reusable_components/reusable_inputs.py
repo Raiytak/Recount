@@ -76,7 +76,9 @@ class ReusableSingleInputs(UniqueReusableSingleInputs):
             options=[
                 {"label":"Week", "value":"week"},
                 {"label":"Month", "value":"month"},
-                {"label":"Quarter", "value":"semestre"}
+                {"label":"Quarter", "value":"semestre"},
+                {"label":"Annual", "value":"annual"}
+
             ],
             value='month'
         )
