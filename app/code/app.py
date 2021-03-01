@@ -1,7 +1,7 @@
 import dash
 import dash_auth
 from dash.dependencies import Input, Output
-from flask import request
+
 
 import update_db
 
@@ -15,7 +15,6 @@ myAccessConfig = access_config.AccessConfig()
 config_json = myAccessConfig.getConfig()
 import config.access_users as access_users
 myAccessUsers = access_users.AccessUsers(config_json)
-USERS_IDENTIFICATION = myAccessUsers.getUsers()
 
 # Get the different paths of the files used in the app.
 import accessors.paths_docs as paths_docs
@@ -75,7 +74,6 @@ class AppDash():
         self.vueNotebookExcel = vue_notebook_excel.AppDash(self.app, myExcelToDataframe, ImportExcelFileSaver, ConfigNotebookExcelSaver, StandardButtonsConfigSaver)
     
 
-
     def setVueIndex(self):
         self.app.layout = self.vueIndex.setThisEmptyDefaultVue()
 
@@ -84,6 +82,7 @@ class AppDash():
         @self.app.callback(Output('default-page-content', 'children'),
                     Input('default-url', 'pathname'))
         def display_page(pathname):
+            self.username = self.getUsername()
             if pathname == '/' and len(pathname) == 1:
                 return self.vueIndex.setThisVue()
             elif pathname == '/home':
@@ -110,10 +109,19 @@ class AppDash():
         
 
     def setAuthentification(self):
-
-        VALID_USERNAME_PASSWORD_PAIRS = USERS_IDENTIFICATION
-
+        VALID_USERNAME_PASSWORD_PAIRS = myAccessUsers.getUsers()
         auth = dash_auth.BasicAuth(
             self.app,
             VALID_USERNAME_PASSWORD_PAIRS
         )
+
+    def getUsername(self):
+        import flask
+        import base64
+        header = flask.request.headers.get('Authorization', None)
+        if not header:
+            return None, None
+        username_password = base64.b64decode(header.split('Basic ')[1])
+        username_password_utf8 = username_password.decode('utf-8')
+        username, password = username_password_utf8.split(':')
+        return username

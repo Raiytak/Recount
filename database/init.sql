@@ -44,6 +44,7 @@ USE `expenses`;
 
 DROP TABLE IF EXISTS `raw_expenses`;
 CREATE TABLE IF NOT EXISTS `raw_expenses` (
+  `username` mediumtext,
   `ID` int(11) DEFAULT NULL,
   `date` date NOT NULL,
   `amount` float NOT NULL,
@@ -69,6 +70,7 @@ CREATE TABLE IF NOT EXISTS `raw_expenses` (
 
 DROP TABLE IF EXISTS `clean_expenses`;
 CREATE TABLE IF NOT EXISTS `clean_expenses` (
+  `username` mediumtext,
   `ID` int(11) NOT NULL,
   `date` date NOT NULL,
   `amount` float NOT NULL,
@@ -94,6 +96,7 @@ CREATE TABLE IF NOT EXISTS `clean_expenses` (
 
 DROP TABLE IF EXISTS `trip_expenses`;
 CREATE TABLE IF NOT EXISTS `trip_expenses` (
+  `username` mediumtext,
   `ID` int(11) DEFAULT NULL,
   `trip` text,
   `date` date NOT NULL,
@@ -119,6 +122,7 @@ CREATE TABLE IF NOT EXISTS `trip_expenses` (
 
 DROP TABLE IF EXISTS `reimbursement`;
 CREATE TABLE IF NOT EXISTS `reimbursement` (
+  `username` mediumtext,
   `ID` int(11) NOT NULL,
   `ID_pay_orig` int(11) NOT NULL,
   `date` date NOT NULL,

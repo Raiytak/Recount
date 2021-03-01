@@ -13,6 +13,7 @@ import app
 # --- INIT ---
 myApp = app.AppDash()
 
+# TODO Change the place of update
 # --- UPDATING DATABASE ---
 update_db.updateAll()   
 

@@ -82,6 +82,7 @@ class AppDash(EmptyVue):
                 self._counter_add_row = add_row_n_clicks
                 message_to_user, data_for_output = self.ReusableNotebook.AddRow.add_row_notebook(data_notebook, columns_notebook)
                 style_message_to_user = self.ReusableStandardButtons.ReusableStyles.styleStandardPlainText()
+                
             elif imported_excel != None:
                 # Update the notebook using imported excel
                 time.sleep(2)
