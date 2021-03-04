@@ -10,29 +10,30 @@ import json
 import pandas as pd
 
 import os
+import re
 
 
 # Path to the file data used by the application
 class ApplicationDataPath():
-    def __init__(self, config_json):
-        self.config_json = config_json
-
+    def __init__(self):
         self.folder_to_excels = "excels"
         self.folder_to_vues = "vues"
         self.folder_to_categories = "categories"
 
 
     def getDataPath(self):
-        path_data = self.config_json["paths"]["PATH_TO_MAIN_FOLDER"] + "/code/data"
+        path_main = self.getMainPath()
+        path_data = path_main + "/code/data"
         return path_data
 
     def getMainPath(self):
-        path_main_folder = self.config_json["paths"]["PATH_TO_MAIN_FOLDER"]
+        path_file = os.path.abspath(__file__)
+        path_main_folder = re.sub("(app).+", "app", path_file)
         return path_main_folder
 
     # TODO
     # def getExcelPath(self):
-    #     path_data = self.config_json["paths"]["PATH_TO_MAIN_FOLDER"] + "/code/data"
+    #     path_data = self.["paths"]["PATH_TO_MAIN_FOLDER"] + "/code/data"
     #     return path_data
 
 
@@ -40,8 +41,8 @@ class ApplicationDataPath():
 #   the source excel (from the user or excel_example) 
 #   and the copy excel (copied, cleaned and manipulated by the applciation)
 class ExcelPath(ApplicationDataPath):
-    def __init__(self, config_json):
-        super().__init__(config_json)
+    def __init__(self):
+        super().__init__()
 
         self._excel_path = self.copiedExcelPath()
         self._source_excel_path = self.importedExcelPath()
@@ -100,8 +101,8 @@ class ExcelPath(ApplicationDataPath):
 
 
 class DescrToThemePath(ApplicationDataPath):       
-    def __init__(self, config_json):
-        super().__init__(config_json)
+    def __init__(self):
+        super().__init__()
         self.folder_to_intell_fill = "intelligent_fill"
 
     def getDescriptionToThemePath(self):
@@ -112,8 +113,8 @@ class DescrToThemePath(ApplicationDataPath):
 
 
 class CategoryAndThemeAuthorizedPath(ApplicationDataPath):     
-    def __init__(self, config_json):
-        super().__init__(config_json)
+    def __init__(self):
+        super().__init__()
 
     def getCategoryAndThemePath(self):
         name_folder_categories = self.folder_to_categories
@@ -131,8 +132,8 @@ class CategoryAndThemeAuthorizedPath(ApplicationDataPath):
 
 
 class NotebookConfigPath(ApplicationDataPath):        
-    def __init__(self, config_json):
-        super().__init__(config_json)
+    def __init__(self):
+        super().__init__()
 
     def getNotebookConfigPath(self):
         name_folder_vues = self.folder_to_vues
@@ -142,8 +143,8 @@ class NotebookConfigPath(ApplicationDataPath):
     
 
 class StandardButtonsConfigPath(ApplicationDataPath):        
-    def __init__(self, config_json):
-        super().__init__(config_json)
+    def __init__(self):
+        super().__init__()
         self.folder_to_buttons = "standard_buttons"
 
     def getStandardButtonsConfigPath(self):
@@ -151,8 +152,3 @@ class StandardButtonsConfigPath(ApplicationDataPath):
         # path_conv = self.getDataPath() + "/themes_subthemes_authorized.json"
         path_conf = self.getDataPath() + "/" + name_folder_vues + "/" + self.folder_to_buttons + "/config_buttons.json"
         return path_conf
-    
-
-
-
-

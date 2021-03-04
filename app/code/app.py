@@ -12,16 +12,15 @@ DateToDataframe = communication_db.DateToDataframe()
 # Import the config file
 import config.access_config as access_config
 myAccessConfig = access_config.AccessConfig()
-config_json = myAccessConfig.getConfig()
 import config.access_users as access_users
-myAccessUsers = access_users.AccessUsers(config_json)
+myAccessUsers = access_users.AccessUsers()
 
 # Get the different paths of the files used in the app.
-import accessors.paths_docs as paths_docs
-myExcelPath = paths_docs.ExcelPath(config_json)
-myCatThemeAuthPath = paths_docs.CategoryAndThemeAuthorizedPath(config_json)
-myNotebookExcelConfigPath = paths_docs.NotebookConfigPath(config_json)
-myStandardButtonsConfigPath = paths_docs.StandardButtonsConfigPath(config_json)
+import accessors.path_docs as path_docs
+myExcelPath = path_docs.ExcelPath()
+myCatThemeAuthPath = path_docs.CategoryAndThemeAuthorizedPath()
+myNotebookExcelConfigPath = path_docs.NotebookConfigPath()
+myStandardButtonsConfigPath = path_docs.StandardButtonsConfigPath()
 
 # Access the documents, to get the values, dataframe and update the docs. Need the paths to work.
 import accessors.access_docs as access_docs

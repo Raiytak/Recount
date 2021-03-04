@@ -12,10 +12,10 @@ import config.access_config as access_config
 myAccessConfig = access_config.AccessConfig()
 config_json = myAccessConfig.getConfig()
 
-import accessors.paths_docs as paths_docs
-myExcelPath = paths_docs.ExcelPath(config_json)
-myDescrToThemePath = paths_docs.DescrToThemePath(config_json)
-myCatThemeAuthPath = paths_docs.CategoryAndThemeAuthorizedPath(config_json)
+import accessors.path_docs as path_docs
+myExcelPath = path_docs.ExcelPath()
+myDescrToThemePath = path_docs.DescrToThemePath()
+myCatThemeAuthPath = path_docs.CategoryAndThemeAuthorizedPath()
 
 import accessors.access_docs as access_docs
 myAccessDescrToTheme = access_docs.AccessDescrToTheme(myDescrToThemePath)
