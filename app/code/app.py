@@ -4,8 +4,8 @@ from dash.dependencies import Input, Output
 
 import update_db
 
-import communication_db
-DateToDataframe = communication_db.DateToDataframe()
+import communication_db_user
+DateToDataframe = communication_db_user.DateToDataframe()
 
 
 # Import the config file
@@ -56,6 +56,8 @@ from wrapper_dash import vue_index, vue_home
 from wrapper_dash import vue_dashboard_home, vue_modify_categories_file
 from wrapper_dash import vue_notebook_excel
 
+import wrapper_dash.facilitator_dash.user_from_flask as user_from_flask
+
 
 # Dash Application
 class AppDash():
@@ -80,16 +82,15 @@ class AppDash():
         @self.app.callback(Output('default-page-content', 'children'),
                     Input('default-url', 'pathname'))
         def display_page(pathname):
-            dash.callback_context.response.set_cookie('username', self.getUsername())
-            # print(flask.request.cookies.get('dash'))
+            username = user_from_flask.getUsername()
+            dash.callback_context.response.set_cookie('username', username)
 
-            self.username = self.getUsername()
             if pathname == '/' and len(pathname) == 1:
                 return self.vueIndex.setThisVue()
             elif pathname == '/home':
                 return self.vueHome.setThisVue()
             elif pathname == '/dashhome':
-                update_db.updateAll(self.username)  
+                update_db.updateAll(username)  
                 return self.vueDashboardHome.setThisVue()
             elif pathname == '/categories':
                 return self.vueCategoriesFile.setThisVue()
@@ -116,14 +117,3 @@ class AppDash():
             self.app,
             VALID_USERNAME_PASSWORD_PAIRS
         )
-
-    def getUsername(self):
-        import flask
-        import base64
-        header = flask.request.headers.get('Authorization', None)
-        if not header:
-            return None, None
-        username_password = base64.b64decode(header.split('Basic ')[1])
-        username_password_utf8 = username_password.decode('utf-8')
-        username, password = username_password_utf8.split(':')
-        return username

@@ -7,6 +7,7 @@ import datetime
 import wrapper_dash.reusable_components.reusable_inputs as reusable_inputs
 import wrapper_dash.reusable_components.reusable_graphs as reusable_graphs
 
+import wrapper_dash.facilitator_dash.user_from_flask as user_from_flask
 
 
 class ElementsVue():
@@ -81,12 +82,11 @@ class AppDash(EmptyVue):
             self.getInputCallbacks()
             )
         def update_graph(selected_date_str, selected_periode, imported_excel):     
-            import flask
-            print(flask.request.cookies.get('username'))
             # Processing the actions received form the user
+            username = user_from_flask.getUsername()
             self.FileSaver.saveImportedFile(imported_excel)
-            dataframe = self.DateToDataframe.getDataframeFromDate(selected_date_str, selected_periode)
-            list_dataframes = self.DateToDataframe.getListDataframeByWeekFromDate(selected_date_str, selected_periode)
+            dataframe = self.DateToDataframe.getDataframeFromDate(username, selected_date_str, selected_periode)
+            list_dataframes = self.DateToDataframe.getListDataframeByWeekFromDate(username, selected_date_str, selected_periode)
 
 
             list_types_of_divs = self.getOutputTypesDiv()
