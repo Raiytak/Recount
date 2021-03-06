@@ -69,10 +69,11 @@ repayRep = repay_repayments.RepayPepayements(rawTable, repayTable)
 
 
 @updatingByRemovingAllExistingRowsOfTable(rawTable)
-def updateRawTable():
+def updateRawTable(username):
     print("--- Update 'raw_expenses' Table ---")
     mainCleaner.updateExcel()
     dataframe, equivalent_columns = mainCleaner.getDataframeAndEqCol()
+    dataframe["username"] = username
     myUpdateConversionJson.updateConversionJsonUsingDataframe(dataframe)
     list_requests = convertDfToReq.translateDataframeToRequestSql(dataframe, equivalent_columns)
     rawTable.insertAllReqs(list_requests)
@@ -147,8 +148,8 @@ def updateCleanTable():
 
 
 # == MAIN == FUNCTION : updates all the tables by removing ALL the older values
-def updateAll():
-    updateRawTable()
+def updateAll(username):
+    updateRawTable(username)
 
     updateRepayementsTable()
     deleteRepayementsFromRaw()

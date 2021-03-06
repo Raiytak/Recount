@@ -52,7 +52,8 @@ class ExcelToDataframe():
     # This works like this :
     #   - "column excel" : ["column sql"]
     def getEquivalentColumns(self):
-        equivalent_columns = {"ID":["ID"], "Date":["date"], "Expenses":["amount"],
+        equivalent_columns = {"username":["username"],
+                            "ID":["ID"], "Date":["date"], "Expenses":["amount"],
                             "Category":["category"], "Theme":["theme"],
                             "Trip":["trip"], "Type":["payment_method"],
                             "Company":["company"], "Description":["description"]}

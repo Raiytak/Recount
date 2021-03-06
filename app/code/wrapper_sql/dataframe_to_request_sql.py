@@ -25,27 +25,28 @@ class DataframeToSql():
 
     def convertDictListListToRequestSql(self, dict_list_list, dict_equivalent_columns):
         equivalent_columns = dict_equivalent_columns
-        start_requests = ["INSERT INTO & ("]*dict_list_list["len"]
-        end_requests = ["VALUES ("]*dict_list_list["len"]
+        insert_into_req = ["INSERT INTO & ("]*dict_list_list["len"]
+        values_req = ["VALUES ("]*dict_list_list["len"]
+        
         # TODO understand this function and simplify it
         for column_excel in equivalent_columns.keys():
             columns_sql = equivalent_columns[column_excel]
-            if columns_sql[0] == "ID": #Goal is to avoid a coma at the start of the request (try without the if and look at the requests to understand)
+            if columns_sql[0] == "username": #Goal is to avoid a coma at the start of the request (try without the if and look at the requests to understand)
                 values = dict_list_list[column_excel][0]
                 dict_list_list_bool = [False if (values[i]==str(np.nan) or values[i]=="None") else True for i in range(len(values))]
-                start_requests = self._concatenateRequestsAndValueWithoutComa(start_requests, columns_sql[0], dict_list_list_bool)
-                end_requests = self._concatenateRequestsAndListValuesWithoutComa(end_requests, dict_list_list[column_excel][0], dict_list_list_bool)
+                insert_into_req = self._concatenateRequestsAndValueWithoutComa(insert_into_req, columns_sql[0], dict_list_list_bool)
+                values_req = self._concatenateRequestsAndListValuesWithoutComa(values_req, dict_list_list[column_excel][0], dict_list_list_bool)
             else:
                 for i in range(len(columns_sql)):
                     values = dict_list_list[column_excel][i]
                     dict_list_list_bool = [False if (values[i]==str(np.nan) or values[i]=="None") else True for i in range(len(values))]
-                    start_requests = self._concatenateRequestsAndValueWithComa(start_requests, columns_sql[i], dict_list_list_bool)
-                    end_requests = self._concatenateRequestsAndListValuesWithComa(end_requests, dict_list_list[column_excel][i], dict_list_list_bool)
+                    insert_into_req = self._concatenateRequestsAndValueWithComa(insert_into_req, columns_sql[i], dict_list_list_bool)
+                    values_req = self._concatenateRequestsAndListValuesWithComa(values_req, dict_list_list[column_excel][i], dict_list_list_bool)
                 
-        start_requests = self.closeRequest(start_requests)
-        end_requests = self.closeRequest(end_requests)
+        insert_into_req = self.closeRequest(insert_into_req)
+        values_req = self.closeRequest(values_req)
             
-        list_requests = self._concatenateRequestsAndList(start_requests, end_requests)
+        list_requests = self._concatenateRequestsAndList(insert_into_req, values_req)
             
         return list_requests
             

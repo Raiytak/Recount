@@ -30,7 +30,11 @@ class RawToRepayement():
     
     def getEquivalentColumns(self):
         # "origin":["destination"]
-        equivalent_columns = {"ID":["ID"], "theme":["ID_pay_orig"], "date":["date"], "amount":["amount"]}
+        equivalent_columns = {
+            "username":["username"],
+            "ID":["ID"], "theme":["ID_pay_orig"],
+            "date":["date"], "amount":["amount"]
+        }
         return equivalent_columns
 
 

@@ -2,7 +2,6 @@ import dash
 import dash_auth
 from dash.dependencies import Input, Output
 
-
 import update_db
 
 import communication_db
@@ -81,12 +80,16 @@ class AppDash():
         @self.app.callback(Output('default-page-content', 'children'),
                     Input('default-url', 'pathname'))
         def display_page(pathname):
+            dash.callback_context.response.set_cookie('username', self.getUsername())
+            # print(flask.request.cookies.get('dash'))
+
             self.username = self.getUsername()
             if pathname == '/' and len(pathname) == 1:
                 return self.vueIndex.setThisVue()
             elif pathname == '/home':
                 return self.vueHome.setThisVue()
             elif pathname == '/dashhome':
+                update_db.updateAll(self.username)  
                 return self.vueDashboardHome.setThisVue()
             elif pathname == '/categories':
                 return self.vueCategoriesFile.setThisVue()

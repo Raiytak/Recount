@@ -62,7 +62,6 @@ class UpdateConversionJson():
     
     def updateConversionJsonUsingDataframe(self, dataframe):
         list_c_d = ["Company", "Description"]
-        # list_entre_descr = ["Entreprise", "Description"]
         company = "Company"
         for cat_or_theme in list_c_d:
             data = dataframe.groupby(cat_or_theme)[company].value_counts()

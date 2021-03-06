@@ -81,7 +81,8 @@ class AppDash(EmptyVue):
             self.getInputCallbacks()
             )
         def update_graph(selected_date_str, selected_periode, imported_excel):     
-            
+            import flask
+            print(flask.request.cookies.get('username'))
             # Processing the actions received form the user
             self.FileSaver.saveImportedFile(imported_excel)
             dataframe = self.DateToDataframe.getDataframeFromDate(selected_date_str, selected_periode)
