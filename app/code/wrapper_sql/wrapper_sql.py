@@ -62,6 +62,10 @@ class WrapperOfTable(SQLConnector):
     def dumpTable(self):
         request = "DELETE FROM &"
         self._execute(request)
+
+    def dumpTableForUser(self, username):
+        request = "DELETE FROM & WHERE username = " + "'" + username + "'"
+        self._execute(request)
     
     
     
