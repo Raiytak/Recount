@@ -1,21 +1,10 @@
 class ReusableStyles():
     def styleStandardButtonText(self):
         style_standard_button = {
-            "display": "inline-block",
             "height": "38px",
-            'color': '#555',
-            'text-align': 'center',
-            'font-size': '11px',
-            'font-weight': '600',
-            'line-height': '38px',
-            'letter-spacing': '.1rem',
-            # 'text-transform': 'uppercase',
-            'text-decoration': 'none',
-            'white-space': 'nowrap',
+            'font-size': '13px',
             'background-color': 'transparent',
-            # 'border-radius': '4px',
             'border': '0px',
-            'cursor': 'pointer',
             'box-sizing': 'border-box',
             }
         return style_standard_button
@@ -56,4 +45,9 @@ class ReusableStyles():
 
 
 
+    def styleLinkHeader(self):
+        style_nav_el = {
+            "text-decoration":None
+        }
+        return style_nav_el
 

@@ -55,6 +55,7 @@ StandardButtonsConfigSaver = save_config.StandardButtonsConfigSaver(myAccessStan
 from wrapper_dash import vue_index, vue_home
 from wrapper_dash import vue_dashboard_home, vue_modify_categories_file
 from wrapper_dash import vue_notebook_excel
+from wrapper_dash import vue_test
 
 import wrapper_dash.facilitator_dash.user_from_flask as user_from_flask
 
@@ -73,6 +74,9 @@ class AppDash():
 
         self.vueNotebookExcel = vue_notebook_excel.AppDash(self.app, myExcelToDataframe, ImportExcelFileSaver, ConfigNotebookExcelSaver, StandardButtonsConfigSaver)
     
+        self.vueTest = vue_test.AppDash(self.app)
+
+
 
     def setVueIndex(self):
         self.app.layout = self.vueIndex.setThisEmptyDefaultVue()
@@ -96,6 +100,8 @@ class AppDash():
                 return self.vueCategoriesFile.setThisVue()
             elif pathname == '/excel':
                 return self.vueNotebookExcel.setThisVue()
+            elif pathname == '/test':
+                return self.vueTest.setThisVue()
             else:
                 return '404'
             pass

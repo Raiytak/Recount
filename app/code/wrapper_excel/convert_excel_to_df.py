@@ -23,7 +23,10 @@ class ExcelToDataframe():
         try:
             dataframe = dfs["Feuil1"]
         except KeyError:
-            dataframe = dfs["Sheet1"]
+            try:
+                dataframe = dfs["Sheet1"]
+            except KeyError:
+                raise Exception
         list_columns = dataframe.columns
         for column_name in list_columns:
             if "Unnamed" in column_name:

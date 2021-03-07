@@ -103,6 +103,7 @@ class ReusableSingleStandardButtons(UniqueReusableSingleStandardButtons):
             value="SUBMIT NOTEBOOK",
             disabled=True,
             style=self.ReusableStyles.styleStandardButtonText(),
+            className="text-button",
             persistence=True
             )
         return update_text_div
@@ -139,6 +140,7 @@ class ReusableSingleStandardButtons(UniqueReusableSingleStandardButtons):
             value="IMPORT EXCEL",
             disabled=True,
             style=self.ReusableStyles.styleStandardButtonText(),
+            className="text-button",
             persistence=True
         )
         return excel_text_div

@@ -36,6 +36,10 @@ class DateToDataframe:
     def _convertDateToDataframe(self, username, start_date, end_date):
         start_date = self._convertToDatetime(start_date)
         request = self.convertDateToRequestSQL(username, start_date, end_date)
+        print("start_date")
+        print(start_date)
+        print("end_date")
+        print(end_date)
         reponse = self.bd_sql.select(request)
         dataframe = self._translateSqlToDataframe(reponse)
         return dataframe

@@ -95,7 +95,7 @@ class AppDash(EmptyVue):
             pie_graph = self.ConvertDfToGraph.convertDataframeToGraph(dataframe, list_types_of_divs[1])
             mean_graph = self.ConvertDfToGraph.convertDataframeToGraph(list_dataframes, list_types_of_divs[2])
             food_graph = self.ConvertDfToGraph.convertDataframeToGraph(list_dataframes, list_types_of_divs[3])
-            
+
             return scatter_graph, pie_graph, mean_graph, food_graph
 
     def setThisVue(self):

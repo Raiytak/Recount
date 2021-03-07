@@ -5,6 +5,7 @@ from dash.dependencies import Input, Output, State
 import wrapper_dash.vue_links_other_vues as vue_links_other_vues
 
 import wrapper_dash.reusable_components.reusable_inputs as reusable_inputs
+import wrapper_dash.reusable_components.reusable_standard_buttons as reusable_standard_buttons
 import wrapper_dash.reusable_components.reusable_links as reusable_links
 
 
@@ -21,7 +22,7 @@ class ElementsVue():
         return html.Div(id='default-page-content')
 
     def getLinksDiv(self):
-        return self.ReusableLinks.getRowTypeLinksDiv()
+        return self.ReusableLinks.getHeaderSite()
 
     def getLocationDiv(self):
         return self.ReusableInputs.getLocationDiv()
@@ -42,9 +43,8 @@ class EmptyVue():
         return default_input_div  
 
     def getEmptyVue(self):
-        elem_input_div = self.elementsVue.getInputDiv()  
         elem_links_div = self.elementsVue.getLinksDiv()  
-        all_the_vue = html.Div([elem_links_div, elem_input_div])   
+        all_the_vue = html.Div([elem_links_div])   
         return all_the_vue
 
 
