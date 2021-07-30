@@ -10,16 +10,20 @@ class ReusableSingleLinks():
     def __init__(self):
         self.ReusableStyles = reusable_styles.ReusableStyles()
 
-    def getLinkPageDashhome(self):
-        link_page_dashhome = dcc.Link('Dashboards', href='/dashhome', className="header-link")
-        return link_page_dashhome
-
     def getLinkPageHome(self):
-        link_page_home = dcc.Link('Home', href='/home', className="header-link")
+        link_page_home = html.Button('Home', className="header-button")
         return link_page_home
 
+    def getLinkPageDashhome(self):
+        link_page_dashhome = html.Button('Dashboard', className="header-button")
+        return link_page_dashhome
+
+    def getLinkPageNotebook(self):
+        link_page_notebook = html.Button('Notebook', className="header-button")
+        return link_page_notebook
+
     def getLinkPageCategories(self):
-        link_page_categories = dcc.Link('Categories', href='/categories', className="header-link")
+        link_page_categories = html.Button('Categories', className="header-button")
         return link_page_categories
 
     def getImageSite(self):
@@ -40,13 +44,15 @@ class ReusableLinks(ReusableSingleLinks):
     def getLinksDiv(self):
         link_page_home = self.getLinkPageHome()
         link_page_dashhome = self.getLinkPageDashhome()
+        link_page_notebook = self.getLinkPageNotebook()
         link_page_categories = self.getLinkPageCategories()
 
         links_div = html.Nav(
             children=[
-                html.Button(link_page_home, className="header-button"),
-                html.Button(link_page_dashhome, className="header-button"),
-                html.Button(link_page_categories, className="header-button")
+                dcc.Link(link_page_home, className="header-link", href='/home'),
+                dcc.Link(link_page_dashhome, className="header-link", href='/dashhome'),
+                dcc.Link(link_page_notebook, className="header-link", href='/excel'),
+                dcc.Link(link_page_categories, className="header-link", href='/categories')
             ],
             style={
                 "display":"flex",
@@ -59,7 +65,7 @@ class ReusableLinks(ReusableSingleLinks):
         logo = self.getImageSite()
         logo_div = html.A(
             children=logo, 
-            href="/"
+            href="/assets/notme.gif"
         )
         return logo_div
 
@@ -67,14 +73,13 @@ class ReusableLinks(ReusableSingleLinks):
         logo_div = self.getLogoDivSite()
         links_div = self.getLinksDiv()
 
-        header_site = html.Div(
+        header_site = html.Header(
             children=[
                 logo_div,
                 links_div
             ],
             style={
                 "display":"flex",
-                "justify-content":"space-between"
                 }
         )
         return header_site

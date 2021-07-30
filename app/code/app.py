@@ -53,7 +53,7 @@ StandardButtonsConfigSaver = save_config.StandardButtonsConfigSaver(myAccessStan
 
 
 from wrapper_dash import vue_index, vue_home
-from wrapper_dash import vue_dashboard_home, vue_modify_categories_file
+from wrapper_dash import vue_dashboard_home, vue_categories
 from wrapper_dash import vue_notebook_excel
 from wrapper_dash import vue_test
 
@@ -70,7 +70,7 @@ class AppDash():
         self.vueIndex = vue_index.AppDash(self.app)
         self.vueHome = vue_home.AppDash(self.app)
         self.vueDashboardHome = vue_dashboard_home.AppDash(self.app, DateToDataframe, ConvertDfToGraph, ImportExcelFileSaver)
-        self.vueCategoriesFile = vue_modify_categories_file.AppDash(self.app, myAccessCTAuthorized, StandardButtonsConfigSaver)
+        self.vueCategoriesFile = vue_categories.AppDash(self.app, myAccessCTAuthorized, StandardButtonsConfigSaver)
 
         self.vueNotebookExcel = vue_notebook_excel.AppDash(self.app, myExcelToDataframe, ImportExcelFileSaver, ConfigNotebookExcelSaver, StandardButtonsConfigSaver)
     

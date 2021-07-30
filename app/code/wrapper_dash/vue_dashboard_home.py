@@ -6,6 +6,7 @@ import datetime
 
 import wrapper_dash.reusable_components.reusable_inputs as reusable_inputs
 import wrapper_dash.reusable_components.reusable_graphs as reusable_graphs
+import wrapper_dash.reusable_components.reusable_links as reusable_links
 
 import wrapper_dash.facilitator_dash.user_from_flask as user_from_flask
 
@@ -36,9 +37,12 @@ class EmptyVue():
         self.name_vue = "dashboard-home-"
         self.ReusableInputs = reusable_inputs.ReusableInputs(self.name_vue)
         self.ReusableGraphs = reusable_graphs.ReusableGraphs(self.name_vue)
+        self.ReusableLinks = reusable_links.ReusableLinks()
         self.ElementsVue = ElementsVue(self.ReusableInputs, self.ReusableGraphs)
         
     def getEmptyVue(self):
+        header_div = self.ReusableLinks.getHeaderSite()
+
         input_div = self.ElementsVue.getInputDiv()
         dashboard_div = self.ElementsVue.getGraphDiv()
         
@@ -47,7 +51,12 @@ class EmptyVue():
             dashboard_div,
         ])
         
-        return dashboard
+        total_vue = html.Div([
+            header_div,
+            dashboard
+        ])
+
+        return total_vue
 
 
     def getInputCallbacks(self):
@@ -67,12 +76,12 @@ class EmptyVue():
 
 # Dash Application
 class AppDash(EmptyVue):
-    def __init__(self, app, DateToDataframe, ConvertDfToGraph, FileSaver):
+    def __init__(self, app, DateToDataframe, ConvertDfToGraph, ImportExcelFileSaver):
         super().__init__()
         self.app = app
         self.DateToDataframe = DateToDataframe
         self.ConvertDfToGraph = ConvertDfToGraph
-        self.FileSaver = FileSaver
+        self.ImportExcelFileSaver = ImportExcelFileSaver
         
         self.setCallback()
     
@@ -84,7 +93,7 @@ class AppDash(EmptyVue):
         def update_graph(selected_date_str, selected_periode, imported_excel):     
             # Processing the actions received form the user
             username = user_from_flask.getUsername()
-            self.FileSaver.saveImportedFile(imported_excel)
+            self.ImportExcelFileSaver.saveImportedFile(imported_excel)
             dataframe = self.DateToDataframe.getDataframeFromDate(username, selected_date_str, selected_periode)
             list_dataframes = self.DateToDataframe.getListDataframeByWeekFromDate(username, selected_date_str, selected_periode)
 

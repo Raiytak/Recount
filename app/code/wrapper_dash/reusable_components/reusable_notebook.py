@@ -4,6 +4,8 @@ import dash_html_components as html
 import dash_core_components as dcc
 from dash.dependencies import Input, Output, State
 
+import wrapper_dash.reusable_components.reusable_links as reusable_links
+
 import pandas as pd
 
 
@@ -126,8 +128,7 @@ class ReusableSingleElementsNotebook(FunctionsForReusableNotebook):
             editable=True,
 
             row_deletable=True,
-            # cell_selectable=True,
-
+            
             export_columns='all',
             export_format='xlsx',
             export_headers='display',
@@ -159,6 +160,7 @@ class ReusableNotebook(ReusableSingleElementsNotebook):
     def __init__(self, name_vue, ExcelToDataframe, ConfigNotebookExcelSaver, ReusableStandardButtons):
         super().__init__(name_vue, ExcelToDataframe, ConfigNotebookExcelSaver, ReusableStandardButtons)
         self.AddRow = AddRow(self)
+        self.ReusableLinks = reusable_links.ReusableLinks()
 
     def getUpperVueDiv(self):
         update_div = self.ReusableStandardButtons.getUpdateDataDiv()
@@ -183,11 +185,14 @@ class ReusableNotebook(ReusableSingleElementsNotebook):
 
 
     def getEmptyVue(self):
+        header_div = self.ReusableLinks.getHeaderSite()
+
         input_div = self.getUpperVueDiv()
         excel_notebook = self.getNotebookDiv()
         add_row_div = self.getAddRowDiv()
+        content_div = html.Div([input_div, excel_notebook, add_row_div])
 
-        total_vue = html.Div([input_div, excel_notebook, add_row_div])
+        total_vue = html.Div([header_div, content_div])
         return total_vue
 
 

@@ -6,6 +6,7 @@ from dash.dependencies import Input, Output, State
 import wrapper_dash.reusable_components.reusable_inputs as reusable_inputs
 import wrapper_dash.reusable_components.reusable_outputs as reusable_outputs
 import wrapper_dash.reusable_components.reusable_standard_buttons as reusable_standard_buttons
+import wrapper_dash.reusable_components.reusable_links as reusable_links
 
 import wrapper_dash.facilitator_dash.parser_json_to_html as parser_json_to_html
 
@@ -73,12 +74,15 @@ class EmptyVue():
 
         self.ReusableInputs = reusable_inputs.ReusableInputs(self.name_vue)
         self.ReusableOutputs = reusable_outputs.ReusableOutputs(self.name_vue)
+        self.ReusableLinks = reusable_links.ReusableLinks()
         self.ReusableStandardButtons = reusable_standard_buttons.ReusableStandardButtons(self.name_vue, StandardButtonsConfigSaver)
 
         self.ParserJsonToHtml = parser_json_to_html.ParserJsonToHtml(self.ReusableInputs, self.ReusableOutputs)
         self.elementsVue = ElementsVue(accessAuthorizedTST, self.ReusableInputs, self.ReusableOutputs, self.ReusableStandardButtons, self.ParserJsonToHtml)
         
     def getEmptyVue(self):
+        header_div = self.ReusableLinks.getHeaderSite()
+
         upper_div = self.elementsVue.getUpperVueDiv()   
         ground_zero = self.elementsVue.getGroundZero()     
         empty_vue = html.Div(
@@ -87,7 +91,12 @@ class EmptyVue():
                 ground_zero
             ]
         )
-        return empty_vue
+
+        total_vue = html.Div([
+            header_div,
+            empty_vue
+        ])
+        return total_vue
 
 
 

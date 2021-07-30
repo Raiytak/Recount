@@ -19,10 +19,45 @@ class UniqueReusableSingleStandardButtons():
 
         self._conf = self.StandardButtonsConfigSaver.getConfig()
 
+        self.unique_button_id = self.name_vue+'-update-button-'
+        self.unique_button_text_id = self.unique_button_id+"-text-"
+        self.unique_button_msg_div = self.unique_button_id + "-message-"
+
         # self.UniqueReusableSingleInputs = reusable_inputs.UniqueReusableSingleInputs("-button-"+self.name_vue)
         # self.UniqueReusableSingleOutputs = reusable_outputs.UniqueReusableSingleOutputs("-button-"+self.name_vue)
 
 
+    def getMessageToUserUniqueButtonDiv(self, name_button):
+        output_div = dcc.Input(
+            id=self.unique_button_msg_div+name_button,
+            value='Update done',
+            style=self.ReusableStyles.styleStandardPlainTextHidden(),
+            persistence=True
+            )
+        return output_div
+    def outputcallback_MessageToUserUpdate_disabled(self, name_button):
+        return Output(self.unique_button_msg_div+name_button, "disabled")
+    def outputcallback_MessageToUserUpdate_style(self, name_button):
+        return Output(self.unique_button_msg_div+name_button, "style")
+
+
+    def getUpdateDataTextDiv(self, name_button):
+        update_text_id = self.unique_button_text_id+name_button
+        update_text_div = dcc.Input(
+            id=self.update_text_id,
+            value="SUBMIT NOTEBOOK",
+            disabled=True,
+            style=self.ReusableStyles.styleStandardButtonText(),
+            className="text-button",
+            persistence=True
+            )
+        return update_text_div
+    def outputCallback_UpdateDataText_disabled(self, name_button):
+        callback = Output(self.unique_button_text_id+name_button, 'disabled')
+        return callback
+    def stateCallback_UpdateDataText_value(self, name_button):
+        callback = State(self.unique_button_text_id+name_button, 'value')
+        return callback
 
 
 
@@ -61,11 +96,14 @@ class ReusableSingleStandardButtons(UniqueReusableSingleStandardButtons):
 
     def getEditButtonsAndColumnsTextDiv(self):
         id_text_div = self.edit_button_text
+        style = self.ReusableStyles.styleStandardPlainText()
+        style["text-align"]="left"
+        style["padding"]="2px"
         text_div = dcc.Input(
             id=id_text_div,
             value="Check to edit the buttons",
             disabled=True,
-            style=self.ReusableStyles.styleStandardPlainText(),
+            style=style,
             persistence=True
         )
         return text_div           
