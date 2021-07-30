@@ -77,7 +77,7 @@ class ReusableSingleInputs(UniqueReusableSingleInputs):
                 {"label":"Week", "value":"week"},
                 {"label":"Month", "value":"month"},
                 {"label":"Quarter", "value":"semestre"},
-                {"label":"Annual", "value":"annual"}
+                # {"label":"Annual", "value":"annual"}
 
             ],
             value='month'

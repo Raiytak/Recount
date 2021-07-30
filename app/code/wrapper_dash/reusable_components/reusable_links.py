@@ -44,19 +44,20 @@ class ReusableLinks(ReusableSingleLinks):
     def getLinksDiv(self):
         link_page_home = self.getLinkPageHome()
         link_page_dashhome = self.getLinkPageDashhome()
-        link_page_notebook = self.getLinkPageNotebook()
-        link_page_categories = self.getLinkPageCategories()
+        # link_page_notebook = self.getLinkPageNotebook()
+        # link_page_categories = self.getLinkPageCategories()
 
         links_div = html.Nav(
             children=[
                 dcc.Link(link_page_home, className="header-link", href='/home'),
                 dcc.Link(link_page_dashhome, className="header-link", href='/dashhome'),
-                dcc.Link(link_page_notebook, className="header-link", href='/excel'),
-                dcc.Link(link_page_categories, className="header-link", href='/categories')
+                # dcc.Link(link_page_notebook, className="header-link", href='/excel'),
+                # dcc.Link(link_page_categories, className="header-link", href='/categories')
             ],
             style={
                 "display":"flex",
-                "justify-content":"space-between"}
+                "justify-content":"space-between",
+                "height":"100px"}
                 )
         return links_div
 
@@ -70,12 +71,10 @@ class ReusableLinks(ReusableSingleLinks):
         return logo_div
 
     def getHeaderSite(self):
-        logo_div = self.getLogoDivSite()
         links_div = self.getLinksDiv()
 
         header_site = html.Header(
             children=[
-                logo_div,
                 links_div
             ],
             style={

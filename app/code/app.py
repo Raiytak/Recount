@@ -96,10 +96,10 @@ class AppDash():
             elif pathname == '/dashhome':
                 update_db.updateAll(username)  
                 return self.vueDashboardHome.setThisVue()
-            elif pathname == '/categories':
-                return self.vueCategoriesFile.setThisVue()
-            elif pathname == '/excel':
-                return self.vueNotebookExcel.setThisVue()
+            # elif pathname == '/categories':
+            #     return self.vueCategoriesFile.setThisVue()
+            # elif pathname == '/excel':
+            #     return self.vueNotebookExcel.setThisVue()
             elif pathname == '/test':
                 return self.vueTest.setThisVue()
             else:
