@@ -4,11 +4,10 @@ import json
 import os
 
 
-
-class AccessConfig():
+class AccessConfig:
     def getConfigPath(self):
         path_file = os.path.abspath(__file__)
-        path_config = path_file.replace("access_config.py","config.json")
+        path_config = path_file.replace("access_config.py", "config.json")
         return path_config
 
     def getConfig(self):
