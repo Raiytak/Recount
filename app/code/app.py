@@ -56,7 +56,7 @@ from wrapper_dash import vue_index, vue_home
 from wrapper_dash import vue_dashboard_home
 from wrapper_dash import vue_test
 
-import wrapper_dash.facilitator_dash.user_from_flask as user_from_flask
+import wrapper_dash.facilitator_dash.user_identification as user_identification
 
 
 # Dash Application
@@ -82,7 +82,7 @@ class AppDash():
         @self.app.callback(Output('default-page-content', 'children'),
                     Input('default-url', 'pathname'))
         def display_page(pathname):
-            username = user_from_flask.getUsername()
+            username = user_identification.getUsername()
             dash.callback_context.response.set_cookie('username', username)
 
             if pathname == '/' and len(pathname) == 1:

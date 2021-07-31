@@ -2,7 +2,7 @@ import flask
 import base64
 
 
-def getUsername(self):
+def getUsername():
     header = flask.request.headers.get('Authorization', None)
     if not header:
         return None, None

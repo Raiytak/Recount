@@ -8,7 +8,7 @@ import wrapper_dash.reusable_components.reusable_inputs as reusable_inputs
 import wrapper_dash.reusable_components.reusable_graphs as reusable_graphs
 import wrapper_dash.reusable_components.reusable_links as reusable_links
 
-import wrapper_dash.facilitator_dash.user_from_flask as user_from_flask
+import wrapper_dash.facilitator_dash.user_identification as user_identification
 
 
 class ElementsVue():
@@ -92,7 +92,7 @@ class AppDash(EmptyVue):
             )
         def update_graph(selected_date_str, selected_periode, imported_excel):     
             # Processing the actions received form the user
-            username = user_from_flask.getUsername()
+            username = user_identification.getUsername()
             self.ImportExcelFileSaver.saveImportedFile(imported_excel)
             dataframe = self.DateToDataframe.getDataframeFromDate(username, selected_date_str, selected_periode)
             list_dataframes = self.DateToDataframe.getListDataframeByWeekFromDate(username, selected_date_str, selected_periode)
