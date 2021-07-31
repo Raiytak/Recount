@@ -7,7 +7,8 @@ class SQLConnector:
 
     def connect(self, config):
         # Line to change depending on the deployment method
-        conf = config["mysql_linux"]
+        conf = config["mysql"]
+        self.config = conf
         myConnection = pymysql.connect(
             host=conf["host"], user=conf["user"], passwd=conf["passwd"], db=conf["db"]
         )
