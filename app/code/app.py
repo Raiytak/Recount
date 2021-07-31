@@ -53,8 +53,7 @@ StandardButtonsConfigSaver = save_config.StandardButtonsConfigSaver(myAccessStan
 
 
 from wrapper_dash import vue_index, vue_home
-from wrapper_dash import vue_dashboard_home, vue_categories
-from wrapper_dash import vue_notebook_excel
+from wrapper_dash import vue_dashboard_home
 from wrapper_dash import vue_test
 
 import wrapper_dash.facilitator_dash.user_from_flask as user_from_flask
@@ -70,10 +69,7 @@ class AppDash():
         self.vueIndex = vue_index.AppDash(self.app)
         self.vueHome = vue_home.AppDash(self.app)
         self.vueDashboardHome = vue_dashboard_home.AppDash(self.app, DateToDataframe, ConvertDfToGraph, ImportExcelFileSaver)
-        self.vueCategoriesFile = vue_categories.AppDash(self.app, myAccessCTAuthorized, StandardButtonsConfigSaver)
-
-        self.vueNotebookExcel = vue_notebook_excel.AppDash(self.app, myExcelToDataframe, ImportExcelFileSaver, ConfigNotebookExcelSaver, StandardButtonsConfigSaver)
-    
+        
         self.vueTest = vue_test.AppDash(self.app)
 
 
@@ -96,14 +92,10 @@ class AppDash():
             elif pathname == '/dashhome':
                 update_db.updateAll(username)  
                 return self.vueDashboardHome.setThisVue()
-            # elif pathname == '/categories':
-            #     return self.vueCategoriesFile.setThisVue()
-            # elif pathname == '/excel':
-            #     return self.vueNotebookExcel.setThisVue()
             elif pathname == '/test':
                 return self.vueTest.setThisVue()
             else:
-                return '404'
+                return '404 Page not found.'
             pass
 
 
@@ -123,3 +115,19 @@ class AppDash():
             self.app,
             VALID_USERNAME_PASSWORD_PAIRS
         )
+
+
+
+
+# Part to launch the app manually
+if __name__ == "__main__":
+    # --- INIT ---
+    myApp = AppDash()
+
+    # TODO Change the place of update
+    # --- UPDATING DATABASE ---
+    # update_db.updateAll()   
+
+    # --- MAIN PART ---
+    myApp.launch()
+
