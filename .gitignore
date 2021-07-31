@@ -1,1 +1,9 @@
 app/code/config/*.json
+
+app/code/data/vues
+app/code/data/users
+
+app/code/build
+app/code/dist
+app/code/recount.egg-info
+app/code/MANIFEST
