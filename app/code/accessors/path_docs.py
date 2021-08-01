@@ -4,36 +4,20 @@
 # This file aims to do return the paths of the documents used in the app.
 # The manipulations are done in other modules.
 
-from shutil import copyfile
-import json
-
-import pandas as pd
-
 import os
-import re
 
 
 # Path to the file data used by the application
 class ApplicationDataPath:
     def __init__(self):
         self.folder_to_excels = "excels"
+        self.folder_to_examples = "examples"
         self.folder_to_vues = "vues"
         self.folder_to_categories = "categories"
 
-    def getMainPath(self):
-        path_file = os.path.abspath(__file__)
-        path_main_folder = re.sub("(app).+", "app", path_file)
-        return path_main_folder
-
     def getDataPath(self):
-        path_main = self.getMainPath()
-        path_data = path_main + "/code/data"
+        path_data = "data"
         return path_data
-
-    # TODO
-    # def getExcelPath(self):
-    #     path_data = self.["paths"]["PATH_TO_MAIN_FOLDER"] + "/code/data"
-    #     return path_data
 
 
 # Path to the excels used :
@@ -42,7 +26,6 @@ class ApplicationDataPath:
 class ExcelPath(ApplicationDataPath):
     def __init__(self):
         super().__init__()
-
         self._excel_path = self.copiedExcelPath()
         self._source_excel_path = self.importedExcelPath()
 
@@ -52,39 +35,40 @@ class ExcelPath(ApplicationDataPath):
     def nameImportedExcelOfTypeCSVTemporary(self):
         return "imported_temporary_excel.csv"
 
+    def joinPaths(self, root_path, file, folder=None):
+        if folder==None:
+            return root_path + "/" + file
+        return root_path + "/" + folder + "/" + file
+
     def importedExcelPath(self):
         path_file = self.getDataPath()
-        name_folder_excels = self.folder_to_excels
+        folder_excels = self.folder_to_excels
         name_file = self.nameImportedExcel()
-        path_excel = path_file + "/" + name_folder_excels + "/" + name_file
-        return path_excel
+        return self.joinPaths(path_file, name_file, folder_excels)
 
     def importedTemporaryCSVExcelPath(self):
         path_file = self.getDataPath()
-        name_folder_excels = self.folder_to_excels
+        folder_excels = self.folder_to_excels
         name_file = self.nameImportedExcelOfTypeCSVTemporary()
-        path_excel = path_file + "/" + name_folder_excels + "/" + name_file
-        return path_excel
+        return self.joinPaths(path_file, name_file, folder_excels)
 
     def copiedExcelPath(self):
         path_file = self.getDataPath()
-        name_folder_excels = self.folder_to_excels
+        folder_excels = self.folder_to_excels
         name_file = "copy_expenses.xlsx"
-        project_excel = path_file + "/" + name_folder_excels + "/" + name_file
-        return project_excel
+        return self.joinPaths(path_file, name_file, folder_excels)
 
     def rawCopiedExcelPath(self):
         path_file = self.getDataPath()
-        name_folder_excels = self.folder_to_excels
+        folder_excels = self.folder_to_excels
         name_file = "raw_copy_expenses.xlsx"
-        raw_copy_excel = path_file + "/" + name_folder_excels + "/" + name_file
-        return raw_copy_excel
+        return self.joinPaths(path_file, name_file, folder_excels)
 
     def exampleExcelPath(self):
-        path_file = self.getMainPath()
-        name_file = "documentation/example_expenses_en.xlsx"
-        path_excel = path_file + "/" + name_file
-        return path_excel
+        path_file = self.getDataPath()
+        folder_excels = self.folder_to_examples
+        name_file = "example_expenses_en.xlsx"
+        return self.joinPaths(path_file, name_file, folder_excels)
 
     def pathExists(self, my_path):
         is_present = os.path.exists(my_path)
@@ -121,7 +105,6 @@ class CategoryAndThemeAuthorizedPath(ApplicationDataPath):
 
     def getCategoryAndThemePath(self):
         name_folder_categories = self.folder_to_categories
-        # path_conv = self.getDataPath() + "/themes_subthemes_authorized.json"
         path_conv = (
             self.getDataPath()
             + "/"
@@ -132,7 +115,6 @@ class CategoryAndThemeAuthorizedPath(ApplicationDataPath):
 
     def getCategoryAndThemeTestPath(self):
         name_folder_categories = self.folder_to_categories
-        # path_conv = self.getDataPath() + "/themes_subthemes_authorized.json"
         path_conv = (
             self.getDataPath()
             + "/"
@@ -148,7 +130,6 @@ class NotebookConfigPath(ApplicationDataPath):
 
     def getNotebookConfigPath(self):
         name_folder_vues = self.folder_to_vues
-        # path_conv = self.getDataPath() + "/themes_subthemes_authorized.json"
         path_conf = (
             self.getDataPath()
             + "/"
@@ -165,7 +146,6 @@ class StandardButtonsConfigPath(ApplicationDataPath):
 
     def getStandardButtonsConfigPath(self):
         name_folder_vues = self.folder_to_vues
-        # path_conv = self.getDataPath() + "/themes_subthemes_authorized.json"
         path_conf = (
             self.getDataPath()
             + "/"

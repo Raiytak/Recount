@@ -1,8 +1,8 @@
 import datetime
 from dateutil.relativedelta import relativedelta
 
-import wrapper_sql.wrapper_sql as wrapper_sql
-import wrapper_sql.response_to_dataframe as response_to_dataframe
+from wrapper_sql.wrapper_sql import WrapperOfTable
+from wrapper_sql.response_to_dataframe import ResponseSqlToDataframe
 
 import config.access_config as access_config
 
@@ -12,8 +12,8 @@ config_json = myAccessConfig.getConfig()
 # TODO simplify this class
 class DateToDataframe:
     def __init__(self):
-        self.bd_sql = wrapper_sql.WrapperOfTable("clean_expenses", config_json)
-        self.translator = response_to_dataframe.ResponseSqlToDataframe()
+        self.bd_sql = WrapperOfTable("clean_expenses", config_json)
+        self.translator = ResponseSqlToDataframe()
 
     def getListDataframeByWeekFromDate(self, username, start_date, periode):
         current_date = self._convertToDatetime(start_date)

@@ -28,23 +28,24 @@ class WrapperOfTable(SQLConnector):
         response = self.cursor.execute(request_sql)
         return response
 
-    def selectRowId(self, id):
-        request = "SELECT * FROM & WHERE ID = " + str(id)
-        return self.select(request)
-
     def select(self, request_sql):
         self._execute(request_sql)
         return self.cursor.fetchall()
 
-    def insertAllReqs(self, list_request_sql):
-        for req_sql in list_request_sql:
-            self.insert(req_sql)
+    def selectRowId(self, id):
+        request = "SELECT * FROM & WHERE ID = " + str(id)
+        return self.select(request)
 
     def insert(self, request_sql):
         self._execute(request_sql)
         self.myConnection.commit()
-        if self.cursor.fetchall() != ():
-            return Exception
+        response = self.cursor.fetchall()
+        if response != ():
+            return ValueError(f"SQL insertion error : {response}")
+
+    def insertAllReqs(self, list_request_sql):
+        for req_sql in list_request_sql:
+            self.insert(req_sql)
 
     def deleteListRowsId(self, list_rows_id):
         for row_id in list_rows_id:

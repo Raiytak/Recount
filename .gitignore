@@ -3,7 +3,10 @@ app/code/config/*.json
 app/code/data/vues
 app/code/data/users
 
+# Ignoring the files created by setuptools and other tools used
+# to create packages.
 app/code/build
 app/code/dist
 app/code/recount.egg-info
 app/code/MANIFEST
+app/code/pyproject.toml
