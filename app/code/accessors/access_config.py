@@ -1,13 +1,10 @@
-import getpass
 import json
-
 import os
-
+import wrapper_sql
 
 class AccessConfig:
     def getConfigPath(self):
-        path_file = os.path.abspath(__file__)
-        path_config = path_file.replace("access_config.py", "config.json")
+        path_config = os.environ["CODE_PATH"] + "/config/config.json"
         return path_config
 
     def getConfig(self):

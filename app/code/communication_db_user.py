@@ -4,7 +4,7 @@ from dateutil.relativedelta import relativedelta
 from wrapper_sql.wrapper_sql import WrapperOfTable
 from wrapper_sql.response_to_dataframe import ResponseSqlToDataframe
 
-import config.access_config as access_config
+import accessors.access_config as access_config
 
 myAccessConfig = access_config.AccessConfig()
 config_json = myAccessConfig.getConfig()

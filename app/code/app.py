@@ -10,30 +10,30 @@ DateToDataframe = communication_db_user.DateToDataframe()
 
 
 # Import the config file
-import config.access_config as access_config
+from accessors.access_config import AccessConfig
 
-myAccessConfig = access_config.AccessConfig()
-import config.access_users as access_users
+myAccessConfig = AccessConfig()
+import accessors.access_users as access_users
 
 myAccessUsers = access_users.AccessUsers()
 
 # Get the different paths of the files used in the app.
-import accessors.path_docs as path_docs
+from accessors.path_files import ExcelPath, CategoryAndThemeAuthorizedPath, NotebookConfigPath, StandardButtonsConfigPath
 
-myExcelPath = path_docs.ExcelPath()
-myCatThemeAuthPath = path_docs.CategoryAndThemeAuthorizedPath()
-myNotebookExcelConfigPath = path_docs.NotebookConfigPath()
-myStandardButtonsConfigPath = path_docs.StandardButtonsConfigPath()
+myExcelPath = ExcelPath()
+myCatThemeAuthPath = CategoryAndThemeAuthorizedPath()
+myNotebookExcelConfigPath = NotebookConfigPath()
+myStandardButtonsConfigPath = StandardButtonsConfigPath()
 
 # Access the documents, to get the values, dataframe and update the docs. Need the paths to work.
-import accessors.access_docs as access_docs
+from accessors.access_files import AccessExcel, AccessCTAuthorized, AccessNotebookConfig, AccessStandardButtonsConfig
 
-myAccessExcel = access_docs.AccessExcel(myExcelPath)
-myAccessCTAuthorized = access_docs.AccessCTAuthorized(myCatThemeAuthPath)
-myAccessNotebookExcelConfig = access_docs.AccessNotebookConfig(
+myAccessExcel = AccessExcel(myExcelPath)
+myAccessCTAuthorized = AccessCTAuthorized(myCatThemeAuthPath)
+myAccessNotebookExcelConfig = AccessNotebookConfig(
     myNotebookExcelConfigPath
 )
-myAccessStandardButtonsConfig = access_docs.AccessStandardButtonsConfig(
+myAccessStandardButtonsConfig = AccessStandardButtonsConfig(
     myStandardButtonsConfigPath
 )
 authorizedCT_json = myAccessCTAuthorized.getJson()

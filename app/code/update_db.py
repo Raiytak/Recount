@@ -8,23 +8,30 @@
 #         return inner
 #     return updateDecorator
 
+import re
+import os
+def get_code_path():
+    path_file = os.path.abspath(__file__)
+    path_app = re.sub("(app).*", "app", path_file)
+    path_code = os.path.join(path_app, "code")
+    return path_code
 
-import config.access_config as access_config
+# To use if having trouble relying on sys.path automatic linking
+os.environ["CODE_PATH"] = get_code_path()
 
-myAccessConfig = access_config.AccessConfig()
+from accessors.access_config import AccessConfig
+myAccessConfig = AccessConfig()
 config_json = myAccessConfig.getConfig()
 
-import accessors.path_docs as path_docs
+from accessors.path_files import ExcelPath, DescrToThemePath, CategoryAndThemeAuthorizedPath
+myExcelPath = ExcelPath()
+myDescrToThemePath = DescrToThemePath()
+myCatThemeAuthPath = CategoryAndThemeAuthorizedPath()
 
-myExcelPath = path_docs.ExcelPath()
-myDescrToThemePath = path_docs.DescrToThemePath()
-myCatThemeAuthPath = path_docs.CategoryAndThemeAuthorizedPath()
-
-import accessors.access_docs as access_docs
-
-myAccessDescrToTheme = access_docs.AccessDescrToTheme(myDescrToThemePath)
-myAccessCTAuthorized = access_docs.AccessCTAuthorized(myCatThemeAuthPath)
-myAccessExcel = access_docs.AccessExcel(myExcelPath)
+from accessors.access_files import AccessDescrToTheme, AccessCTAuthorized, AccessExcel
+myAccessDescrToTheme = AccessDescrToTheme(myDescrToThemePath)
+myAccessCTAuthorized = AccessCTAuthorized(myCatThemeAuthPath)
+myAccessExcel = AccessExcel(myExcelPath)
 
 
 import wrapper_excel.convert_excel_to_df as convert_excel_to_df
