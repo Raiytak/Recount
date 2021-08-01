@@ -12,6 +12,7 @@ Unidecode = "*"
 PyMySQL = "*"
 dash-auth = "*"
 openpyxl = "*"
+pipenv-setup = "*"
 
 [dev-packages]
 

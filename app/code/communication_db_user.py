@@ -4,15 +4,15 @@ from dateutil.relativedelta import relativedelta
 from wrapper_sql.wrapper_sql import WrapperOfTable
 from wrapper_sql.response_to_dataframe import ResponseSqlToDataframe
 
-import accessors.access_config as access_config
+from accessors.access_config import AccessConfig
 
-myAccessConfig = access_config.AccessConfig()
-config_json = myAccessConfig.getConfig()
+myAccessConfig = AccessConfig()
+db_config = myAccessConfig.getDatabaseConfig()
 
 # TODO simplify this class
 class DateToDataframe:
     def __init__(self):
-        self.bd_sql = WrapperOfTable("clean_expenses", config_json)
+        self.bd_sql = WrapperOfTable("clean_expenses", db_config)
         self.translator = ResponseSqlToDataframe()
 
     def getListDataframeByWeekFromDate(self, username, start_date, periode):

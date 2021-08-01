@@ -1,7 +1,10 @@
+# Ignore the important stuff
 app/code/config/*.json
+app/code/.env
 
-app/code/data/vues
-app/code/data/users
+# Ignore the users's stuff
+app/code/data/vues/*
+app/code/data/users/*
 
 # Ignoring the files created by setuptools and other tools used
 # to create packages.
@@ -10,3 +13,6 @@ app/code/dist
 app/code/recount.egg-info
 app/code/MANIFEST
 app/code/pyproject.toml
+
+# Other ignores
+app/code/test.py

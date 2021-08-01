@@ -20,7 +20,7 @@ class SQLConnector:
         myConnection = pymysql.connect(
             host=db_config["host"],
             user=db_config["user"],
-            passwd=db_config["passwd"],
+            passwd=db_config["password"],
             db=db_config["db"],
         )
         return myConnection, myConnection.cursor()

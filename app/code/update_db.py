@@ -12,8 +12,7 @@
 from accessors.access_config import AccessConfig
 
 myAccessConfig = AccessConfig()
-config_json = myAccessConfig.getConfig()
-mysql_connection = config_json["mysql"]
+db_config = myAccessConfig.getDatabaseConfig()
 
 from accessors.access_files import AccessDescrToTheme, AccessCTAuthorized, AccessExcel
 
@@ -55,10 +54,10 @@ convertDfToReq = DataframeToSql()
 convertRespToDf = ResponseSqlToDataframe()
 convertRespToList = ResponseSqlToList()
 
-rawTable = WrapperOfTable("raw_expenses", mysql_connection)
-tripTable = WrapperOfTable("trip_expenses", mysql_connection)
-repayTable = WrapperOfTable("reimbursement", mysql_connection)
-cleanTable = WrapperOfTable("clean_expenses", mysql_connection)
+rawTable = WrapperOfTable("raw_expenses", db_config)
+tripTable = WrapperOfTable("trip_expenses", db_config)
+repayTable = WrapperOfTable("reimbursement", db_config)
+cleanTable = WrapperOfTable("clean_expenses", db_config)
 
 rawToRepayement = RawToRepayement(rawTable, repayTable)
 rawToTrip = RawToTrip(rawTable, tripTable)
