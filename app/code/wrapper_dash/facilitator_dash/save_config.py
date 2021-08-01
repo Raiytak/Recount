@@ -1,21 +1,15 @@
-import os
-import io
-import base64
-import csv
-import pandas as pd
-
-import update_db
+from accessors.access_files import AccessNotebookConfig, AccessStandardButtonsConfig
 
 
 class ConfigNotebookExcelSaver:
-    def __init__(self, AccessNotebookExcelConfig):
-        self.AccessNotebookExcelConfig = AccessNotebookExcelConfig
+    def __init__(self):
+        self.AccessNotebookConfig = AccessNotebookConfig()
 
     def getConfig(self):
-        return self.AccessNotebookExcelConfig.getJson()
+        return self.AccessNotebookConfig.getJson()
 
     def updateConfig(self, data):
-        return self.AccessNotebookExcelConfig.updateJson(data)
+        return self.AccessNotebookConfig.updateJson(data)
 
     def updateColumnsName(self, list_columns_name):
         config_json = self.getConfig()
@@ -27,8 +21,8 @@ class ConfigNotebookExcelSaver:
 
 
 class StandardButtonsConfigSaver:
-    def __init__(self, AccessStandardButtonsConfig):
-        self.AccessStandardButtonsConfig = AccessStandardButtonsConfig
+    def __init__(self):
+        self.AccessStandardButtonsConfig = AccessStandardButtonsConfig()
         self._conf = self.getConfig()
 
     def getConfig(self):

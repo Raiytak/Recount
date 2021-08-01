@@ -31,22 +31,15 @@ myNotebookExcelConfigPath = NotebookConfigPath()
 myStandardButtonsConfigPath = StandardButtonsConfigPath()
 
 # Access the documents, to get the values, dataframe and update the docs. Need the paths to work.
-from accessors.access_files import (
-    AccessExcel,
-    AccessCTAuthorized,
-    AccessNotebookConfig,
-    AccessStandardButtonsConfig,
-)
+from accessors.access_files import AccessCTAuthorized
 
-myAccessExcel = AccessExcel()
+
 myAccessCTAuthorized = AccessCTAuthorized()
-myAccessNotebookExcelConfig = AccessNotebookConfig()
-myAccessStandardButtonsConfig = AccessStandardButtonsConfig()
 authorizedCT_json = myAccessCTAuthorized.getJson()
 
 import wrapper_excel.convert_excel_to_df as convert_excel_to_df
 
-myExcelToDataframe = convert_excel_to_df.ExcelToDataframe(myAccessExcel)
+myExcelToDataframe = convert_excel_to_df.ExcelToDataframe()
 
 
 # Objects used to clean and convert the data into dataframe and objects readable for the dash app
@@ -70,12 +63,8 @@ ImportExcelFileSaver = import_excel.ImportExcelFileSaver(myExcelToDataframe, upd
 
 import wrapper_dash.facilitator_dash.save_config as save_config
 
-ConfigNotebookExcelSaver = save_config.ConfigNotebookExcelSaver(
-    myAccessNotebookExcelConfig
-)
-StandardButtonsConfigSaver = save_config.StandardButtonsConfigSaver(
-    myAccessStandardButtonsConfig
-)
+ConfigNotebookExcelSaver = save_config.ConfigNotebookExcelSaver()
+StandardButtonsConfigSaver = save_config.StandardButtonsConfigSaver()
 
 
 from wrapper_dash import vue_index, vue_home

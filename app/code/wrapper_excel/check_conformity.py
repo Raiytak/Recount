@@ -1,13 +1,13 @@
 # -*- coding: utf-8 -*-
-import unidecode
 
 import numpy as np
-import pandas as pd
+
+from accessors.access_files import AccessCTAuthorized as AccessCTAuthorized
 
 
 class ReviewerDataframe:
-    def __init__(self, TSTAuthorized):
-        self._tst_json = TSTAuthorized.getJson()
+    def __init__(self):
+        self._tst_json = AccessCTAuthorized().getJson()
 
     def checkConformity(self, dataframe):
         self.checkThemesAndSubthemes(dataframe)

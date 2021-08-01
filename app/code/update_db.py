@@ -14,12 +14,6 @@ from accessors.access_config import AccessConfig
 myAccessConfig = AccessConfig()
 db_config = myAccessConfig.getDatabaseConfig()
 
-from accessors.access_files import AccessDescrToTheme, AccessCTAuthorized, AccessExcel
-
-myAccessDescrToTheme = AccessDescrToTheme()
-myAccessCTAuthorized = AccessCTAuthorized()
-myAccessExcel = AccessExcel()
-
 
 from wrapper_excel.convert_excel_to_df import ExcelToDataframe
 from wrapper_excel.cleaner_dataframe import CleanerDataframe
@@ -28,15 +22,15 @@ from wrapper_excel.check_conformity import ReviewerDataframe
 from wrapper_excel.main_cleaner import MainCleanerExcel
 
 
-myExcelToDataframe = ExcelToDataframe(myAccessExcel)
+myExcelToDataframe = ExcelToDataframe()
 myCleanerDataframe = CleanerDataframe()
-myIntelligentFill = IntelligentFill(myAccessDescrToTheme)
-myReviewerDataframe = ReviewerDataframe(myAccessCTAuthorized)
+myIntelligentFill = IntelligentFill()
+myReviewerDataframe = ReviewerDataframe()
 mainCleaner = MainCleanerExcel(
     myExcelToDataframe, myCleanerDataframe, myIntelligentFill, myReviewerDataframe
 )
 
-myUpdateConversionJson = UpdateConversionJson(myAccessDescrToTheme)
+myUpdateConversionJson = UpdateConversionJson()
 
 
 from wrapper_sql.wrapper_sql import WrapperOfTable

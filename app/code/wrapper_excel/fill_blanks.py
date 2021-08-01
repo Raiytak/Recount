@@ -9,14 +9,13 @@
 # meaning that this is the most probable one.
 
 import numpy as np
-import pandas as pd
 
-import stop_words
+from accessors.access_files import AccessDescrToTheme
 
 
 class IntelligentFill:
-    def __init__(self, AccessDescrToTheme):
-        self._descr_to_category_json = AccessDescrToTheme.getJsonDescrToTheme()
+    def __init__(self):
+        self._descr_to_category_json = AccessDescrToTheme().getJsonDescrToTheme()
 
     def intelligentFillBlankCategoryUsingCompany(self, dataframe):
         if self._descr_to_category_json != {}:
@@ -55,9 +54,9 @@ class IntelligentFill:
 
 
 class UpdateConversionJson:
-    def __init__(self, AccessDescrToTheme):
-        self.AccessDescrToTheme = AccessDescrToTheme
-        self._descr_to_category_json = AccessDescrToTheme.getJsonDescrToTheme()
+    def __init__(self):
+        self.AccessDescrToTheme = AccessDescrToTheme()
+        self._descr_to_category_json = self.AccessDescrToTheme.getJsonDescrToTheme()
 
     def updateConversionJsonUsingDataframe(self, dataframe):
         list_c_d = ["Company", "Description"]
