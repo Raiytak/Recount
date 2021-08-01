@@ -38,10 +38,10 @@ from accessors.access_files import (
     AccessStandardButtonsConfig,
 )
 
-myAccessExcel = AccessExcel(myExcelPath)
-myAccessCTAuthorized = AccessCTAuthorized(myCatThemeAuthPath)
-myAccessNotebookExcelConfig = AccessNotebookConfig(myNotebookExcelConfigPath)
-myAccessStandardButtonsConfig = AccessStandardButtonsConfig(myStandardButtonsConfigPath)
+myAccessExcel = AccessExcel()
+myAccessCTAuthorized = AccessCTAuthorized()
+myAccessNotebookExcelConfig = AccessNotebookConfig()
+myAccessStandardButtonsConfig = AccessStandardButtonsConfig()
 authorizedCT_json = myAccessCTAuthorized.getJson()
 
 import wrapper_excel.convert_excel_to_df as convert_excel_to_df

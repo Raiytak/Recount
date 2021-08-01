@@ -1,11 +1,17 @@
 import json
-import os
+
+from accessors import path_files
 
 
 class AccessUsers:
+    def __init__(self):
+        self.ApplicationDataPath = path_files.ApplicationDataPath()
+        self.PathInformation = self.ApplicationDataPath.PathInformation
+
     def getUsersPath(self):
-        path_users = os.environ["CODE_PATH"] + "/config/users.json"
-        return path_users
+        self.PathInformation.folders = [self.ApplicationDataPath.folder_config]
+        self.PathInformation.filename = "users.json"
+        return self.ApplicationDataPath.formPathUsing(self.PathInformation)
 
     def getUsers(self):
         path_users = self.getUsersPath()

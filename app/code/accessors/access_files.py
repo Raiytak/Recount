@@ -8,13 +8,14 @@ from shutil import copyfile
 
 import pandas as pd
 import json
-
 import os
+
+from accessors.path_files import *
 
 
 class AccessExcel:
-    def __init__(self, ExcelPath):
-        self.ExcelPath = ExcelPath
+    def __init__(self):
+        self.ExcelPath = ExcelPath()
         self.useExampleIfNoExcel()
 
         # self.removeAllOldFiles()
@@ -56,8 +57,8 @@ class AccessExcel:
 
 
 class AccessDescrToTheme:
-    def __init__(self, DescrToThemePath):
-        self.DescrToThemePath = DescrToThemePath
+    def __init__(self):
+        self.DescrToThemePath = DescrToThemePath()
 
     def getJsonDescrToTheme(self):
         data = {}
@@ -81,8 +82,8 @@ class AccessDescrToTheme:
 
 
 class AccessCTAuthorized:
-    def __init__(self, CategoryAndThemeAuthorized):
-        self.TSTAuth = CategoryAndThemeAuthorized
+    def __init__(self):
+        self.TSTAuth = CategoryAndThemeAuthorizedPath()
 
     def getJson(self):
         data = {}
@@ -110,8 +111,8 @@ class AccessCTAuthorized:
 
 
 class AccessNotebookConfig:
-    def __init__(self, NotebookConfigPath):
-        self.NotebookConfigPath = NotebookConfigPath
+    def __init__(self):
+        self.NotebookConfigPath = NotebookConfigPath()
 
     def getJson(self):
         data = {}
@@ -133,8 +134,8 @@ class AccessNotebookConfig:
 
 
 class AccessStandardButtonsConfig:
-    def __init__(self, StandardButtonsConfigPath):
-        self.StandardButtonsConfigPath = StandardButtonsConfigPath
+    def __init__(self):
+        self.StandardButtonsConfigPath = StandardButtonsConfigPath()
 
     def getJson(self):
         data = {}

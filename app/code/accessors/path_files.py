@@ -5,10 +5,24 @@
 # The manipulations are done in other modules.
 
 import os
+import sys
+import re
+
+
+def _getCodePath():
+    root_path = os.path.abspath(__file__)
+    app_path = re.sub("(app).*", "app", root_path)
+    code_path = os.path.join(app_path, "code")
+    return code_path
+
+
+CODE_PATH = _getCodePath()
+if CODE_PATH not in sys.path:
+    sys.path = [CODE_PATH] + sys.path
 
 
 class PathInformation:
-    root = os.environ["CODE_PATH"]
+    root = CODE_PATH
     folders = []
     filename = ""
 
@@ -25,6 +39,7 @@ class ApplicationDataPath:
         self.intelligent_fill = "intelligent_fill"
         self.standard_buttons = "standard_buttons"
         self.notebook_excel = "notebook_excel"
+        self.folder_config = "config"
 
     def joinPaths(self, root_path, filename, folders=None):
         if folders == None:

@@ -2,17 +2,26 @@ import pymysql
 
 
 class SQLConnector:
-    def __init__(self, config):
-        self.CONFIG = config
+    def __init__(self, db_config):
+        self.DB_CONFIG = db_config
+        self.myConnection, self.cursor = self._connect()
 
-    def _connect(self, config=None):
-        if config == None:
-            config = self.CONFIG
+    def __enter__(self):
+        pass
+        # self.myConnection, self.cursor = self._connect()
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        pass
+        # self._end_connection()
+
+    def _connect(self, db_config=None):
+        if db_config == None:
+            db_config = self.DB_CONFIG
         myConnection = pymysql.connect(
-            host=config["host"],
-            user=config["user"],
-            passwd=config["passwd"],
-            db=config["db"],
+            host=db_config["host"],
+            user=db_config["user"],
+            passwd=db_config["passwd"],
+            db=db_config["db"],
         )
         return myConnection, myConnection.cursor()
 
@@ -21,17 +30,13 @@ class SQLConnector:
 
 
 class WrapperOfTable(SQLConnector):
-    def __init__(self, table, config):
-        super().__init__(config)
+    def __init__(self, table, db_config):
+        super().__init__(db_config)
         self.table = table
 
     def _execute(self, request_sql):
-        self.myConnection, self.cursor = self._connect()
-
         request_sql = request_sql.replace("&", self.table)
         response = self.cursor.execute(request_sql)
-
-        self._end_connection()
         return response
 
     def select(self, request_sql):

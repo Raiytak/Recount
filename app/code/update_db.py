@@ -8,19 +8,6 @@
 #         return inner
 #     return updateDecorator
 
-import re
-import os
-
-
-def get_code_path():
-    path_file = os.path.abspath(__file__)
-    path_app = re.sub("(app).*", "app", path_file)
-    path_code = os.path.join(path_app, "code")
-    return path_code
-
-
-# To use if having trouble relying on sys.path automatic linking
-os.environ["CODE_PATH"] = get_code_path()
 
 from accessors.access_config import AccessConfig
 
@@ -28,21 +15,11 @@ myAccessConfig = AccessConfig()
 config_json = myAccessConfig.getConfig()
 mysql_connection = config_json["mysql"]
 
-from accessors.path_files import (
-    ExcelPath,
-    DescrToThemePath,
-    CategoryAndThemeAuthorizedPath,
-)
-
-myExcelPath = ExcelPath()
-myDescrToThemePath = DescrToThemePath()
-myCatThemeAuthPath = CategoryAndThemeAuthorizedPath()
-
 from accessors.access_files import AccessDescrToTheme, AccessCTAuthorized, AccessExcel
 
-myAccessDescrToTheme = AccessDescrToTheme(myDescrToThemePath)
-myAccessCTAuthorized = AccessCTAuthorized(myCatThemeAuthPath)
-myAccessExcel = AccessExcel(myExcelPath)
+myAccessDescrToTheme = AccessDescrToTheme()
+myAccessCTAuthorized = AccessCTAuthorized()
+myAccessExcel = AccessExcel()
 
 
 from wrapper_excel.convert_excel_to_df import ExcelToDataframe
@@ -103,8 +80,9 @@ def updateRawTable(username):
         dataframe, equivalent_columns
     )
 
-    rawTable.dumpTableForUser(username)
-    rawTable.insertAllReqs(list_requests)
+    with rawTable:
+        rawTable.dumpTableForUser(username)
+        rawTable.insertAllReqs(list_requests)
 
 
 # @updatingByRemovingAllExistingRowsOfTable(repayTable)
