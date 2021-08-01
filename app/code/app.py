@@ -37,34 +37,35 @@ from accessors.access_files import AccessCTAuthorized
 myAccessCTAuthorized = AccessCTAuthorized()
 authorizedCT_json = myAccessCTAuthorized.getJson()
 
-import wrapper_excel.convert_excel_to_df as convert_excel_to_df
+from wrapper_excel.convert_excel_to_df import ExcelToDataframe
 
-myExcelToDataframe = convert_excel_to_df.ExcelToDataframe()
+myExcelToDataframe = ExcelToDataframe()
 
 
 # Objects used to clean and convert the data into dataframe and objects readable for the dash app
 # import wrapper_dash.facilitator_dash.prepare_dashboard as prepare_dashboard
-import wrapper_dash.facilitator_dash.convert_df_to_ld as convert_df_to_ld
+from wrapper_dash.facilitator_dash.convert_df_to_ld import DataframeToListOfDicts
 
-DataframeToListDict = convert_df_to_ld.DataframeToListOfDicts()
-import wrapper_dash.facilitator_dash.convert_ld_to_graph as convert_ld_to_graph
+DataframeToListDict = DataframeToListOfDicts()
+from wrapper_dash.facilitator_dash.convert_ld_to_graph import ListDictToGraph
 
-ListDictToGraph = convert_ld_to_graph.ListDictToGraph(authorizedCT_json)
-import wrapper_dash.facilitator_dash.main_convert_df_to_graph as main_convert_df_to_graph
+ListDictToGraph = ListDictToGraph(authorizedCT_json)
+from wrapper_dash.facilitator_dash.main_convert_df_to_graph import DataframeToGraph
 
-ConvertDfToGraph = main_convert_df_to_graph.DataframeToGraph(
-    DataframeToListDict, ListDictToGraph
-)
+ConvertDfToGraph = DataframeToGraph(DataframeToListDict, ListDictToGraph)
 
 # Object used to save an excel uploaded by the user
-import wrapper_dash.facilitator_dash.import_excel as import_excel
+from wrapper_dash.facilitator_dash.import_excel import ImportExcelFileSaver
 
-ImportExcelFileSaver = import_excel.ImportExcelFileSaver(myExcelToDataframe, update_db)
+ImportExcelFileSaver = ImportExcelFileSaver(myExcelToDataframe, update_db)
 
-import wrapper_dash.facilitator_dash.save_config as save_config
+from wrapper_dash.facilitator_dash.save_config import (
+    ConfigNotebookExcelSaver,
+    StandardButtonsConfigSaver,
+)
 
-ConfigNotebookExcelSaver = save_config.ConfigNotebookExcelSaver()
-StandardButtonsConfigSaver = save_config.StandardButtonsConfigSaver()
+ConfigNotebookExcelSaver = ConfigNotebookExcelSaver()
+StandardButtonsConfigSaver = StandardButtonsConfigSaver()
 
 
 from wrapper_dash import vue_index, vue_home
