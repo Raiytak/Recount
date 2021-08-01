@@ -60,12 +60,7 @@ class ReusableGraphs:
             style={"display": "flex", "justify-content": "space-around"},
         )
 
-        dashboard_div = html.Div(
-            [
-                upper_graphs,
-                bottom_graphs,
-            ]
-        )
+        dashboard_div = html.Div([upper_graphs, bottom_graphs])
         return dashboard_div
 
     def getDashboardHomeTypeGraphs(self):

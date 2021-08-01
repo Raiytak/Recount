@@ -4,15 +4,8 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-dash = "*"
-pandas = "*"
-stop-words = "*"
-xlrd = "==1.2.0"
-Unidecode = "*"
-PyMySQL = "*"
-dash-auth = "*"
-openpyxl = "*"
 pipenv-setup = "*"
+recount = {editable = true, path = "."}
 
 [dev-packages]
 

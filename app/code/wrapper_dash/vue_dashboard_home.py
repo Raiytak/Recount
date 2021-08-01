@@ -46,12 +46,7 @@ class EmptyVue:
         input_div = self.ElementsVue.getInputDiv()
         dashboard_div = self.ElementsVue.getGraphDiv()
 
-        dashboard = html.Div(
-            [
-                input_div,
-                dashboard_div,
-            ]
-        )
+        dashboard = html.Div([input_div, dashboard_div])
 
         total_vue = html.Div([header_div, dashboard])
 

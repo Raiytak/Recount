@@ -81,10 +81,7 @@ class ReusableSingleStandardButtons(UniqueReusableSingleStandardButtons):
         edit_button_div = dcc.Checklist(
             id=self.edit_button,
             options=[{"label": "", "value": "checked"}],
-            style={
-                "margin-top": "8px",
-                "margin-left": "10px",
-            },
+            style={"margin-top": "8px", "margin-left": "10px"},
         )
         return edit_button_div
 
@@ -206,19 +203,14 @@ class ReusableStandardButtons(ReusableSingleStandardButtons):
         edit_button_div = self.getEditButtonsAndColumnsChecklist()
         text_div = self.getEditButtonsAndColumnsTextDiv()
         all_div = html.Div(
-            children=[edit_button_div, text_div],
-            style={
-                "display": "flex",
-            },
+            children=[edit_button_div, text_div], style={"display": "flex"}
         )
         return all_div
 
     def getImportExcelUpload(self):
         excel_input_id = self.import_excel_id
         excel_input = dcc.Upload(
-            id=excel_input_id,
-            children=self.getImportExcelTextDiv(),
-            multiple=False,
+            id=excel_input_id, children=self.getImportExcelTextDiv(), multiple=False
         )
         return excel_input
 
@@ -243,9 +235,7 @@ class ReusableStandardButtons(ReusableSingleStandardButtons):
     def getUpdateDataDiv(self):
         update_input_id = self.update_id
         update_input = html.Button(
-            id=update_input_id,
-            children=self.getUpdateDataTextDiv(),
-            n_clicks=0,
+            id=update_input_id, children=self.getUpdateDataTextDiv(), n_clicks=0
         )
         message_to_user = self.getMessageToUserUpdateDiv()
         all_div = html.Div(

@@ -66,10 +66,5 @@ class ReusableLinks(ReusableSingleLinks):
     def getHeaderSite(self):
         links_div = self.getLinksDiv()
 
-        header_site = html.Header(
-            children=[links_div],
-            style={
-                "display": "flex",
-            },
-        )
+        header_site = html.Header(children=[links_div], style={"display": "flex"})
         return header_site
