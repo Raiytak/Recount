@@ -2,11 +2,13 @@ import sys
 import os
 import re
 
+
 def get_code_path():
     path_file = os.path.abspath(__file__)
     path_app = re.sub("(app).*", "app", path_file)
     path_code = os.path.join(path_app, "code")
     return path_code
+
 
 # Add project_path to the sys path.
 # This allows to import any package of this project from another package, with /code as root.

@@ -1,6 +1,7 @@
 import json
 import os
 
+
 class AccessConfig:
     def getConfigPath(self):
         path_config = os.environ["CODE_PATH"] + "/config/config.json"

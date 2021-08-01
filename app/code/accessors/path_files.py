@@ -5,12 +5,14 @@
 # The manipulations are done in other modules.
 
 import os
-import enum
+import sys
+
 
 class PathInformation:
     root = os.environ["CODE_PATH"]
     folders = []
     filename = ""
+
 
 # Path to the file data used by the application
 class ApplicationDataPath:
@@ -24,10 +26,9 @@ class ApplicationDataPath:
         self.intelligent_fill = "intelligent_fill"
         self.standard_buttons = "standard_buttons"
         self.notebook_excel = "notebook_excel"
-        
 
     def joinPaths(self, root_path, filename, folders=None):
-        if folders==None:
+        if folders == None:
             return root_path + "/" + filename
         chained_folders = "/".join(folders)
         return root_path + "/" + chained_folders + "/" + filename
@@ -96,7 +97,7 @@ class DescrToThemePath(ApplicationDataPath):
 
     def getDescriptionToThemePath(self):
         self.PathInformation.folders = [self.folder_data, self.categories_folder]
-        self.PathInformation.filename = "convert_descr_to_theme.json"   
+        self.PathInformation.filename = "convert_descr_to_theme.json"
         return self.formPathUsing(self.PathInformation)
 
 
@@ -130,6 +131,10 @@ class StandardButtonsConfigPath(ApplicationDataPath):
         super().__init__()
 
     def getStandardButtonsConfigPath(self):
-        self.PathInformation.folders = [self.folder_data, self.vues_folder, self.standard_buttons]
+        self.PathInformation.folders = [
+            self.folder_data,
+            self.vues_folder,
+            self.standard_buttons,
+        ]
         self.PathInformation.filename = "config_buttons.json"
         return self.formPathUsing(self.PathInformation)

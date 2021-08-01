@@ -18,7 +18,12 @@ import accessors.access_users as access_users
 myAccessUsers = access_users.AccessUsers()
 
 # Get the different paths of the files used in the app.
-from accessors.path_files import ExcelPath, CategoryAndThemeAuthorizedPath, NotebookConfigPath, StandardButtonsConfigPath
+from accessors.path_files import (
+    ExcelPath,
+    CategoryAndThemeAuthorizedPath,
+    NotebookConfigPath,
+    StandardButtonsConfigPath,
+)
 
 myExcelPath = ExcelPath()
 myCatThemeAuthPath = CategoryAndThemeAuthorizedPath()
@@ -26,16 +31,17 @@ myNotebookExcelConfigPath = NotebookConfigPath()
 myStandardButtonsConfigPath = StandardButtonsConfigPath()
 
 # Access the documents, to get the values, dataframe and update the docs. Need the paths to work.
-from accessors.access_files import AccessExcel, AccessCTAuthorized, AccessNotebookConfig, AccessStandardButtonsConfig
+from accessors.access_files import (
+    AccessExcel,
+    AccessCTAuthorized,
+    AccessNotebookConfig,
+    AccessStandardButtonsConfig,
+)
 
 myAccessExcel = AccessExcel(myExcelPath)
 myAccessCTAuthorized = AccessCTAuthorized(myCatThemeAuthPath)
-myAccessNotebookExcelConfig = AccessNotebookConfig(
-    myNotebookExcelConfigPath
-)
-myAccessStandardButtonsConfig = AccessStandardButtonsConfig(
-    myStandardButtonsConfigPath
-)
+myAccessNotebookExcelConfig = AccessNotebookConfig(myNotebookExcelConfigPath)
+myAccessStandardButtonsConfig = AccessStandardButtonsConfig(myStandardButtonsConfigPath)
 authorizedCT_json = myAccessCTAuthorized.getJson()
 
 import wrapper_excel.convert_excel_to_df as convert_excel_to_df

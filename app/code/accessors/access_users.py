@@ -1,6 +1,7 @@
 import json
 import os
 
+
 class AccessUsers:
     def getUsersPath(self):
         path_users = os.environ["CODE_PATH"] + "/config/users.json"

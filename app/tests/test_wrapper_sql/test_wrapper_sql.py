@@ -5,23 +5,23 @@ import enum
 from wrapper_sql import wrapper_sql
 
 
-CONFIG_ONE={
+CONFIG_ONE = {
     "mysql": {
         "host": "localhost",
         "port": 3306,
         "db": "expenses",
         "user": "myuser",
-        "passwd": "mypass"
+        "passwd": "mypass",
     }
 }
 
-CONFIG_TWO={
+CONFIG_TWO = {
     "mysql": {
         "host": "db",
         "port": 33000,
         "db": "expenses",
         "user": "myuser",
-        "passwd": "mypass"
+        "passwd": "mypass",
     }
 }
 
@@ -29,11 +29,11 @@ CONFIG_TWO={
 def test_sql_connector(mocker):
     mocker.patch("pymysql.connect")
     spy_connection = mocker.spy(wrapper_sql.pymysql, "connect")
-   
+
     sqlConnector = wrapper_sql.SQLConnector(CONFIG_ONE)
     assert spy_connection.call_count == 1
     assert sqlConnector.config["host"] == "localhost"
-   
+
     sqlConnector.connect(CONFIG_TWO)
     assert spy_connection.call_count == 2
     assert sqlConnector.config["port"] == 33000
@@ -48,8 +48,7 @@ def test_execute(mocker):
     assert spy_connection.call_count == 1
     assert fakeWrapper.table == "fake_table"
 
-
-    fake_request =  "SELECT * FROM & WHERE ID = 0"
+    fake_request = "SELECT * FROM & WHERE ID = 0"
     response = fakeWrapper._execute(fake_request)
 
     assert spy_execution.call_count == 1
@@ -61,7 +60,7 @@ def test_select(mocker):
     fakeWrapper = wrapper_sql.WrapperOfTable("fake_table", CONFIG_ONE)
     spy_response = mocker.spy(fakeWrapper.cursor, "fetchall")
 
-    fake_request =  "SELECT * FROM & WHERE ID = 0"
+    fake_request = "SELECT * FROM & WHERE ID = 0"
     response = fakeWrapper.select(fake_request)
 
     assert spy_connection.call_count == 1
@@ -74,13 +73,13 @@ def test_insertion(mocker):
     spy_commit = mocker.spy(fakeWrapper.myConnection, "commit")
     spy_response = mocker.spy(fakeWrapper.cursor, "fetchall")
 
-    fake_request =  "SELECT * FROM & WHERE ID = 0"
+    fake_request = "SELECT * FROM & WHERE ID = 0"
     response = fakeWrapper.insert(fake_request)
 
     assert spy_commit.call_count == 1
     assert spy_response.call_count == 1
     assert spy_response.spy_return != ()
-    
+
     # mocker.patch(fakeWrapper.cursor, "fetchall", ())
     # with pytest.raises(
     #     ValueError,
