@@ -1,9 +1,0 @@
-dash
-dash_auth
-pandas
-unidecode
-stop_words
-xlrd
-pymysql
-openpyxl
-python-decouple
