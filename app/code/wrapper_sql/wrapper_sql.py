@@ -3,29 +3,35 @@ import pymysql
 
 class SQLConnector:
     def __init__(self, config):
-        self.myConnection, self.cursor = self.connect(config)
+        self.CONFIG = config
 
-    def connect(self, config):
-        # Line to change depending on the deployment method
-        conf = config["mysql"]
-        self.config = conf
+    def _connect(self, config=None):
+        if config == None:
+            config = self.CONFIG
         myConnection = pymysql.connect(
-            host=conf["host"], user=conf["user"], passwd=conf["passwd"], db=conf["db"]
+            host=config["host"],
+            user=config["user"],
+            passwd=config["passwd"],
+            db=config["db"],
         )
         return myConnection, myConnection.cursor()
 
-    def end_connection(self):
+    def _end_connection(self):
         self.myConnection.close()
 
 
 class WrapperOfTable(SQLConnector):
     def __init__(self, table, config):
-        SQLConnector.__init__(self, config)
+        super().__init__(config)
         self.table = table
 
     def _execute(self, request_sql):
+        self.myConnection, self.cursor = self._connect()
+
         request_sql = request_sql.replace("&", self.table)
         response = self.cursor.execute(request_sql)
+
+        self._end_connection()
         return response
 
     def select(self, request_sql):

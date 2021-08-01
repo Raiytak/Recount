@@ -19,3 +19,6 @@ if path_code not in sys.path:
 
 # Add the .../code path to the os environment, which will be used for opening files.
 os.environ["CODE_PATH"] = get_code_path()
+
+
+os.environ["ENV_TYPE"] = "local_test"

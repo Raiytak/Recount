@@ -26,6 +26,7 @@ from accessors.access_config import AccessConfig
 
 myAccessConfig = AccessConfig()
 config_json = myAccessConfig.getConfig()
+mysql_connection = config_json["mysql"]
 
 from accessors.path_files import (
     ExcelPath,
@@ -44,45 +45,50 @@ myAccessCTAuthorized = AccessCTAuthorized(myCatThemeAuthPath)
 myAccessExcel = AccessExcel(myExcelPath)
 
 
-import wrapper_excel.convert_excel_to_df as convert_excel_to_df
-import wrapper_excel.main_cleaner as main_cleaner
-import wrapper_excel.cleaner_dataframe as cleaner_dataframe
-import wrapper_excel.fill_blanks as fill_blanks
-import wrapper_excel.check_conformity as check_conformity
+from wrapper_excel.convert_excel_to_df import ExcelToDataframe
+from wrapper_excel.cleaner_dataframe import CleanerDataframe
+from wrapper_excel.fill_blanks import IntelligentFill, UpdateConversionJson
+from wrapper_excel.check_conformity import ReviewerDataframe
+from wrapper_excel.main_cleaner import MainCleanerExcel
 
 
-myExcelToDataframe = convert_excel_to_df.ExcelToDataframe(myAccessExcel)
-myCleanerDataframe = cleaner_dataframe.CleanerDataframe()
-myIntelligentFill = fill_blanks.IntelligentFill(myAccessDescrToTheme)
-myReviewerDataframe = check_conformity.ReviewerDataframe(myAccessCTAuthorized)
-mainCleaner = main_cleaner.MainCleanerExcel(
+myExcelToDataframe = ExcelToDataframe(myAccessExcel)
+myCleanerDataframe = CleanerDataframe()
+myIntelligentFill = IntelligentFill(myAccessDescrToTheme)
+myReviewerDataframe = ReviewerDataframe(myAccessCTAuthorized)
+mainCleaner = MainCleanerExcel(
     myExcelToDataframe, myCleanerDataframe, myIntelligentFill, myReviewerDataframe
 )
 
-myUpdateConversionJson = fill_blanks.UpdateConversionJson(myAccessDescrToTheme)
+myUpdateConversionJson = UpdateConversionJson(myAccessDescrToTheme)
 
 
-import wrapper_sql.wrapper_sql as wrapper_sql
-import wrapper_sql.dataframe_to_request_sql as dataframe_to_request_sql
-import wrapper_sql.response_to_dataframe as response_to_dataframe
-import wrapper_sql.table_to_other_table as table_to_other_table
-import wrapper_sql.repay_repayments as repay_repayments
+from wrapper_sql.wrapper_sql import WrapperOfTable
+from wrapper_sql.dataframe_to_request_sql import DataframeToSql
+from wrapper_sql.response_to_dataframe import ResponseSqlToDataframe, ResponseSqlToList
+from wrapper_sql.table_to_other_table import (
+    RawToRepayement,
+    RawToTrip,
+    RawToClean,
+    TripToClean,
+)
+from wrapper_sql.repay_repayments import RepayPepayements
 
-convertDfToReq = dataframe_to_request_sql.DataframeToSql()
-convertRespToDf = response_to_dataframe.ResponseSqlToDataframe()
-convertRespToList = response_to_dataframe.ResponseSqlToList()
+convertDfToReq = DataframeToSql()
+convertRespToDf = ResponseSqlToDataframe()
+convertRespToList = ResponseSqlToList()
 
-rawTable = wrapper_sql.WrapperOfTable("raw_expenses", config_json)
-tripTable = wrapper_sql.WrapperOfTable("trip_expenses", config_json)
-repayTable = wrapper_sql.WrapperOfTable("reimbursement", config_json)
-cleanTable = wrapper_sql.WrapperOfTable("clean_expenses", config_json)
+rawTable = WrapperOfTable("raw_expenses", mysql_connection)
+tripTable = WrapperOfTable("trip_expenses", mysql_connection)
+repayTable = WrapperOfTable("reimbursement", mysql_connection)
+cleanTable = WrapperOfTable("clean_expenses", mysql_connection)
 
-rawToRepayement = table_to_other_table.RawToRepayement(rawTable, repayTable)
-rawToTrip = table_to_other_table.RawToTrip(rawTable, tripTable)
-rawToClean = table_to_other_table.RawToClean(rawTable, cleanTable)
-tripToClean = table_to_other_table.TripToClean(tripTable, cleanTable)
+rawToRepayement = RawToRepayement(rawTable, repayTable)
+rawToTrip = RawToTrip(rawTable, tripTable)
+rawToClean = RawToClean(rawTable, cleanTable)
+tripToClean = TripToClean(tripTable, cleanTable)
 
-repayRep = repay_repayments.RepayPepayements(rawTable, repayTable)
+repayRep = RepayPepayements(rawTable, repayTable)
 
 
 # @updatingByRemovingAllExistingRowsOfTable(rawTable)

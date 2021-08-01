@@ -5,7 +5,6 @@
 # The manipulations are done in other modules.
 
 import os
-import sys
 
 
 class PathInformation:

@@ -11,7 +11,7 @@ class AccessConfig:
         config_path = self.getConfigPath()
         with open(config_path, "r") as json_file:
             data = json.load(json_file)
-        return data
+        return data[os.environ["ENV_TYPE"]]
 
     def writeConfig(self, data):
         config_path = self.getConfigPath()
