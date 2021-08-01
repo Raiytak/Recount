@@ -18,6 +18,21 @@ app/code/pyproject.toml
 # Those should only be created using pipenv install -e .
 app/Pipfile
 app/Pipfile.lock
+app/recount.egg-info
+app/pyvenv.cfg
+
+# Ignoring files created by venv.
+# Those should only be created using :
+#       python -venv .
+#       source bin/activate
+#       pip install -e .
+app/bin
+app/etc
+app/share
+app/lib
+app/lib64
+app/include
+app/.pytest_cache
 
 # Other ignores
 app/code/test.py

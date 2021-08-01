@@ -1,4 +1,4 @@
-from setuptools import setup
+from setuptools import setup, find_packages
 
 setup(
     name="recount",
@@ -6,6 +6,8 @@ setup(
     description="Python Distribution Utilities for Recount app",
     author="Mathieu Salaün",
     author_email="mathieu.salaun12@gmail.com",
+    packages=find_packages("code"),
+    package_dir={"": "code"},
     install_requires=[
         "dash",
         "dash_auth",
@@ -16,8 +18,9 @@ setup(
         "pymysql",
         "openpyxl",
         "python-decouple",
+        "pytest",
     ],
-    tests_require=["pytest"],
+    # tests_require=["pytest"],
 )
 
 # from distutils.core import setup
