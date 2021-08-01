@@ -1,5 +1,7 @@
 import pymysql
 
+import wrapper_dash.facilitator_dash.user_identification as user_identification
+
 
 class SQLConnector:
     def __init__(self, db_config):
@@ -37,6 +39,8 @@ class WrapperOfTable(SQLConnector):
     def _execute(self, request_sql):
         request_sql = request_sql.replace("&", self.table)
         response = self.cursor.execute(request_sql)
+        username = user_identification.getUsername()
+        # print(username)
         return response
 
     def select(self, request_sql):
