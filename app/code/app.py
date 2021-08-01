@@ -121,7 +121,7 @@ class AppDash:
     def launch(self):
         self.setVueIndex()
         self.setCallback()
-        print("-#- Application Running -#-\n")
+        # print(f"-#- Request from '{username}' -#-\n")
         self.run()
 
     def run(self):
@@ -129,13 +129,14 @@ class AppDash:
 
     def setAuthentification(self):
         VALID_USERNAME_PASSWORD_PAIRS = myAccessUsers.getUsers()
-        auth = dash_auth.BasicAuth(self.app, VALID_USERNAME_PASSWORD_PAIRS)
+        dash_auth.BasicAuth(self.app, VALID_USERNAME_PASSWORD_PAIRS)
 
 
 # Part to launch the app manually
 if __name__ == "__main__":
     # --- INIT ---
     myApp = AppDash()
+    print("-#- Application Running -#-\n")
 
     # TODO Change the place of update
     # --- UPDATING DATABASE ---

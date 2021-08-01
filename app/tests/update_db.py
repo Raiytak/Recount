@@ -70,7 +70,6 @@ repayRep = repay_repayments.RepayPepayements(rawTable, repayTable)
 
 # @updatingByRemovingAllExistingRowsOfTable(rawTable)
 def updateRawTable(username):
-    print("--- User : '" + username + "' ---")
     print("--- Update 'raw_expenses' Table ---")
     mainCleaner.updateExcel()
     dataframe, equivalent_columns = mainCleaner.getDataframeAndEqCol()
@@ -86,7 +85,6 @@ def updateRawTable(username):
 
 # @updatingByRemovingAllExistingRowsOfTable(repayTable)
 def updateRepayementsTable(username):
-    print("--- User : '" + username + "' ---")
     print("--- Update 'reimbursement' Table ---")
     response = rawToRepayement.selectRepayementRows()
     dataframe = convertRespToDf.translateResponseSqlToDataframe(response, rawTable)
@@ -177,6 +175,8 @@ def updateCleanTable(username):
 
 # == MAIN == FUNCTION : updates all the tables by removing ALL the older values
 def updateAll(username):
+    print(" = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = ")
+    print("--- User : '" + username + "' ---")
     updateRawTable(username)
 
     updateRepayementsTable(username)
