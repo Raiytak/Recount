@@ -36,3 +36,5 @@ app/.pytest_cache
 
 # Other ignores
 app/code/test.py
+app/code/__pycache__
+app/test/__pycache__
