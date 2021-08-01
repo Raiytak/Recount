@@ -1,4 +1,5 @@
 import pymysql
+import logging
 
 import wrapper_dash.facilitator_dash.user_identification as user_identification
 
@@ -6,15 +7,15 @@ import wrapper_dash.facilitator_dash.user_identification as user_identification
 class SQLConnector:
     def __init__(self, db_config):
         self.DB_CONFIG = db_config
-        self.myConnection, self.cursor = self._connect()
+        self.connection, self.cursor = self._connect()
 
     def __enter__(self):
+        # self.connection, self.cursor = self._connect()
         pass
-        # self.myConnection, self.cursor = self._connect()
 
     def __exit__(self, exc_type, exc_val, exc_tb):
-        pass
         # self._end_connection()
+        pass
 
     def _connect(self, db_config=None):
         if db_config == None:
@@ -28,7 +29,7 @@ class SQLConnector:
         return myConnection, myConnection.cursor()
 
     def _end_connection(self):
-        self.myConnection.close()
+        self.connection.close()
 
 
 class WrapperOfTable(SQLConnector):
@@ -38,10 +39,16 @@ class WrapperOfTable(SQLConnector):
 
     def _execute(self, request_sql):
         request_sql = request_sql.replace("&", self.table)
-        response = self.cursor.execute(request_sql)
+        # print(request_sql)
+        try:
+            response = self.cursor.execute(request_sql)
+        except pymysql.Error as err:
+            print(f"Pymysql exception occured during request execution : {err}")
+        else:
+            return response
+        return ""
         # username = user_identification.getUsername()
         # print(username)
-        return response
 
     def select(self, request_sql):
         self._execute(request_sql)
@@ -53,7 +60,17 @@ class WrapperOfTable(SQLConnector):
 
     def insert(self, request_sql):
         self._execute(request_sql)
-        self.myConnection.commit()
+        try:
+            self.connection.commit()
+        except Exception as exc:
+            print(f"Exception during commit : '{exc}'")
+            try:
+                print("Trying a rollback ... ")
+                self.connection.rollback()
+                print("Rollback done!")
+            except Exception as exc:
+                print(f"Rollback failed : {str(exc)}")
+
         response = self.cursor.fetchall()
         if response != ():
             return ValueError(f"SQL insertion error : {response}")
