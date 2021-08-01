@@ -39,7 +39,7 @@ class WrapperOfTable(SQLConnector):
     def _execute(self, request_sql):
         request_sql = request_sql.replace("&", self.table)
         response = self.cursor.execute(request_sql)
-        username = user_identification.getUsername()
+        # username = user_identification.getUsername()
         # print(username)
         return response
 
