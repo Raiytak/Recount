@@ -132,15 +132,9 @@ class AppDash:
         dash_auth.BasicAuth(self.app, VALID_USERNAME_PASSWORD_PAIRS)
 
 
-# Part to launch the app manually
+# --- MAIN PART ---
 if __name__ == "__main__":
     # --- INIT ---
-    myApp = AppDash()
     print("-#- Application Running -#-\n")
-
-    # TODO Change the place of update
-    # --- UPDATING DATABASE ---
-    # update_db.updateAll()
-
-    # --- MAIN PART ---
+    myApp = AppDash()
     myApp.launch()
