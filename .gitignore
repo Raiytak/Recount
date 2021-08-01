@@ -1,5 +1,5 @@
 # Ignore the important stuff
-app/code/config/*.json
+app/code/config/*
 app/code/.env
 
 # Ignore the users's stuff
