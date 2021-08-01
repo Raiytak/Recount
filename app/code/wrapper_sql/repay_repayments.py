@@ -8,6 +8,14 @@ class RepayPepayements:
         self.table_rep = wrapper_table_repayement
         self.name = "repayRepayements"
 
+    def __enter__(self):
+        pass
+        # self.myConnection, self.cursor = self._connect()
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        pass
+        # self._end_connection()
+
     def selectRepayementRows(self):
         request = "SELECT * FROM &"
         response = self.table_rep.select(request)

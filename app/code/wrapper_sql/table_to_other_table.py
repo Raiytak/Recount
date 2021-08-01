@@ -3,14 +3,22 @@ import pandas as pd
 
 
 class RawToRepayement:
-    def __init__(self, wrapper_table_raw, wrapper_table_repayement):
-        self.table_raw = wrapper_table_raw
+    def __init__(self, WrapperTableRaw, wrapper_table_repayement):
+        self.TableRaw = WrapperTableRaw
         self.table_rep = wrapper_table_repayement
         self.name = "rawToRepayement"
 
+    def __enter__(self):
+        pass
+        # self.myConnection, self.cursor = self._connect()
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        pass
+        # self._end_connection()
+
     def selectRepayementRows(self):
         request = "SELECT * FROM & where category = 'reimbursement'"
-        response = self.table_raw.select(request)
+        response = self.TableRaw.select(request)
         return response
 
     def insertAllReqs(self, requests):
@@ -24,7 +32,7 @@ class RawToRepayement:
 
     def deleteRepayementRowsInRaw(self, requests):
         for req in requests:
-            self.table_raw.deleteRowId(req)
+            self.TableRaw.deleteRowId(req)
 
     def getEquivalentColumns(self):
         # "origin":["destination"]
@@ -39,45 +47,67 @@ class RawToRepayement:
 
 
 class RawToTrip:
-    def __init__(self, wrapper_table_raw, wrapper_table_trip):
-        self.table_raw = wrapper_table_raw
-        self.table_trip = wrapper_table_trip
+    def __init__(self, WrapperTableRaw, WrapperTableTrip):
+        self.TableRaw = WrapperTableRaw
+        self.TableTrip = WrapperTableTrip
         self.name = "rawToTrip"
+
+    def __enter__(self):
+        pass
+        # self.myConnection, self.cursor = self._connect()
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        pass
+        # self._end_connection()
 
     def selectTripRows(self):
         request = "SELECT * FROM & where trip IS NOT NULL"
-        response = self.table_raw.select(request)
+        response = self.TableRaw.select(request)
         return response
 
     def insertAllReqs(self, requests):
         for req in requests:
-            self.table_trip.insert(req)
+            self.TableTrip.insert(req)
 
     def selectTripIds(self):
         request = "SELECT ID FROM &"
-        response = self.table_trip.select(request)
+        response = self.TableTrip.select(request)
         return response
 
     def deleteTripRowsInRaw(self, requests):
         for req in requests:
-            self.table_raw.deleteRowId(req)
+            self.TableRaw.deleteRowId(req)
 
     def getEquivalentColumns(self):
         # "origin":["destination"]
-        columns = self.table_raw.getNameColumns()
+        columns = self.TableRaw.getNameColumns()
         equivalent_columns = {col: [col] for col in columns}
         return equivalent_columns
 
+    def dumpTripTableForUser(self, username):
+        self.TableTrip.dumpTableForUser(username)
+
+    def insertAllReqsInTrip(self, list_request_sql):
+        self.TableTrip.insertAllReqs(list_request_sql)
+
 
 class RawToClean:
-    def __init__(self, wrapper_table_raw, wrapper_table_clean):
-        self.table_raw = wrapper_table_raw
-        self.table_clean = wrapper_table_clean
+    def __init__(self, WrapperTableRaw, WrapperTableClean):
+        self.TableRaw = WrapperTableRaw
+        self.table_clean = WrapperTableClean
         self.name = "rawToClean"
+
+    def __enter__(self):
+        pass
+        # self.myConnection, self.cursor = self._connect()
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        pass
+        # self._end_connection()
 
     def selectAllRemainingRowsInRaw(self):
         request = "SELECT * FROM &"
-        response = self.table_raw.select(request)
+        response = self.TableRaw.select(request)
         return response
 
     def insertAllReqs(self, requests):
@@ -92,14 +122,22 @@ class RawToClean:
 
 
 class TripToClean:
-    def __init__(self, wrapper_table_trip, wrapper_table_clean):
-        self.table_trip = wrapper_table_trip
-        self.table_clean = wrapper_table_clean
+    def __init__(self, WrapperTableTrip, WrapperTableClean):
+        self.TableTrip = WrapperTableTrip
+        self.table_clean = WrapperTableClean
         self.name = "tripToClean"
+
+    def __enter__(self):
+        pass
+        # self.myConnection, self.cursor = self._connect()
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        pass
+        # self._end_connection()
 
     def selectAllRemainingRowsInTrip(self):
         request = "SELECT * FROM &"
-        response = self.table_trip.select(request)
+        response = self.TableTrip.select(request)
         return response
 
     def insertAllReqs(self, requests):
