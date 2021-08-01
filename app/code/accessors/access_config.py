@@ -1,6 +1,5 @@
 import json
 import os
-import wrapper_sql
 
 class AccessConfig:
     def getConfigPath(self):
