@@ -3,8 +3,12 @@ app/code/config/*
 app/code/.env
 
 # Ignore the users's stuff
-app/code/data/vues/*
-app/code/data/users/*
+app/code/data/vues
+app/code/data/categories
+app/code/data/dates_voyages.json
+
+# Ignore the __pycache__ files created by python
+__pycache__/
 
 # Ignoring files created by setuptools and other tools used
 # to create packages.
