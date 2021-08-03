@@ -3,6 +3,8 @@ app/code/config/*
 app/code/.env
 
 # Ignore the users's stuff
+app/code/data/users
+# Ignore old version, FOR NOW
 app/code/data/vues
 app/code/data/categories
 app/code/data/dates_voyages.json

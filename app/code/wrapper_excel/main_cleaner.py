@@ -1,14 +1,16 @@
 # -*- coding: utf-8 -*-
+from wrapper_excel.check_conformity import ReviewerDataframe
+from wrapper_excel.cleaner_dataframe import CleanerDataframe
+from wrapper_excel.convert_excel_to_df import ExcelToDataframe
+from wrapper_excel.fill_blanks import IntelligentFill
 
 
 class MainCleanerExcel:
-    def __init__(
-        self, ExcelToDataframe, CleanerDataframe, IntelligentFill, ReviewerDataframe
-    ):
-        self.ExcelToDataframe = ExcelToDataframe
-        self.CleanerDf = CleanerDataframe
-        self.IntellFill = IntelligentFill
-        self.ReviewerDataframe = ReviewerDataframe
+    def __init__(self):
+        self.ExcelToDataframe = ExcelToDataframe()
+        self.CleanerDf = CleanerDataframe()
+        self.IntellFill = IntelligentFill()
+        self.ReviewerDataframe = ReviewerDataframe()
 
     def updateExcel(self):
         self.ExcelToDataframe.AccessExcel._updateExcel()
@@ -42,5 +44,5 @@ class MainCleanerExcel:
     def saveDataframeToCopiedExcel(self, dataframe):
         # self.ExcelToDataframe.AccessExcel.removeCopiedExcel()
         dataframe.to_excel(
-            self.ExcelToDataframe.AccessExcel.ExcelPath.copiedExcelPath()
+            self.ExcelToDataframe.AccessExcel.ExcelPaths.copiedExcelPath()
         )

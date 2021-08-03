@@ -4,12 +4,14 @@ import base64
 import csv
 import pandas as pd
 
+from wrapper_excel.convert_excel_to_df import ExcelToDataframe
+
 
 class ImportExcelFileSaver:
-    def __init__(self, ExcelToDataframe, update_db):
-        self.ExcelToDataframe = ExcelToDataframe
+    def __init__(self, update_db):
+        self.ExcelToDataframe = ExcelToDataframe()
         self.AccessExcel = self.ExcelToDataframe.AccessExcel
-        self.ExcelPath = self.AccessExcel.ExcelPath
+        self.ExcelPaths = self.ExcelToDataframe.ExcelPaths
 
         self.update_db = update_db
 
@@ -42,7 +44,7 @@ class ImportExcelFileSaver:
         return content_type, content_decoded
 
     def saveContentStringIntoXlsxFile(self, content_type, content_decoded):
-        path_file = self.ExcelPath.rawCopiedExcelPath()
+        path_file = self.ExcelPaths.rawCopiedExcelPath()
         if content_type == "xlsx":
             with open(path_file, "wb") as f:
                 f.write(content_decoded.read())
@@ -73,7 +75,7 @@ class ImportExcelFileSaver:
         # If there is nothing to save, the function stops
         try:
             dataframe = pd.DataFrame(data_excel)
-            dataframe.to_excel(self.ExcelPath.rawCopiedExcelPath(), index=False)
+            dataframe.to_excel(self.ExcelPaths.rawCopiedExcelPath(), index=False)
         except Exception:
             # print(" >>> An error has occcured during the update.<<<\n >>> Please check the values you have inserted <<<")
             return " >>> An error has occcured during the update. Please check the values you have inserted <<<"

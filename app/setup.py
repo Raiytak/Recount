@@ -19,6 +19,7 @@ setup(
         "openpyxl",
         "python-decouple",
         "pytest",
+        "invoke",
     ],
     # tests_require=["pytest"],
 )

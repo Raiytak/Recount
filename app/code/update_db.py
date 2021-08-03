@@ -20,20 +20,11 @@ myAccessConfig = AccessConfig()
 db_config = myAccessConfig.getDatabaseConfig()
 
 
-from wrapper_excel.convert_excel_to_df import ExcelToDataframe
-from wrapper_excel.cleaner_dataframe import CleanerDataframe
-from wrapper_excel.fill_blanks import IntelligentFill, UpdateConversionJson
-from wrapper_excel.check_conformity import ReviewerDataframe
 from wrapper_excel.main_cleaner import MainCleanerExcel
 
+mainCleaner = MainCleanerExcel()
 
-myExcelToDataframe = ExcelToDataframe()
-myCleanerDataframe = CleanerDataframe()
-myIntelligentFill = IntelligentFill()
-myReviewerDataframe = ReviewerDataframe()
-mainCleaner = MainCleanerExcel(
-    myExcelToDataframe, myCleanerDataframe, myIntelligentFill, myReviewerDataframe
-)
+from wrapper_excel.fill_blanks import UpdateConversionJson
 
 myUpdateConversionJson = UpdateConversionJson()
 

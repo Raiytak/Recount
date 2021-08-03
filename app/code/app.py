@@ -17,29 +17,12 @@ import accessors.access_users as access_users
 
 myAccessUsers = access_users.AccessUsers()
 
-# Get the different paths of the files used in the app.
-from accessors.path_files import (
-    ExcelPath,
-    CategoryAndThemeAuthorizedPath,
-    NotebookConfigPath,
-    StandardButtonsConfigPath,
-)
-
-myExcelPath = ExcelPath()
-myCatThemeAuthPath = CategoryAndThemeAuthorizedPath()
-myNotebookExcelConfigPath = NotebookConfigPath()
-myStandardButtonsConfigPath = StandardButtonsConfigPath()
-
 # Access the documents, to get the values, dataframe and update the docs. Need the paths to work.
 from accessors.access_files import AccessCTAuthorized
 
 
 myAccessCTAuthorized = AccessCTAuthorized()
 authorizedCT_json = myAccessCTAuthorized.getJson()
-
-from wrapper_excel.convert_excel_to_df import ExcelToDataframe
-
-myExcelToDataframe = ExcelToDataframe()
 
 
 # Objects used to clean and convert the data into dataframe and objects readable for the dash app
@@ -57,7 +40,7 @@ ConvertDfToGraph = DataframeToGraph(DataframeToListDict, ListDictToGraph)
 # Object used to save an excel uploaded by the user
 from wrapper_dash.facilitator_dash.import_excel import ImportExcelFileSaver
 
-ImportExcelFileSaver = ImportExcelFileSaver(myExcelToDataframe, update_db)
+ImportExcelFileSaver = ImportExcelFileSaver(update_db)
 
 from wrapper_dash.facilitator_dash.save_config import (
     ConfigNotebookExcelSaver,

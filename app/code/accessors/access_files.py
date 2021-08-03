@@ -15,23 +15,27 @@ from accessors.path_files import *
 
 class AccessExcel:
     def __init__(self):
-        self.ExcelPath = ExcelPath()
+        self.ExcelPaths = ExcelPaths()
         self.useExampleIfNoExcel()
 
         # self.removeAllOldFiles()
 
     def useExampleIfNoExcel(self):
-        if self.ExcelPath.rawCopiedExcelExists():
+        if self.ExcelPaths.rawCopiedExcelExists():
             self.copyRawExcel()
         else:
             self.copyExampleExcel()
 
     def copyRawExcel(self):
-        copyfile(self.ExcelPath.rawCopiedExcelPath(), self.ExcelPath.copiedExcelPath())
+        copyfile(
+            self.ExcelPaths.rawCopiedExcelPath(), self.ExcelPaths.copiedExcelPath()
+        )
 
     def copyExampleExcel(self):
-        copyfile(self.ExcelPath.exampleExcelPath(), self.ExcelPath.copiedExcelPath())
-        copyfile(self.ExcelPath.exampleExcelPath(), self.ExcelPath.rawCopiedExcelPath())
+        copyfile(self.ExcelPaths.exampleExcelPath(), self.ExcelPaths.copiedExcelPath())
+        copyfile(
+            self.ExcelPaths.exampleExcelPath(), self.ExcelPaths.rawCopiedExcelPath()
+        )
 
     def removeFile(self, path_file):
         try:
@@ -40,19 +44,19 @@ class AccessExcel:
             pass
 
     def removeCopiedExcel(self):
-        self.removeFile(self.ExcelPath.copiedExcelPath())
+        self.removeFile(self.ExcelPaths.copiedExcelPath())
 
     def removeRawCopiedExcel(self):
-        self.removeFile(self.ExcelPath.rawCopiedExcelPath())
+        self.removeFile(self.ExcelPaths.rawCopiedExcelPath())
 
     def removeAllOldFiles(self):
-        if self.ExcelPath.rawCopiedExcelExists() == True:
+        if self.ExcelPaths.rawCopiedExcelExists() == True:
             self.removeRawCopiedExcel()
-        if self.ExcelPath.copiedExcelPath() == True:
+        if self.ExcelPaths.copiedExcelPath() == True:
             self.removeCopiedExcel()
 
     def _updateExcel(self):
-        if self.ExcelPath.rawCopiedExcelExists() == True:
+        if self.ExcelPaths.rawCopiedExcelExists() == True:
             self.copyRawExcel()
 
 

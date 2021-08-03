@@ -20,19 +20,29 @@ def _getCodePath():
 CODE_PATH = _getCodePath()
 if CODE_PATH not in sys.path:
     sys.path = [CODE_PATH] + sys.path
+DATA_PATH = CODE_PATH / "data"
+DATA_USERS_PATH = DATA_PATH / "users"
 
 
 class PathInformation:
-    root = CODE_PATH
+    root = ""
     folders = []
     filename = ""
 
 
-# Path to the file data used by the application
-class ApplicationDataPath:
-    def __init__(self):
-        self.PathInformation = PathInformation
-        self.folder_data = "data"
+def showFunctionCalling(func):
+    print(func)
+    return func
+
+
+# Path to the file data used by the application.
+class FilesPaths:
+    # @showFunctionCalling
+    def __init__(self, ROOT_PATH=CODE_PATH):
+        self.PathInformation = PathInformation()
+        self.PathInformation.root = ROOT_PATH
+        # print(self.PathInformation.root)
+        self.data_folder = "data"
         self.excels_folder = "excels"
         self.example_folder = "examples"
         self.vues_folder = "vues"
@@ -41,6 +51,7 @@ class ApplicationDataPath:
         self.standard_buttons = "standard_buttons"
         self.notebook_excel = "notebook_excel"
         self.folder_config = "config"
+        self.users_data = "users"
 
     def joinPaths(self, root_path, filename, folders=None):
         if folders == None:
@@ -58,11 +69,11 @@ class ApplicationDataPath:
 # Path to the excels used :
 #   the source excel (from the user or excel_example)
 #   and the copy excel (copied, cleaned and manipulated by the applciation)
-class ExcelPath(ApplicationDataPath):
-    def __init__(self):
-        super().__init__()
-        self._excel_path = self.copiedExcelPath()
-        self._source_excel_path = self.importedExcelPath()
+class ExcelPaths(FilesPaths):
+    def __init__(self, ROOT_PATH=DATA_PATH):
+        super().__init__(ROOT_PATH)
+        # self._excel_path = self.copiedExcelPath()
+        # self._source_excel_path = self.importedExcelPath()
 
     def nameImportedExcel(self):
         return "imported_excel.xlsx"
@@ -71,27 +82,27 @@ class ExcelPath(ApplicationDataPath):
         return "imported_temporary_excel.csv"
 
     def importedExcelPath(self):
-        self.PathInformation.folders = [self.folder_data, self.excels_folder]
+        self.PathInformation.folders = [self.excels_folder]
         self.PathInformation.filename = self.nameImportedExcel()
         return self.formPathUsing(self.PathInformation)
 
-    def importedTemporaryCSVExcelPath(self):
-        self.PathInformation.folders = [self.folder_data, self.excels_folder]
-        self.PathInformation.filename = self.nameImportedExcelOfTypeCSVTemporary()
-        return self.formPathUsing(self.PathInformation)
+    # def importedTemporaryCSVExcelPath(self):
+    #     self.PathInformation.folders = [self.data_folder, self.excels_folder]
+    #     self.PathInformation.filename = self.nameImportedExcelOfTypeCSVTemporary()
+    #     return self.formPathUsing(self.PathInformation)
 
     def copiedExcelPath(self):
-        self.PathInformation.folders = [self.folder_data, self.excels_folder]
+        self.PathInformation.folders = [self.excels_folder]
         self.PathInformation.filename = "copy_expenses.xlsx"
         return self.formPathUsing(self.PathInformation)
 
     def rawCopiedExcelPath(self):
-        self.PathInformation.folders = [self.folder_data, self.excels_folder]
+        self.PathInformation.folders = [self.excels_folder]
         self.PathInformation.filename = "raw_copy_expenses.xlsx"
         return self.formPathUsing(self.PathInformation)
 
     def exampleExcelPath(self):
-        self.PathInformation.folders = [self.folder_data, self.example_folder]
+        self.PathInformation.folders = [self.example_folder]
         self.PathInformation.filename = "example_expenses_en.xlsx"
         return self.formPathUsing(self.PathInformation)
 
@@ -106,50 +117,66 @@ class ExcelPath(ApplicationDataPath):
         return self.pathExists(self.copiedExcelPath())
 
 
-class DescrToThemePath(ApplicationDataPath):
-    def __init__(self):
-        super().__init__()
+class UsersConfigPath(FilesPaths):
+    def __init__(self, ROOT_PATH=CODE_PATH):
+        super().__init__(ROOT_PATH)
+
+    def getUsersPath(self):
+        self.PathInformation.folders = [self.folder_config]
+        self.PathInformation.filename = "users.json"
+        return self.formPathUsing(self.PathInformation)
+
+
+class DescrToThemePath(FilesPaths):
+    def __init__(self, ROOT_PATH=DATA_PATH):
+        super().__init__(ROOT_PATH)
 
     def getDescriptionToThemePath(self):
-        self.PathInformation.folders = [self.folder_data, self.categories_folder]
+        self.PathInformation.folders = [self.categories_folder]
         self.PathInformation.filename = "convert_descr_to_theme.json"
         return self.formPathUsing(self.PathInformation)
 
 
-class CategoryAndThemeAuthorizedPath(ApplicationDataPath):
-    def __init__(self):
-        super().__init__()
+class CategoryAndThemeAuthorizedPath(FilesPaths):
+    def __init__(self, ROOT_PATH=DATA_PATH):
+        super().__init__(ROOT_PATH)
 
     def getCategoryAndThemePath(self):
-        self.PathInformation.folders = [self.folder_data, self.categories_folder]
+        self.PathInformation.folders = [self.categories_folder]
         self.PathInformation.filename = "categories_themes_authorized.json"
         return self.formPathUsing(self.PathInformation)
 
     def getCategoryAndThemeTestPath(self):
-        self.PathInformation.folders = [self.folder_data, self.categories_folder]
+        self.PathInformation.folders = [self.categories_folder]
         self.PathInformation.filename = "categories_themes_authorized_test.json"
         return self.formPathUsing(self.PathInformation)
 
 
-class NotebookConfigPath(ApplicationDataPath):
-    def __init__(self):
-        super().__init__()
+class NotebookConfigPath(FilesPaths):
+    def __init__(self, ROOT_PATH=DATA_PATH):
+        super().__init__(ROOT_PATH)
 
     def getNotebookConfigPath(self):
-        self.PathInformation.folders = [self.folder_data, self.notebook_excel]
+        self.PathInformation.folders = [self.notebook_excel]
         self.PathInformation.filename = "categories_themes_authorized_test.json"
         return self.formPathUsing(self.PathInformation)
 
 
-class StandardButtonsConfigPath(ApplicationDataPath):
-    def __init__(self):
-        super().__init__()
+class StandardButtonsConfigPath(FilesPaths):
+    def __init__(self, ROOT_PATH=DATA_PATH):
+        super().__init__(ROOT_PATH)
 
     def getStandardButtonsConfigPath(self):
-        self.PathInformation.folders = [
-            self.folder_data,
-            self.vues_folder,
-            self.standard_buttons,
-        ]
+        self.PathInformation.folders = [self.vues_folder, self.standard_buttons]
+        self.PathInformation.filename = "config_buttons.json"
+        return self.formPathUsing(self.PathInformation)
+
+
+class UsersDataPath(FilesPaths):
+    def __init__(self, ROOT_PATH=DATA_PATH):
+        super().__init__(ROOT_PATH)
+
+    def getStandardButtonsConfigPath(self):
+        self.PathInformation.folders = [self.vues_folder, self.standard_buttons]
         self.PathInformation.filename = "config_buttons.json"
         return self.formPathUsing(self.PathInformation)

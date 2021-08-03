@@ -14,7 +14,7 @@ from accessors.access_files import AccessExcel
 class ExcelToDataframe:
     def __init__(self):
         self.AccessExcel = AccessExcel()
-        self.ExcelPath = self.AccessExcel.ExcelPath
+        self.ExcelPaths = self.AccessExcel.ExcelPaths
 
     def getDataframeOf(self, path_excel):
         xl_file = pd.ExcelFile(path_excel)
@@ -35,18 +35,18 @@ class ExcelToDataframe:
         return dataframe
 
     def getDataframeOfExcel(self):
-        path_excel = self.ExcelPath.copiedExcelPath()
+        path_excel = self.ExcelPaths.copiedExcelPath()
         return self.getDataframeOf(path_excel)
 
     def getDataframe(self):
         return self.getDataframeOfExcel()
 
     def getDataframeOfRawExcel(self):
-        path_excel = self.ExcelPath.rawCopiedExcelPath()
+        path_excel = self.ExcelPaths.rawCopiedExcelPath()
         return self.getDataframeOf(path_excel)
 
     def getDataframeOfExampleExcel(self):
-        path_excel = self.ExcelPath.exampleExcelPath()
+        path_excel = self.ExcelPaths.exampleExcelPath()
         return self.getDataframeOf(path_excel)
 
     def getDataframeAndEqCol(self):
