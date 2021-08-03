@@ -7,12 +7,13 @@
 import os
 import sys
 import re
+from pathlib import Path
 
 
 def _getCodePath():
     root_path = os.path.abspath(__file__)
-    app_path = re.sub("(app).*", "app", root_path)
-    code_path = os.path.join(app_path, "code")
+    app_path = Path(re.sub("(app).*", "app", root_path))
+    code_path = app_path / "code"
     return code_path
 
 
@@ -43,9 +44,9 @@ class ApplicationDataPath:
 
     def joinPaths(self, root_path, filename, folders=None):
         if folders == None:
-            return root_path + "/" + filename
+            return root_path / filename
         chained_folders = "/".join(folders)
-        return root_path + "/" + chained_folders + "/" + filename
+        return root_path / chained_folders / filename
 
     def formPathUsing(self, pathInformation):
         root_path = pathInformation.root

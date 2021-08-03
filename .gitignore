@@ -8,7 +8,8 @@ app/code/data/categories
 app/code/data/dates_voyages.json
 
 # Ignore the __pycache__ files created by python
-__pycache__/
+**__pycache__**
+*.pyc
 
 # Ignoring files created by setuptools and other tools used
 # to create packages.
