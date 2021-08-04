@@ -72,8 +72,6 @@ class FilesPaths:
 class ExcelPaths(FilesPaths):
     def __init__(self, ROOT_PATH=DATA_PATH):
         super().__init__(ROOT_PATH)
-        # self._excel_path = self.copiedExcelPath()
-        # self._source_excel_path = self.importedExcelPath()
 
     def nameImportedExcel(self):
         return "imported_excel.xlsx"
@@ -91,30 +89,36 @@ class ExcelPaths(FilesPaths):
     #     self.PathInformation.filename = self.nameImportedExcelOfTypeCSVTemporary()
     #     return self.formPathUsing(self.PathInformation)
 
-    def copiedExcelPath(self):
+    def cleanedExcelPath(self):
         self.PathInformation.folders = [self.excels_folder]
-        self.PathInformation.filename = "copy_expenses.xlsx"
+        self.PathInformation.filename = "cleaned_expenses.xlsx"
         return self.formPathUsing(self.PathInformation)
 
-    def rawCopiedExcelPath(self):
+    def rawExcelPath(self):
         self.PathInformation.folders = [self.excels_folder]
-        self.PathInformation.filename = "raw_copy_expenses.xlsx"
+        self.PathInformation.filename = "raw_expenses.xlsx"
         return self.formPathUsing(self.PathInformation)
 
     def exampleExcelPath(self):
+        TEMP_PATH = self.PathInformation.root
+
+        self.PathInformation.root = DATA_PATH
         self.PathInformation.folders = [self.example_folder]
         self.PathInformation.filename = "example_expenses_en.xlsx"
-        return self.formPathUsing(self.PathInformation)
+        example_path = self.formPathUsing(self.PathInformation)
+
+        self.PathInformation.root = TEMP_PATH
+        return example_path
 
     def pathExists(self, my_path):
         is_present = os.path.exists(my_path)
         return is_present
 
     def rawCopiedExcelExists(self):
-        return self.pathExists(self.rawCopiedExcelPath())
+        return self.pathExists(self.rawExcelPath())
 
     def copiedExcelExists(self):
-        return self.pathExists(self.copiedExcelPath())
+        return self.pathExists(self.cleanedExcelPath())
 
 
 class UsersConfigPath(FilesPaths):

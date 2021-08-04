@@ -2,11 +2,11 @@ import dash
 import dash_auth
 from dash.dependencies import Input, Output
 
-import update_db
+import update_data
 
-import communication_db_user
+import request_data
 
-DateToDataframe = communication_db_user.DateToDataframe()
+DateToDataframe = request_data.DateToDataframe()
 
 
 # Import the config file
@@ -40,7 +40,7 @@ ConvertDfToGraph = DataframeToGraph(DataframeToListDict, ListDictToGraph)
 # Object used to save an excel uploaded by the user
 from wrapper_dash.facilitator_dash.import_excel import ImportExcelFileSaver
 
-ImportExcelFileSaver = ImportExcelFileSaver(update_db)
+ImportExcelFileSaver = ImportExcelFileSaver(update_data)
 
 from wrapper_dash.facilitator_dash.save_config import (
     ConfigNotebookExcelSaver,
@@ -94,7 +94,7 @@ class AppDash:
             elif pathname == "/home":
                 return self.vueHome.setThisVue()
             elif pathname == "/dashhome":
-                update_db.updateAll(username)
+                update_data.updateAll(username)
                 return self.vueDashboardHome.setThisVue()
             elif pathname == "/test":
                 return self.vueTest.setThisVue()
@@ -105,7 +105,6 @@ class AppDash:
     def launch(self):
         self.setVueIndex()
         self.setCallback()
-        # print(f"-#- Request from '{username}' -#-\n")
         self.run()
 
     def run(self):

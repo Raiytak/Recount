@@ -1,23 +1,28 @@
 import pymysql
+from threading import Lock
 import logging
-
-import wrapper_dash.facilitator_dash.user_identification as user_identification
 
 
 class SQLConnector:
+    connection = None
+    cursor = None
+    co_lock = Lock()
+
     def __init__(self, db_config):
         self.DB_CONFIG = db_config
         self.connection, self.cursor = self._connect()
 
     def __enter__(self):
+        self.co_lock.acquire()
         # self.connection, self.cursor = self._connect()
         pass
 
     def __exit__(self, exc_type, exc_val, exc_tb):
-        # self._end_connection()
+        self._end_connection()
         pass
 
     def _connect(self, db_config=None):
+        # self.co_lock.acquire()
         if db_config == None:
             db_config = self.DB_CONFIG
         myConnection = pymysql.connect(
@@ -29,7 +34,8 @@ class SQLConnector:
         return myConnection, myConnection.cursor()
 
     def _end_connection(self):
-        self.connection.close()
+        # self.connection.close()
+        self.co_lock.release()
 
 
 class WrapperOfTable(SQLConnector):
@@ -47,8 +53,6 @@ class WrapperOfTable(SQLConnector):
         else:
             return response
         return ""
-        # username = user_identification.getUsername()
-        # print(username)
 
     def select(self, request_sql):
         self._execute(request_sql)

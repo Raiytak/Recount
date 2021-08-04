@@ -7,7 +7,7 @@ def updatingByRemovingAllExistingRowsOfTable(wrapperTable):
             )
             with wrapperTable:
                 wrapperTable.dumpTableForUser(username)
-            return func(*args, **kwargs)
+                func(*args, **kwargs)
 
         return inner
 
@@ -67,7 +67,6 @@ def updateRawTable(username):
     list_requests = convertDfToReq.translateDataframeToRequestSql(
         dataframe, equivalent_columns
     )
-    rawTable.dumpTableForUser(username)
     rawTable.insertAllReqs(list_requests)
 
 
@@ -80,8 +79,6 @@ def updateRepayementsTable(username):
     list_requests = convertDfToReq.translateDataframeToRequestSql(
         dataframe, equivalent_columns
     )
-
-    repayTable.dumpTableForUser(username)
     repayTable.insertAllReqs(list_requests)
 
 
@@ -130,11 +127,9 @@ def updateTripsTable(username):
     list_requests = convertDfToReq.translateDataframeToRequestSql(
         dataframe, equivalent_columns
     )
-    rawToTrip.dumpTripTableForUser(username)
     rawToTrip.insertAllReqsInTrip(list_requests)
 
 
-# TODO using username
 def deleteTripsFromRaw(username):
     print("--- Delete 'trip_expenses' in 'raw_expenses' ---")
     response = rawToTrip.selectTripIds()
@@ -160,15 +155,14 @@ def updateCleanTable(username):
     list_requests += convertDfToReq.translateDataframeToRequestSql(
         dataframe, equivalent_columns
     )
-
-    cleanTable.dumpTableForUser(username)
     cleanTable.insertAllReqs(list_requests)
 
 
 # == MAIN == FUNCTION : updates all the tables by removing ALL the older values
 def updateAll(username):
     print("= = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =")
-    print("--- User : '" + username + "' ---")
+    # Lock.acquire()
+    # set all instances for user username
     updateRawTable(username)
 
     updateRepayementsTable(username)
@@ -179,4 +173,5 @@ def updateAll(username):
     deleteTripsFromRaw(username)
 
     updateCleanTable(username)
+    # Lock.release()
     print("= = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =")

@@ -14,28 +14,20 @@ from accessors.path_files import *
 
 
 class AccessExcel:
-    def __init__(self):
-        self.ExcelPaths = ExcelPaths()
-        self.useExampleIfNoExcel()
+    def __init__(self, ROOT_PATH=DATA_PATH):
+        self.ExcelPaths = ExcelPaths(ROOT_PATH)
+        self.useExampleIfNoRawExcel()
 
-        # self.removeAllOldFiles()
-
-    def useExampleIfNoExcel(self):
-        if self.ExcelPaths.rawCopiedExcelExists():
-            self.copyRawExcel()
-        else:
+    def useExampleIfNoRawExcel(self):
+        if self.ExcelPaths.rawCopiedExcelExists() == False:
             self.copyExampleExcel()
+        self.copyRawExcel()
 
     def copyRawExcel(self):
-        copyfile(
-            self.ExcelPaths.rawCopiedExcelPath(), self.ExcelPaths.copiedExcelPath()
-        )
+        copyfile(self.ExcelPaths.rawExcelPath(), self.ExcelPaths.cleanedExcelPath())
 
     def copyExampleExcel(self):
-        copyfile(self.ExcelPaths.exampleExcelPath(), self.ExcelPaths.copiedExcelPath())
-        copyfile(
-            self.ExcelPaths.exampleExcelPath(), self.ExcelPaths.rawCopiedExcelPath()
-        )
+        copyfile(self.ExcelPaths.exampleExcelPath(), self.ExcelPaths.rawExcelPath())
 
     def removeFile(self, path_file):
         try:
@@ -44,20 +36,27 @@ class AccessExcel:
             pass
 
     def removeCopiedExcel(self):
-        self.removeFile(self.ExcelPaths.copiedExcelPath())
+        self.removeFile(self.ExcelPaths.cleanedExcelPath())
 
     def removeRawCopiedExcel(self):
-        self.removeFile(self.ExcelPaths.rawCopiedExcelPath())
+        self.removeFile(self.ExcelPaths.rawExcelPath())
 
     def removeAllOldFiles(self):
         if self.ExcelPaths.rawCopiedExcelExists() == True:
             self.removeRawCopiedExcel()
-        if self.ExcelPaths.copiedExcelPath() == True:
+        if self.ExcelPaths.cleanedExcelPath() == True:
             self.removeCopiedExcel()
 
     def _updateExcel(self):
         if self.ExcelPaths.rawCopiedExcelExists() == True:
             self.copyRawExcel()
+
+
+# class AccessDataUserExcel(AccessExcel):
+#     def __init__(self):
+#         super().__init__(DATA_USERS_PATH)
+
+#     def createUserFolder(self, username):
 
 
 class AccessDescrToTheme:

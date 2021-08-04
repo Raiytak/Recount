@@ -44,5 +44,5 @@ class MainCleanerExcel:
     def saveDataframeToCopiedExcel(self, dataframe):
         # self.ExcelToDataframe.AccessExcel.removeCopiedExcel()
         dataframe.to_excel(
-            self.ExcelToDataframe.AccessExcel.ExcelPaths.copiedExcelPath()
+            self.ExcelToDataframe.AccessExcel.ExcelPaths.cleanedExcelPath()
         )

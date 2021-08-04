@@ -35,14 +35,14 @@ class ExcelToDataframe:
         return dataframe
 
     def getDataframeOfExcel(self):
-        path_excel = self.ExcelPaths.copiedExcelPath()
+        path_excel = self.ExcelPaths.cleanedExcelPath()
         return self.getDataframeOf(path_excel)
 
     def getDataframe(self):
         return self.getDataframeOfExcel()
 
     def getDataframeOfRawExcel(self):
-        path_excel = self.ExcelPaths.rawCopiedExcelPath()
+        path_excel = self.ExcelPaths.rawExcelPath()
         return self.getDataframeOf(path_excel)
 
     def getDataframeOfExampleExcel(self):
