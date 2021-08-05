@@ -68,7 +68,7 @@ def updateRawTable(username):
     dataframe, equivalent_columns = mainCleaner.getDataframeAndEqCol()
     dataframe["username"] = username
     myUpdateConversionJson.updateConversionJsonUsingDataframe(dataframe)
-    list_requests = convertDfToReq.translateDataframeToRequestSql(
+    list_requests = convertDfToReq.translateDataframeToInsertRequestSql(
         dataframe, equivalent_columns
     )
     rawTable.insertAllReqs(list_requests)
@@ -80,7 +80,7 @@ def updateRepayementsTable(username):
     response = rawToRepayement.selectRepayementRows()
     dataframe = convertRespToDf.translateResponseSqlToDataframe(response, rawTable)
     equivalent_columns = rawToRepayement.getEquivalentColumns()
-    list_requests = convertDfToReq.translateDataframeToRequestSql(
+    list_requests = convertDfToReq.translateDataframeToInsertRequestSql(
         dataframe, equivalent_columns
     )
     repayTable.insertAllReqs(list_requests)
@@ -116,9 +116,11 @@ def repayRepayements(username):
         )
 
         equivalent_columns = convertRespToDf.getEquivalentColumns(rawTable)
-        requests_cleaned_rows = convertDfToReq.translateDataframeToRequestSql(
+        requests_cleaned_rows = convertDfToReq.translateDataframeToInsertRequestSql(
             dataframe_cleaned, equivalent_columns
         )
+        # Updating by removing old values, TODO
+        repayRep.insertCleanedRowsReqs(requests_cleaned_rows)
         repayRep.insertCleanedRowsReqs(requests_cleaned_rows)
 
 
@@ -128,7 +130,7 @@ def updateTripsTable(username):
     response = rawToTrip.selectTripRows()
     dataframe = convertRespToDf.translateResponseSqlToDataframe(response, rawTable)
     equivalent_columns = rawToTrip.getEquivalentColumns()
-    list_requests = convertDfToReq.translateDataframeToRequestSql(
+    list_requests = convertDfToReq.translateDataframeToInsertRequestSql(
         dataframe, equivalent_columns
     )
     rawToTrip.insertAllReqsInTrip(list_requests)
@@ -148,7 +150,7 @@ def updateCleanTable(username):
     response = rawToClean.selectAllRemainingRowsInRaw()
     dataframe = convertRespToDf.translateResponseSqlToDataframe(response, rawTable)
     equivalent_columns = rawToClean.getEquivalentColumns()
-    list_requests = convertDfToReq.translateDataframeToRequestSql(
+    list_requests = convertDfToReq.translateDataframeToInsertRequestSql(
         dataframe, equivalent_columns
     )
 
@@ -156,7 +158,7 @@ def updateCleanTable(username):
     response = tripToClean.selectAllRemainingRowsInTrip()
     dataframe = convertRespToDf.translateResponseSqlToDataframe(response, tripTable)
     equivalent_columns = tripToClean.getEquivalentColumns()
-    list_requests += convertDfToReq.translateDataframeToRequestSql(
+    list_requests += convertDfToReq.translateDataframeToInsertRequestSql(
         dataframe, equivalent_columns
     )
     cleanTable.insertAllReqs(list_requests)

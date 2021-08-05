@@ -50,7 +50,7 @@ class WrapperOfTable(SQLConnector):
             response = self.cursor.execute(request_sql)
         except pymysql.Error as err:
             logging.exception(
-                f"Pymysql exception occured during request execution : {err}"
+                f"Pymysql exception occured during request execution\nRequest : {request_sql}\nError : \n{err}"
             )
         else:
             return response

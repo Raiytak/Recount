@@ -18,6 +18,10 @@ def completeLogMessage(message, pattern="= "):
     return log_message
 
 
+# Main logger
+MAIN_LOGGER = logging.getLogger()
+MAIN_LOGGER.setLevel(logging.INFO)
+
 # def startListeningToPort(port=8050):
 #     logging.config.listen(port=8050, verify=None)
 #     if space_left <= 0:
@@ -39,12 +43,8 @@ class InfoFileHandler(StreamHandler):
 
 
 def setup_logging(path_logs):
-    log_file_format = "[%(levelname)s] - %(asctime)s - %(name)s - : %(message)s in %(pathname)s, line : %(lineno)d"
+    log_file_format = "[%(levelname)s] - %(asctime)s - %(name)s - : %(message)s in %(pathname)s , line : %(lineno)d"
     log_console_format = "%(message)s"
-
-    # Main logger
-    main_logger = logging.getLogger()
-    main_logger.setLevel(logging.INFO)
 
     console_handler = InfoFileHandler()
     console_handler.setLevel(logging.INFO)
@@ -54,8 +54,8 @@ def setup_logging(path_logs):
     exp_file_handler.setLevel(logging.DEBUG)
     exp_file_handler.setFormatter(Formatter(log_file_format, datefmt="%H:%M:%S"))
 
-    main_logger.addHandler(console_handler)
-    main_logger.addHandler(exp_file_handler)
+    MAIN_LOGGER.addHandler(console_handler)
+    MAIN_LOGGER.addHandler(exp_file_handler)
 
 
 myFilePath = FilesPaths()
