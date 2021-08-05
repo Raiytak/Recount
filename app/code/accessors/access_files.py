@@ -9,6 +9,7 @@ from shutil import copyfile
 import pandas as pd
 import json
 import os
+import logging
 
 from accessors.path_files import *
 
@@ -79,7 +80,7 @@ class AccessDescrToTheme:
             try:
                 json.dump(data, json_file)
             except TypeError:
-                print("JSON of wrong type :\n", data)
+                logging.exception("JSON of wrong type :\n", data)
 
 
 class AccessCTAuthorized:
@@ -97,7 +98,7 @@ class AccessCTAuthorized:
             try:
                 json.dump(data, json_file, indent=4)
             except TypeError:
-                print("JSON of wrong type :\n", data)
+                logging.exception("JSON of wrong type :\n", data)
 
     def getPrettyJson(self):
         data = self.getJson()
@@ -126,7 +127,7 @@ class AccessNotebookConfig:
             try:
                 json.dump(data, json_file, indent=4)
             except TypeError:
-                print("JSON of wrong type :\n", data)
+                logging.exception("JSON of wrong type :\n", data)
 
     def getPrettyJson(self):
         data = self.getJson()
@@ -153,7 +154,7 @@ class AccessStandardButtonsConfig:
             try:
                 json.dump(data, json_file, indent=4)
             except TypeError:
-                print("JSON of wrong type :\n", data)
+                logging.exception("JSON of wrong type :\n", data)
 
     def getPrettyJson(self):
         data = self.getJson()
@@ -187,7 +188,7 @@ class AccessUserFiles:
             try:
                 os.mkdir(folder_path)
             except Exception as e:
-                print(
+                logging.exception(
                     f"Exception occured during the creation of the user's main folder  : {e}"
                 )
 
@@ -198,7 +199,7 @@ class AccessUserFiles:
             try:
                 os.mkdir(user_path)
             except Exception as e:
-                print(f"Exception occured during user file creation : {e}")
+                logging.exception(f"Exception occured during user file creation : {e}")
 
     def initializeUserFolders(self):
         self.AccessExcel.useExampleIfNoRawExcel()

@@ -9,6 +9,7 @@ setup(
     packages=find_packages("code"),
     package_dir={"": "code"},
     install_requires=[
+        "black",
         "dash",
         "dash_auth",
         "pandas",

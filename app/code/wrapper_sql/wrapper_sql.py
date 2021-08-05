@@ -49,7 +49,9 @@ class WrapperOfTable(SQLConnector):
         try:
             response = self.cursor.execute(request_sql)
         except pymysql.Error as err:
-            print(f"Pymysql exception occured during request execution : {err}")
+            logging.exception(
+                f"Pymysql exception occured during request execution : {err}"
+            )
         else:
             return response
         return ""
@@ -67,13 +69,13 @@ class WrapperOfTable(SQLConnector):
         try:
             self.connection.commit()
         except Exception as exc:
-            print(f"Exception during commit : '{exc}'")
+            logging.exception(f"Exception during commit : '{exc}'")
             try:
-                print("Trying a rollback ... ")
+                logging.exception("Trying a rollback ... ")
                 self.connection.rollback()
-                print("Rollback done!")
+                logging.exception("Rollback done!")
             except Exception as exc:
-                print(f"Rollback failed : {str(exc)}")
+                logging.exception(f"Rollback failed : {str(exc)}")
 
         response = self.cursor.fetchall()
         if response != ():

@@ -30,18 +30,12 @@ class PathInformation:
     filename = ""
 
 
-def showFunctionCalling(func):
-    print(func)
-    return func
-
-
 # Path to the file data used by the application.
 class FilesPaths:
     # @showFunctionCalling
     def __init__(self, ROOT_PATH=CODE_PATH):
         self.PathInformation = PathInformation()
         self.PathInformation.root = ROOT_PATH
-        # print(self.PathInformation.root)
         self.data_folder = "data"
         self.excels_folder = "excels"
         self.example_folder = "examples"
@@ -50,8 +44,9 @@ class FilesPaths:
         self.intelligent_fill = "intelligent_fill"
         self.standard_buttons = "standard_buttons"
         self.notebook_excel = "notebook_excel"
-        self.folder_config = "config"
+        self.config_folder = "config"
         self.users_data = "users"
+        self.logs_folder = "logs"
 
     def joinPaths(self, root_path, filename, folders=None):
         if folders == None:
@@ -127,7 +122,7 @@ class UsersConfigPath(FilesPaths):
         super().__init__(ROOT_PATH)
 
     def getUsersPath(self):
-        self.PathInformation.folders = [self.folder_config]
+        self.PathInformation.folders = [self.config_folder]
         self.PathInformation.filename = "users.json"
         return self.formPathUsing(self.PathInformation)
 

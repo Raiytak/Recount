@@ -1,9 +1,12 @@
 import dash
 import dash_auth
 from dash.dependencies import Input, Output
+import sys
+
+from logs import logs
+import logging
 
 import update_data
-
 import request_data
 
 DateToDataframe = request_data.DateToDataframe()
@@ -118,6 +121,6 @@ class AppDash:
 # --- MAIN PART ---
 if __name__ == "__main__":
     # --- INIT ---
-    print("-#- Application Running -#-\n")
+    logging.info("-#- Application Running -#-\n")
     myApp = AppDash()
     myApp.launch()
