@@ -16,12 +16,11 @@ from accessors.path_files import *
 class AccessExcel:
     def __init__(self, ROOT_PATH=DATA_PATH):
         self.ExcelPaths = ExcelPaths(ROOT_PATH)
-        self.useExampleIfNoRawExcel()
+        # self.useExampleIfNoRawExcel()
 
     def useExampleIfNoRawExcel(self):
-        if self.ExcelPaths.rawCopiedExcelExists() == False:
+        if self.ExcelPaths.rawExcelExists() == False:
             self.copyExampleExcel()
-        self.copyRawExcel()
 
     def copyRawExcel(self):
         copyfile(self.ExcelPaths.rawExcelPath(), self.ExcelPaths.cleanedExcelPath())
@@ -35,28 +34,27 @@ class AccessExcel:
         except FileNotFoundError:
             pass
 
-    def removeCopiedExcel(self):
+    def removeCleanedExcel(self):
         self.removeFile(self.ExcelPaths.cleanedExcelPath())
 
-    def removeRawCopiedExcel(self):
+    def removeRawExcel(self):
         self.removeFile(self.ExcelPaths.rawExcelPath())
 
+    def removeAllExcels(self):
+        self.removeRawExcel()
+        self.removeCleanedExcel()
+
     def removeAllOldFiles(self):
-        if self.ExcelPaths.rawCopiedExcelExists() == True:
-            self.removeRawCopiedExcel()
+        if self.ExcelPaths.rawExcelExists() == True:
+            self.removeRawExcel()
         if self.ExcelPaths.cleanedExcelPath() == True:
-            self.removeCopiedExcel()
+            self.removeCleanedExcel()
 
-    def _updateExcel(self):
-        if self.ExcelPaths.rawCopiedExcelExists() == True:
+    def updateUserExcel(self):
+        if self.ExcelPaths.rawExcelExists() == True:
             self.copyRawExcel()
-
-
-# class AccessDataUserExcel(AccessExcel):
-#     def __init__(self):
-#         super().__init__(DATA_USERS_PATH)
-
-#     def createUserFolder(self, username):
+        else:
+            raise FileNotFoundError("No ")
 
 
 class AccessDescrToTheme:
@@ -161,3 +159,47 @@ class AccessStandardButtonsConfig:
         data = self.getJson()
         json_formatted_str = json.dumps(data, indent=4)
         return json_formatted_str
+
+
+class AccessUserFiles:
+    def __init__(self, username):
+        self.UserDataPath = UserDataPath(username)
+        ROOT_PATH = DATA_USERS_PATH / username
+        self.AccessExcel = AccessExcel(ROOT_PATH)
+
+        self.createUserFolders()
+        # self.removeOlderFiles()
+        self.initializeUserFolders()
+
+    def createUserFolders(self):
+        self.createUserMainFolder()
+        self.createUserExcelsFolder()
+
+    def createUserMainFolder(self):
+        self.createFolder(self.UserDataPath.userMainFolderExists)
+
+    def createUserExcelsFolder(self):
+        self.createFolder(self.UserDataPath.userExcelsFolderExists)
+
+    def createFolder(self, folderExists):
+        is_created, folder_path = folderExists()
+        if is_created == False:
+            try:
+                os.mkdir(folder_path)
+            except Exception as e:
+                print(
+                    f"Exception occured during the creation of the user's main folder  : {e}"
+                )
+
+    # TODO
+    def removeOlderFiles(self):
+        are_created, user_path = self.AccessExcel.ExcelPaths.fileUserExists()
+        if are_created == False:
+            try:
+                os.mkdir(user_path)
+            except Exception as e:
+                print(f"Exception occured during user file creation : {e}")
+
+    def initializeUserFolders(self):
+        self.AccessExcel.useExampleIfNoRawExcel()
+        self.AccessExcel.updateUserExcel()

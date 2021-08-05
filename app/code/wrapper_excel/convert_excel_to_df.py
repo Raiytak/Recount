@@ -7,13 +7,18 @@
 
 import pandas as pd
 
-from accessors.access_files import AccessExcel
+from accessors.access_files import AccessExcel, AccessUserFiles
 
 
 # This class load the copy_expenses.xmlx file in code/data and converts it to a dataframe used by other functions
 class ExcelToDataframe:
-    def __init__(self):
-        self.AccessExcel = AccessExcel()
+    def __init__(self, username=""):
+        if username != "":
+            self.AccessUserFiles = AccessUserFiles(username)
+            self.AccessExcel = self.AccessUserFiles.AccessExcel
+        else:
+            self.AccessUserFiles = None
+            self.AccessExcel = AccessExcel()
         self.ExcelPaths = self.AccessExcel.ExcelPaths
 
     def getDataframeOf(self, path_excel):

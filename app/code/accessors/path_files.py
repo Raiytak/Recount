@@ -65,6 +65,13 @@ class FilesPaths:
         filename = pathInformation.filename
         return self.joinPaths(root_path, filename, folders)
 
+    def fileExists(self, folders=[], filename=""):
+        self.PathInformation.folders = folders
+        self.PathInformation.filename = filename
+        path_file = self.formPathUsing(self.PathInformation)
+        bool_exists = os.path.exists(path_file)
+        return bool_exists, path_file
+
 
 # Path to the excels used :
 #   the source excel (from the user or excel_example)
@@ -73,20 +80,14 @@ class ExcelPaths(FilesPaths):
     def __init__(self, ROOT_PATH=DATA_PATH):
         super().__init__(ROOT_PATH)
 
-    def nameImportedExcel(self):
-        return "imported_excel.xlsx"
-
-    def nameImportedExcelOfTypeCSVTemporary(self):
-        return "imported_temporary_excel.csv"
-
     def importedExcelPath(self):
         self.PathInformation.folders = [self.excels_folder]
-        self.PathInformation.filename = self.nameImportedExcel()
+        self.PathInformation.filename = "imported_excel.xlsx"
         return self.formPathUsing(self.PathInformation)
 
     # def importedTemporaryCSVExcelPath(self):
     #     self.PathInformation.folders = [self.data_folder, self.excels_folder]
-    #     self.PathInformation.filename = self.nameImportedExcelOfTypeCSVTemporary()
+    #     self.PathInformation.filename = "imported_temporary_excel.csv"
     #     return self.formPathUsing(self.PathInformation)
 
     def cleanedExcelPath(self):
@@ -114,7 +115,7 @@ class ExcelPaths(FilesPaths):
         is_present = os.path.exists(my_path)
         return is_present
 
-    def rawCopiedExcelExists(self):
+    def rawExcelExists(self):
         return self.pathExists(self.rawExcelPath())
 
     def copiedExcelExists(self):
@@ -176,11 +177,16 @@ class StandardButtonsConfigPath(FilesPaths):
         return self.formPathUsing(self.PathInformation)
 
 
-class UsersDataPath(FilesPaths):
-    def __init__(self, ROOT_PATH=DATA_PATH):
-        super().__init__(ROOT_PATH)
+class UserDataPath(FilesPaths):
+    def __init__(self, username):
+        USER_DATA_PATH = DATA_USERS_PATH / username
+        super().__init__(USER_DATA_PATH)
 
-    def getStandardButtonsConfigPath(self):
-        self.PathInformation.folders = [self.vues_folder, self.standard_buttons]
-        self.PathInformation.filename = "config_buttons.json"
-        return self.formPathUsing(self.PathInformation)
+    def userFolderExists(self, name_folder=""):
+        return self.fileExists(folders=[name_folder])
+
+    def userMainFolderExists(self):
+        return self.userFolderExists()
+
+    def userExcelsFolderExists(self):
+        return self.userFolderExists(self.excels_folder)

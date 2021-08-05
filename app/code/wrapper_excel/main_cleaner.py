@@ -6,14 +6,15 @@ from wrapper_excel.fill_blanks import IntelligentFill
 
 
 class MainCleanerExcel:
-    def __init__(self):
-        self.ExcelToDataframe = ExcelToDataframe()
+    def __init__(self, username=""):
+        self.username = username
+        self.ExcelToDataframe = ExcelToDataframe(self.username)
         self.CleanerDf = CleanerDataframe()
         self.IntellFill = IntelligentFill()
         self.ReviewerDataframe = ReviewerDataframe()
 
     def updateExcel(self):
-        self.ExcelToDataframe.AccessExcel._updateExcel()
+        self.ExcelToDataframe.AccessUserFiles.AccessExcel.updateUserExcel()
         dataframe = self.ExcelToDataframe.getDataframe()
 
         dataframe = self.CleanerDf.addDateEverywhere(dataframe)

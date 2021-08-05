@@ -22,8 +22,6 @@ db_config = myAccessConfig.getDatabaseConfig()
 
 from wrapper_excel.main_cleaner import MainCleanerExcel
 
-mainCleaner = MainCleanerExcel()
-
 from wrapper_excel.fill_blanks import UpdateConversionJson
 
 myUpdateConversionJson = UpdateConversionJson()
@@ -60,6 +58,7 @@ repayRep = RepayPepayements(rawTable, repayTable)
 @updatingByRemovingAllExistingRowsOfTable(rawTable)
 def updateRawTable(username):
     print("--- Update 'raw_expenses' Table ---")
+    mainCleaner = MainCleanerExcel(username)
     mainCleaner.updateExcel()
     dataframe, equivalent_columns = mainCleaner.getDataframeAndEqCol()
     dataframe["username"] = username
