@@ -44,6 +44,7 @@ class WrapperOfTable(SQLConnector):
         self.table = table
 
     def _execute(self, request_sql):
+        # logging.debug(request_sql)
         request_sql = request_sql.replace("&", self.table)
         # print(request_sql)
         try:

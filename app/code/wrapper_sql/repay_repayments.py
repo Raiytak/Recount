@@ -21,9 +21,10 @@ class RepayPepayements:
         response = self.table_rep.select(request)
         return response
 
-    def selectRowsOfRawWhereIds(self, list_ids_pay_orig):
+    def selectRowsOfRawWithId(self, list_ids_pay_orig):
         list_rows = []
         for id in list_ids_pay_orig:
+            print("ICI : ", self.table_raw.selectRowId(id))
             list_rows.append(self.table_raw.selectRowId(id)[0])
         return tuple(list_rows)
 

@@ -4,6 +4,8 @@ from dash.dependencies import Input, Output
 import sys
 
 from logs import logs
+
+logs.startLogs()
 import logging
 
 import update_data

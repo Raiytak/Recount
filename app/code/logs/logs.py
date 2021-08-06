@@ -1,6 +1,7 @@
 import logging
 from logging import Formatter, StreamHandler, INFO
 from logging.handlers import RotatingFileHandler
+import os
 
 from accessors.path_files import FilesPaths
 
@@ -43,6 +44,8 @@ class InfoFileHandler(StreamHandler):
 
 
 def setup_logging(path_logs):
+    if os.path.exists(path_logs):
+        os.remove(path_logs)
     log_file_format = "[%(levelname)s] - %(asctime)s - %(name)s - : %(message)s in %(pathname)s , line : %(lineno)d"
     log_console_format = "%(message)s"
 
@@ -58,14 +61,18 @@ def setup_logging(path_logs):
     MAIN_LOGGER.addHandler(exp_file_handler)
 
 
-myFilePath = FilesPaths()
-logs_filename = "application.log"
-myFilePath.PathInformation.filename = logs_filename
-myFilePath.PathInformation.folders = [myFilePath.logs_folder]
-path_to_logs = myFilePath.formPathUsing(myFilePath.PathInformation)
+def getLogsPath():
+    myFilePath = FilesPaths()
+    logs_filename = "application.log"
+    myFilePath.PathInformation.filename = logs_filename
+    myFilePath.PathInformation.folders = [myFilePath.logs_folder]
+    path_to_logs = myFilePath.formPathUsing(myFilePath.PathInformation)
+    return path_to_logs
 
 
-setup_logging(path_to_logs)
+def startLogs():
+    path_to_logs = getLogsPath()
+    setup_logging(path_to_logs)
 
 
 # APP_LOGGER = setup_logger('application_logger', 'logs/application.log')

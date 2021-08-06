@@ -105,7 +105,7 @@ def repayRepayements(username):
         )
 
         list_ids_pay_orig = repayRep.convertDataframeToListIdsPayOrig(dataframe_rep)
-        response_raw = repayRep.selectRowsOfRawWhereIds(list_ids_pay_orig)
+        response_raw = repayRep.selectRowsOfRawWithId(list_ids_pay_orig)
         repayRep.deleteRowsOfRawWhereIds(list_ids_pay_orig)
 
         dataframe_raw = convertRespToDf.translateResponseSqlToDataframe(
