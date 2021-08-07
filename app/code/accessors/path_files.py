@@ -110,6 +110,9 @@ class ExcelPaths(FilesPaths):
         is_present = os.path.exists(my_path)
         return is_present
 
+    def importedExcelExists(self):
+        return self.pathExists(self.importedExcelPath())
+
     def rawExcelExists(self):
         return self.pathExists(self.rawExcelPath())
 

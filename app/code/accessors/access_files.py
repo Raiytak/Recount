@@ -19,12 +19,19 @@ class AccessExcel:
         self.ExcelPaths = ExcelPaths(ROOT_PATH)
         # self.useExampleIfNoRawExcel()
 
+    def copyImportedExcelIfExists(self):
+        if self.ExcelPaths.importedExcelExists() == True:
+            self.copyImportedExcel()
+
     def useExampleIfNoRawExcel(self):
         if self.ExcelPaths.rawExcelExists() == False:
             self.copyExampleExcel()
 
     def copyRawExcel(self):
         copyfile(self.ExcelPaths.rawExcelPath(), self.ExcelPaths.cleanedExcelPath())
+
+    def copyImportedExcel(self):
+        copyfile(self.ExcelPaths.importedExcelPath(), self.ExcelPaths.rawExcelPath())
 
     def copyExampleExcel(self):
         copyfile(self.ExcelPaths.exampleExcelPath(), self.ExcelPaths.rawExcelPath())
@@ -202,5 +209,6 @@ class AccessUserFiles:
                 logging.exception(f"Exception occured during user file creation : {e}")
 
     def initializeUserFolders(self):
+        self.AccessExcel.copyImportedExcelIfExists()
         self.AccessExcel.useExampleIfNoRawExcel()
-        self.AccessExcel.updateUserExcel()
+        # self.AccessExcel.updateUserExcel()

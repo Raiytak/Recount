@@ -9,8 +9,13 @@ class ResponseSqlToDataframe:
 
         # If data exists in the period selected, the dataframe is not empty and can be returned by describing it's columns
         # Else we simply return the dataframe completely empty
-        if dataframe.empty == False:
-            dataframe.columns = columns_name
+        try:
+            if dataframe.empty == False:
+                dataframe.columns = columns_name
+        except ValueError:
+            import pdb
+
+            pdb.set_trace()
         return dataframe
 
     def getEquivalentColumns(self, wrapper_table):

@@ -61,6 +61,12 @@ class WrapperOfTable(SQLConnector):
         self._execute(request_sql)
         return self.cursor.fetchall()
 
+    def selectListRowId(self, list_ids):
+        list_responses = []
+        for id in list_ids:
+            list_responses.append(self.selectRowId(id)[0])
+        return list_responses
+
     def selectRowId(self, id):
         request = "SELECT * FROM & WHERE ID = " + str(id)
         return self.select(request)
@@ -91,7 +97,7 @@ class WrapperOfTable(SQLConnector):
             self.deleteRowId(row_id)
 
     def deleteRowId(self, row_id):
-        request = "DELETE FROM & where id = " + str(row_id)
+        request = "DELETE FROM & where ID = " + str(row_id)
         self._execute(request)
 
     def dumpTable(self):

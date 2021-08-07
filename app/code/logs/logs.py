@@ -9,7 +9,7 @@ from accessors.path_files import FilesPaths
 SIZE_LOGS = 50
 
 
-def completeLogMessage(message, pattern="= "):
+def paddedLogMessage(message, pattern="= "):
     space_left = SIZE_LOGS - len(message)
     if space_left <= 0:
         return message

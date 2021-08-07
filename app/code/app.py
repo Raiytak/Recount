@@ -1,7 +1,6 @@
 import dash
 import dash_auth
 from dash.dependencies import Input, Output
-import sys
 
 from logs import logs
 

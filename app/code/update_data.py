@@ -1,5 +1,6 @@
+from genericpath import exists
 import logging
-from logs.logs import completeLogMessage
+from logs.logs import paddedLogMessage
 from accessors.access_config import AccessConfig
 
 
@@ -8,9 +9,7 @@ def updatingByRemovingAllExistingRowsOfTable(wrapperTable):
         def inner(*args, **kwargs):
             username = args[0]
             logging.info(
-                completeLogMessage(
-                    f"Remove rows of '{wrapperTable.table}' for user '{username}'"
-                )
+                paddedLogMessage(f"{username}:@ Remove rows of '{wrapperTable.table}'")
             )
             with wrapperTable:
                 wrapperTable.dumpTableForUser(username)
@@ -60,11 +59,16 @@ tripToClean = TripToClean(tripTable, cleanTable)
 repayRep = RepayPepayements(rawTable, repayTable)
 
 
-@updatingByRemovingAllExistingRowsOfTable(rawTable)
-def updateRawTable(username):
-    logging.info(completeLogMessage("Update 'raw_expenses' Table"))
+def updateExcel(username):
+    logging.info(paddedLogMessage(f"{username}: Update excel files"))
     mainCleaner = MainCleanerExcel(username)
     mainCleaner.updateExcel()
+
+
+@updatingByRemovingAllExistingRowsOfTable(rawTable)
+def updateRawTable(username):
+    logging.info(paddedLogMessage(f"{username}: Update 'raw_expenses' Table"))
+    mainCleaner = MainCleanerExcel(username)
     dataframe, equivalent_columns = mainCleaner.getDataframeAndEqCol()
     dataframe["username"] = username
     myUpdateConversionJson.updateConversionJsonUsingDataframe(dataframe)
@@ -76,7 +80,7 @@ def updateRawTable(username):
 
 @updatingByRemovingAllExistingRowsOfTable(repayTable)
 def updateRepayementsTable(username):
-    logging.info(completeLogMessage("Update 'reimbursement' Table"))
+    logging.info(paddedLogMessage(f"{username}: Update 'reimbursement' Table"))
     response = rawToRepayement.selectRepayementRows()
     dataframe = convertRespToDf.translateResponseSqlToDataframe(response, rawTable)
     equivalent_columns = rawToRepayement.getEquivalentColumns()
@@ -88,7 +92,9 @@ def updateRepayementsTable(username):
 
 # TODO using username
 def deleteRepayementsFromRaw(username):
-    logging.info(completeLogMessage("Delete 'reimbursement' in 'raw_expenses'"))
+    logging.info(
+        paddedLogMessage(f"{username}: Delete 'reimbursement' in 'raw_expenses'")
+    )
     response = rawToRepayement.selectRepayementIds()
     list_resp = convertRespToList.translateResponseSqlToList(response)
     with rawTable:
@@ -97,7 +103,9 @@ def deleteRepayementsFromRaw(username):
 
 # TODO using username
 def repayRepayements(username):
-    logging.info(completeLogMessage("Repay 'reimbursement' in 'raw_expenses'"))
+    logging.info(
+        paddedLogMessage(f"{username}: Repay 'reimbursement' in 'raw_expenses'")
+    )
     with repayRep:
         response_rep = repayRep.selectRepayementRows()
         dataframe_rep = convertRespToDf.translateResponseSqlToDataframe(
@@ -106,7 +114,7 @@ def repayRepayements(username):
 
         list_ids_pay_orig = repayRep.convertDataframeToListIdsPayOrig(dataframe_rep)
         response_raw = repayRep.selectRowsOfRawWithId(list_ids_pay_orig)
-        repayRep.deleteRowsOfRawWhereIds(list_ids_pay_orig)
+        repayRep.deleteRowsOfRawIds(list_ids_pay_orig)
 
         dataframe_raw = convertRespToDf.translateResponseSqlToDataframe(
             response_raw, rawTable
@@ -120,13 +128,14 @@ def repayRepayements(username):
             dataframe_cleaned, equivalent_columns
         )
         # Updating by removing old values, TODO
-        repayRep.insertCleanedRowsReqs(requests_cleaned_rows)
+        list_ids_pay_reimb = repayRep.convertDataframeToListIdsPayOrig(dataframe_rep)
+        repayRep.deleteRowsOfRawIds(list_ids_pay_reimb)
         repayRep.insertCleanedRowsReqs(requests_cleaned_rows)
 
 
 @updatingByRemovingAllExistingRowsOfTable(tripTable)
 def updateTripsTable(username):
-    logging.info(completeLogMessage("Update 'trip_expenses'"))
+    logging.info(paddedLogMessage(f"{username}: Update 'trip_expenses'"))
     response = rawToTrip.selectTripRows()
     dataframe = convertRespToDf.translateResponseSqlToDataframe(response, rawTable)
     equivalent_columns = rawToTrip.getEquivalentColumns()
@@ -137,7 +146,9 @@ def updateTripsTable(username):
 
 
 def deleteTripsFromRaw(username):
-    logging.info(completeLogMessage("Delete 'trip_expenses' in 'raw_expenses'"))
+    logging.info(
+        paddedLogMessage(f"{username}: Delete 'trip_expenses' in 'raw_expenses'")
+    )
     response = rawToTrip.selectTripIds()
     list_resp = convertRespToList.translateResponseSqlToList(response)
     with rawTable:
@@ -146,7 +157,7 @@ def deleteTripsFromRaw(username):
 
 @updatingByRemovingAllExistingRowsOfTable(cleanTable)
 def updateCleanTable(username):
-    logging.info(completeLogMessage("Update 'clean_expenses'"))
+    logging.info(paddedLogMessage(f"{username}: Update 'clean_expenses'"))
     response = rawToClean.selectAllRemainingRowsInRaw()
     dataframe = convertRespToDf.translateResponseSqlToDataframe(response, rawTable)
     equivalent_columns = rawToClean.getEquivalentColumns()
@@ -154,7 +165,7 @@ def updateCleanTable(username):
         dataframe, equivalent_columns
     )
 
-    logging.info(completeLogMessage("Adding trip expenses"))
+    logging.info(paddedLogMessage(f"{username}: Adding trip expenses"))
     response = tripToClean.selectAllRemainingRowsInTrip()
     dataframe = convertRespToDf.translateResponseSqlToDataframe(response, tripTable)
     equivalent_columns = tripToClean.getEquivalentColumns()
@@ -168,6 +179,8 @@ def updateCleanTable(username):
 def updateAll(username):
     # Lock.acquire()
     # set all instances for user username
+    updateExcel(username)
+
     updateRawTable(username)
 
     updateRepayementsTable(username)

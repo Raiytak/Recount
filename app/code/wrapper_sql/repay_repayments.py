@@ -22,18 +22,14 @@ class RepayPepayements:
         return response
 
     def selectRowsOfRawWithId(self, list_ids_pay_orig):
-        list_rows = []
-        for id in list_ids_pay_orig:
-            print("ICI : ", self.table_raw.selectRowId(id))
-            list_rows.append(self.table_raw.selectRowId(id)[0])
-        return tuple(list_rows)
+        return self.table_raw.selectListRowId(list_ids_pay_orig)
 
     def selectRepayementIds(self):
         request = "SELECT ID FROM &"
         response = self.table_rep.select(request)
         return response
 
-    def deleteRowsOfRawWhereIds(self, list_ids_pay_orig):
+    def deleteRowsOfRawIds(self, list_ids_pay_orig):
         for id in list_ids_pay_orig:
             self.table_raw.deleteRowId(id)
 
@@ -52,6 +48,10 @@ class RepayPepayements:
 
     def convertDataframeToListIdsPayOrig(self, dataframe_rep):
         list_ids_pay_orig = list(dataframe_rep["ID_pay_orig"])
+        return list_ids_pay_orig
+
+    def convertDataframeToListIdsPayReimbursed(self, dataframe_rep):
+        list_ids_pay_orig = list(dataframe_rep["ID"])
         return list_ids_pay_orig
 
     def addDfRawAndDfRepayement(self, dataframe_raw, dataframe_rep):
