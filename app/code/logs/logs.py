@@ -1,90 +1,121 @@
 import logging
-from logging import Formatter, StreamHandler, INFO
+import logging.config
+from logging import Formatter, StreamHandler, Filter
+from logging import INFO, DEBUG, WARNING, ERROR
 from logging.handlers import RotatingFileHandler
 import os
 
 from accessors.path_files import FilesPaths
 
+SIZE_PADDED_LOGS = 50
+SIZE_FILE_LOGS = 5 * 10 ** 6
+DATE_FORMAT = "%H:%M:%S"
+DETAILLED_DESCR = "[%(levelname)s] - %(asctime)s - %(module)s - : %(message)s in %(pathname)s , line : %(lineno)d"
 
-SIZE_LOGS = 50
+APP_INFO_LOGS = "application.log"
+EXCEPT_LOGS = "errors.log"
+DB_COM_LOGS = "db_coms.log"
+LIST_LOGS = [APP_INFO_LOGS, EXCEPT_LOGS, DB_COM_LOGS]
 
 
 def paddedLogMessage(message, pattern="= "):
-    space_left = SIZE_LOGS - len(message)
+    space_left = SIZE_PADDED_LOGS - len(message)
     if space_left <= 0:
         return message
-    empty_message = "$  {0: <" + str(SIZE_LOGS) + "s}  $"
-    empty_log_message = empty_message.replace("$", pattern * (SIZE_LOGS // 8))
+    empty_message = "$  {0: <" + str(SIZE_PADDED_LOGS) + "s}  $"
+    empty_log_message = empty_message.replace("$", pattern * (SIZE_PADDED_LOGS // 8))
     log_message = empty_log_message.format(message)
     return log_message
 
 
-# Main logger
-MAIN_LOGGER = logging.getLogger()
-MAIN_LOGGER.setLevel(logging.INFO)
-
-# def startListeningToPort(port=8050):
-#     logging.config.listen(port=8050, verify=None)
-#     if space_left <= 0:
-#         return message
-#     empty_message = "$  {0: <" + str(SIZE_LOGS) + "s}  $"
-#     empty_log_message = empty_message.replace("$", pattern * (SIZE_LOGS // 8))
-#     log_message = empty_log_message.format(message)
-#     return log_message
+def infoOnlyFilter(record):
+    if record.levelno == INFO:
+        return record
+    return 0
 
 
-class InfoFileHandler(StreamHandler):
-    def __init__(self):
-        super().__init__()
-
-    def emit(self, record):
-        if not record.levelno == INFO:
-            return
-        super().emit(record)
+def filterDbComsWarnings(record):
+    if record.module != "wrapper_sql":
+        return record
+    return 0
 
 
-def setup_logging(path_logs):
-    if os.path.exists(path_logs):
-        os.remove(path_logs)
-    log_file_format = "[%(levelname)s] - %(asctime)s - %(name)s - : %(message)s in %(pathname)s , line : %(lineno)d"
+def selectDbComsWarnings(record):
+    if record.module == "wrapper_sql":
+        return record
+    return 0
+
+
+def createStreamInfoHandler():
+    console_handler = StreamHandler()
     log_console_format = "%(message)s"
-
-    console_handler = InfoFileHandler()
     console_handler.setLevel(logging.INFO)
-    console_handler.setFormatter(Formatter(log_console_format, datefmt="%H:%M:%S"))
+    console_handler.setFormatter(Formatter(log_console_format, datefmt=DATE_FORMAT))
+    return console_handler
 
-    exp_file_handler = RotatingFileHandler(path_logs, maxBytes=5 * 10 ** 6)
-    exp_file_handler.setLevel(logging.DEBUG)
-    exp_file_handler.setFormatter(Formatter(log_file_format, datefmt="%H:%M:%S"))
 
-    MAIN_LOGGER.addHandler(console_handler)
-    MAIN_LOGGER.addHandler(exp_file_handler)
+def createInfoHandler(path_logs_folder):
+    info_handler = RotatingFileHandler(
+        path_logs_folder / APP_INFO_LOGS, maxBytes=SIZE_FILE_LOGS
+    )
+    log_file_format = DETAILLED_DESCR
+    info_handler.setLevel(logging.INFO)
+    info_handler.setFormatter(Formatter(log_file_format, datefmt=DATE_FORMAT))
+    return info_handler
+
+
+def createErrorHandler(path_logs_folder):
+    debug_handler = RotatingFileHandler(
+        path_logs_folder / EXCEPT_LOGS, maxBytes=SIZE_FILE_LOGS
+    )
+    log_file_format = DETAILLED_DESCR
+    debug_handler.setLevel(logging.WARNING)
+    debug_handler.setFormatter(Formatter(log_file_format, datefmt=DATE_FORMAT))
+    return debug_handler
+
+
+def createDbComsHandler(path_logs_folder):
+    debug_handler = RotatingFileHandler(
+        path_logs_folder / DB_COM_LOGS, maxBytes=SIZE_FILE_LOGS
+    )
+    log_file_format = DETAILLED_DESCR
+    debug_handler.setLevel(logging.DEBUG)
+    debug_handler.setFormatter(Formatter(log_file_format, datefmt=DATE_FORMAT))
+    return debug_handler
 
 
 def getLogsPath():
     myFilePath = FilesPaths()
-    logs_filename = "application.log"
-    myFilePath.PathInformation.filename = logs_filename
     myFilePath.PathInformation.folders = [myFilePath.logs_folder]
-    path_to_logs = myFilePath.formPathUsing(myFilePath.PathInformation)
-    return path_to_logs
+    path_logs_folder = myFilePath.formPathUsing(myFilePath.PathInformation)
+    return path_logs_folder
+
+
+def removeOldLogs(path_logs_folder):
+    for log_name in LIST_LOGS:
+        log_path = path_logs_folder / log_name
+        if os.path.exists(log_path):
+            os.remove(log_path)
 
 
 def startLogs():
-    path_to_logs = getLogsPath()
-    setup_logging(path_to_logs)
+    path_logs_folder = getLogsPath()
+    removeOldLogs(path_logs_folder)
 
+    stream_stdout = createStreamInfoHandler()
+    stream_stdout.addFilter(infoOnlyFilter)
 
-# APP_LOGGER = setup_logger('application_logger', 'logs/application.log')
-# APP_LOGGER.addHandler(logging.StreamHandler(sys.stdout))
-# APP_LOGGER.addHandler(logging.StreamHandler()
+    application_log = createInfoHandler(path_logs_folder)
+    application_log.addFilter(infoOnlyFilter)
+    error_log = createErrorHandler(path_logs_folder)
+    error_log.addFilter(filterDbComsWarnings)
+    db_coms_log = createDbComsHandler(path_logs_folder)
+    db_coms_log.addFilter(selectDbComsWarnings)
 
-# Listens to all communications with the database, on port 3306
-# DB_COMM_LOGGER = setup_logger('application_logger', 'database.log')
-# APP_LOGGER.config.listen(port=3306, verify=None)
-# logging.config.listen(port=3306, verify=None)
+    rootDebugLogger = logging.getLogger()
+    rootDebugLogger.setLevel(logging.DEBUG)
 
-# Listens to all communications with the application, on port 8050
-# DB_COMM_LOGGER = setup_logger('application_logger', 'application.log')
-# APP_LOGGER.config.listen(port=8050, verify=None)
-# logging.config.listen(port=8050, verify=None)
+    rootDebugLogger.addHandler(stream_stdout)
+    rootDebugLogger.addHandler(application_log)
+    rootDebugLogger.addHandler(error_log)
+    rootDebugLogger.addHandler(db_coms_log)

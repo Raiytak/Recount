@@ -61,7 +61,6 @@ from wrapper_dash import vue_test
 
 import wrapper_dash.facilitator_dash.user_identification as user_identification
 
-
 # Dash Application
 class AppDash:
     def __init__(self):

@@ -9,7 +9,7 @@ def updatingByRemovingAllExistingRowsOfTable(wrapperTable):
         def inner(*args, **kwargs):
             username = args[0]
             logging.info(
-                paddedLogMessage(f"{username}:@ Remove rows of '{wrapperTable.table}'")
+                paddedLogMessage(f"@{username}: Remove rows of '{wrapperTable.table}'")
             )
             with wrapperTable:
                 wrapperTable.dumpTableForUser(username)
