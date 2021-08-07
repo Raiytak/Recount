@@ -80,11 +80,6 @@ class ExcelPaths(FilesPaths):
         self.PathInformation.filename = "imported_excel.xlsx"
         return self.formPathUsing(self.PathInformation)
 
-    # def importedTemporaryCSVExcelPath(self):
-    #     self.PathInformation.folders = [self.data_folder, self.excels_folder]
-    #     self.PathInformation.filename = "imported_temporary_excel.csv"
-    #     return self.formPathUsing(self.PathInformation)
-
     def cleanedExcelPath(self):
         self.PathInformation.folders = [self.excels_folder]
         self.PathInformation.filename = "cleaned_expenses.xlsx"

@@ -1,12 +1,11 @@
 import numpy as np
-import pandas as pd
 
 
 class RepayPepayements:
-    def __init__(self, wrapper_table_raw, wrapper_table_repayement):
-        self.table_raw = wrapper_table_raw
-        self.table_rep = wrapper_table_repayement
-        self.name = "repayRepayements"
+    def __init__(self, rawTable, repayTbale, username):
+        self.rawTable = rawTable
+        self.repayTable = repayTbale
+        self.username = username
 
     def __enter__(self):
         pass
@@ -17,34 +16,34 @@ class RepayPepayements:
         # self._end_connection()
 
     def selectRepayementRows(self):
-        request = "SELECT * FROM &"
-        response = self.table_rep.select(request)
+        request = "SELECT * FROM & WHERE username = '" + self.username + "'"
+        response = self.repayTable.select(request)
         return response
 
     def selectRowsOfRawWithId(self, list_ids_pay_orig):
-        return self.table_raw.selectListRowId(list_ids_pay_orig)
+        return self.rawTable.selectListRowId(list_ids_pay_orig)
 
     def selectRepayementIds(self):
-        request = "SELECT ID FROM &"
-        response = self.table_rep.select(request)
+        request = "SELECT ID FROM & WHERE username = '" + self.username + "'"
+        response = self.repayTable.select(request)
         return response
 
     def deleteRowsOfRawIds(self, list_ids_pay_orig):
         for id in list_ids_pay_orig:
-            self.table_raw.deleteRowId(id)
+            self.rawTable.deleteRowId(id)
 
     def deleteRepayementRowsInRaw(self, requests):
         for req in requests:
-            self.table_raw.deleteRowId(req)
+            self.rawTable.deleteRowId(req)
 
     def insertRepayementReqs(self, requests):
-        self.table_rep.dumpTable()
+        self.repayTable.dumpTable()
         for req in requests:
-            self.table_rep.insert(req)
+            self.repayTable.insert(req)
 
     def insertCleanedRowsReqs(self, requests):
         for req in requests:
-            self.table_raw.insert(req)
+            self.rawTable.insert(req)
 
     def convertDataframeToListIdsPayOrig(self, dataframe_rep):
         list_ids_pay_orig = list(dataframe_rep["ID_pay_orig"])

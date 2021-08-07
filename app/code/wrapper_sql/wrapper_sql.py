@@ -47,6 +47,8 @@ class WrapperOfTable(SQLConnector):
         # logging.debug(request_sql)
         request_sql = request_sql.replace("&", self.table)
         # print(request_sql)
+        if request_sql == "":
+            return ""
         try:
             response = self.cursor.execute(request_sql)
         except pymysql.Error as err:

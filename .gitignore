@@ -17,7 +17,7 @@ app/code/data/dates_voyages.json
 # to create packages.
 app/code/build
 app/code/dist
-app/code/recount.egg-info
+**recount.egg-info**
 app/code/MANIFEST
 app/code/pyproject.toml
 
@@ -42,6 +42,4 @@ app/include
 app/.pytest_cache
 
 # Other ignores
-app/code/test.py
-app/code/__pycache__
-app/test/__pycache__
+app/code/logs/*.log

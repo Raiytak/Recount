@@ -1,12 +1,8 @@
-import numpy as np
-import pandas as pd
-
-
 class RawToRepayement:
-    def __init__(self, WrapperTableRaw, wrapper_table_repayement):
-        self.TableRaw = WrapperTableRaw
-        self.table_rep = wrapper_table_repayement
-        self.name = "rawToRepayement"
+    def __init__(self, rawTable, repayTable, username):
+        self.rawTable = rawTable
+        self.repayTable = repayTable
+        self.username = username
 
     def __enter__(self):
         pass
@@ -17,22 +13,26 @@ class RawToRepayement:
         # self._end_connection()
 
     def selectRepayementRows(self):
-        request = "SELECT * FROM & where category = 'reimbursement'"
-        response = self.TableRaw.select(request)
+        request = (
+            "SELECT * FROM & where category = 'reimbursement' AND username = '"
+            + self.username
+            + "'"
+        )
+        response = self.rawTable.select(request)
         return response
 
     def insertAllReqs(self, requests):
         for req in requests:
-            self.table_rep.insert(req)
+            self.repayTable.insert(req)
 
     def selectRepayementIds(self):
         request = "SELECT ID FROM &"
-        response = self.table_rep.select(request)
+        response = self.repayTable.select(request)
         return response
 
     def deleteRepayementRowsInRaw(self, requests):
         for req in requests:
-            self.TableRaw.deleteRowId(req)
+            self.rawTable.deleteRowId(req)
 
     def getEquivalentColumns(self):
         # "origin":["destination"]
@@ -47,10 +47,10 @@ class RawToRepayement:
 
 
 class RawToTrip:
-    def __init__(self, WrapperTableRaw, WrapperTableTrip):
-        self.TableRaw = WrapperTableRaw
-        self.TableTrip = WrapperTableTrip
-        self.name = "rawToTrip"
+    def __init__(self, rawTable, tripTable, username):
+        self.rawTable = rawTable
+        self.tripTable = tripTable
+        self.username = username
 
     def __enter__(self):
         pass
@@ -61,41 +61,45 @@ class RawToTrip:
         # self._end_connection()
 
     def selectTripRows(self):
-        request = "SELECT * FROM & where trip IS NOT NULL"
-        response = self.TableRaw.select(request)
+        request = (
+            "SELECT * FROM & WHERE trip IS NOT NULL AND username = '"
+            + self.username
+            + "'"
+        )
+        response = self.rawTable.select(request)
         return response
 
     def insertAllReqs(self, requests):
         for req in requests:
-            self.TableTrip.insert(req)
+            self.tripTable.insert(req)
 
     def selectTripIds(self):
-        request = "SELECT ID FROM &"
-        response = self.TableTrip.select(request)
+        request = "SELECT ID FROM & WHERE username = '" + self.username + "'"
+        response = self.tripTable.select(request)
         return response
 
     def deleteTripRowsInRaw(self, requests):
         for req in requests:
-            self.TableRaw.deleteRowId(req)
+            self.rawTable.deleteRowId(req)
 
     def getEquivalentColumns(self):
         # "origin":["destination"]
-        columns = self.TableRaw.getNameColumns()
+        columns = self.rawTable.getNameColumns()
         equivalent_columns = {col: [col] for col in columns}
         return equivalent_columns
 
     def dumpTripTableForUser(self, username):
-        self.TableTrip.dumpTableForUser(username)
+        self.tripTable.dumpTableForUser(username)
 
     def insertAllReqsInTrip(self, list_request_sql):
-        self.TableTrip.insertAllReqs(list_request_sql)
+        self.tripTable.insertAllReqs(list_request_sql)
 
 
 class RawToClean:
-    def __init__(self, WrapperTableRaw, WrapperTableClean):
-        self.TableRaw = WrapperTableRaw
-        self.table_clean = WrapperTableClean
-        self.name = "rawToClean"
+    def __init__(self, rawTable, cleanTable, username):
+        self.rawTable = rawTable
+        self.cleanTable = cleanTable
+        self.username = username
 
     def __enter__(self):
         pass
@@ -107,25 +111,25 @@ class RawToClean:
 
     def selectAllRemainingRowsInRaw(self):
         request = "SELECT * FROM &"
-        response = self.TableRaw.select(request)
+        response = self.rawTable.select(request)
         return response
 
     def insertAllReqs(self, requests):
         for req in requests:
-            self.table_clean.insert(req)
+            self.cleanTable.insert(req)
 
     def getEquivalentColumns(self):
         # "origin":["destination"]
-        columns = self.table_clean.getNameColumns()
+        columns = self.cleanTable.getNameColumns()
         equivalent_columns = {col: [col] for col in columns}
         return equivalent_columns
 
 
 class TripToClean:
-    def __init__(self, WrapperTableTrip, WrapperTableClean):
-        self.TableTrip = WrapperTableTrip
-        self.table_clean = WrapperTableClean
-        self.name = "tripToClean"
+    def __init__(self, tripTable, cleanTable, username):
+        self.tripTable = tripTable
+        self.cleanTable = cleanTable
+        self.username = username
 
     def __enter__(self):
         pass
@@ -136,21 +140,21 @@ class TripToClean:
         # self._end_connection()
 
     def selectAllRemainingRowsInTrip(self):
-        request = "SELECT * FROM &"
-        response = self.TableTrip.select(request)
+        request = "SELECT * FROM & WHERE username = '" + self.username + "'"
+        response = self.tripTable.select(request)
         return response
 
     def insertAllReqs(self, requests):
-        self.table_clean.dumpTable()
+        self.cleanTable.dumpTable()
         for req in requests:
-            self.table_clean.insert(req)
+            self.cleanTable.insert(req)
 
     def insertAllReqs(self, requests):
         for req in requests:
-            self.table_clean.insert(req)
+            self.cleanTable.insert(req)
 
     def getEquivalentColumns(self):
         # "origin":["destination"]
-        columns = self.table_clean.getNameColumns()
+        columns = self.cleanTable.getNameColumns()
         equivalent_columns = {col: [col] for col in columns}
         return equivalent_columns
