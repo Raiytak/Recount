@@ -119,6 +119,11 @@ class ConfigPath(FilesPaths):
     def __init__(self, ROOT_PATH=CODE_PATH):
         super().__init__(ROOT_PATH)
 
+    def getApplicationConfigsPath(self):
+        self.PathInformation.folders = [self.config_folder]
+        self.PathInformation.filename = "app_configs.json"
+        return self.formPathUsing(self.PathInformation)
+
     def getUsersPath(self):
         self.PathInformation.folders = [self.config_folder]
         self.PathInformation.filename = "users.json"
