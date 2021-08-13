@@ -1,5 +1,5 @@
 import dash
-import dash_auth
+from wrapper_dash.facilitator_dash.encrypted_auth import EncryptedAuth
 from dash.dependencies import Input, Output
 
 from logs import logs
@@ -8,18 +8,19 @@ logs.startLogs()
 import logging
 
 import update_data
-import request_data
+from request_data import DateToDataframe
 
-DateToDataframe = request_data.DateToDataframe()
-
+DateToDataframe = DateToDataframe()
 
 # Import the config file
 from accessors.access_config import AccessConfig
 
 myAccessConfig = AccessConfig()
-import accessors.access_users as access_users
+SSL_CONTEXT = myAccessConfig.getSSLContext()
 
-myAccessUsers = access_users.AccessUsers()
+from accessors.access_users import AccessUsers
+
+myAccessUsers = AccessUsers()
 
 # Access the documents, to get the values, dataframe and update the docs. Need the paths to work.
 from accessors.access_files import AccessCTAuthorized
@@ -103,7 +104,6 @@ class AppDash:
                 return self.vueTest.setThisVue()
             else:
                 return "404 Page not found."
-            pass
 
     def launch(self):
         self.setVueIndex()
@@ -111,11 +111,13 @@ class AppDash:
         self.run()
 
     def run(self):
-        self.app.run_server(debug=True)
+        # self.app.run_server(debug=True)
+        # self.app.run_server(debug=False, ssl_context=SSL_CONTEXT)
+        self.app.run_server(debug=True, ssl_context="adhoc")
 
     def setAuthentification(self):
         VALID_USERNAME_PASSWORD_PAIRS = myAccessUsers.getUsers()
-        dash_auth.BasicAuth(self.app, VALID_USERNAME_PASSWORD_PAIRS)
+        EncryptedAuth(self.app, VALID_USERNAME_PASSWORD_PAIRS)
 
 
 # --- MAIN PART ---

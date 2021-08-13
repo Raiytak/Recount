@@ -21,6 +21,8 @@ setup(
         "python-decouple",
         "pytest",
         "invoke",
+        "cryptography",
+        "flask_talisman",
     ],
     # tests_require=["pytest"],
 )

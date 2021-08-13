@@ -115,7 +115,7 @@ class ExcelPaths(FilesPaths):
         return self.pathExists(self.cleanedExcelPath())
 
 
-class UsersConfigPath(FilesPaths):
+class ConfigPath(FilesPaths):
     def __init__(self, ROOT_PATH=CODE_PATH):
         super().__init__(ROOT_PATH)
 
@@ -123,6 +123,33 @@ class UsersConfigPath(FilesPaths):
         self.PathInformation.folders = [self.config_folder]
         self.PathInformation.filename = "users.json"
         return self.formPathUsing(self.PathInformation)
+
+    def getKeysFolderPath(self):
+        self.PathInformation.folders = [self.config_folder, "keys"]
+        self.PathInformation.filename = ""
+        return self.formPathUsing(self.PathInformation)
+
+    def getCertificatePath(self):
+        list_folders = [self.config_folder, "keys"]
+        path_exists, path_created = self.fileExists(list_folders, "other-csr.pem")
+        if path_exists:
+            return path_created
+        else:
+            path_exists, path_created = self.fileExists(list_folders, "server-csr.pem")
+            return self.formPathUsing(self.PathInformation)
+
+    def getPrivateKeyPath(self):
+        list_folders = [self.config_folder, "keys"]
+        path_exists, path_created = self.fileExists(
+            list_folders, "other-private-key.pem"
+        )
+        if path_exists:
+            return path_created
+        else:
+            path_exists, path_created = self.fileExists(
+                list_folders, "server-private-key.pem"
+            )
+            return path_created
 
 
 class DescrToThemePath(FilesPaths):

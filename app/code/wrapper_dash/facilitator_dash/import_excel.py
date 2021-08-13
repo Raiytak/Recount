@@ -4,7 +4,7 @@ import base64
 import csv
 import pandas as pd
 
-from wrapper_excel.convert_excel_to_df import ExcelToDataframe
+from wrapper_excel.excel_to_df import ExcelToDataframe
 
 
 class ImportExcelFileSaver:

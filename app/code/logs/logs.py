@@ -8,7 +8,7 @@ import os
 from accessors.path_files import FilesPaths
 
 SIZE_PADDED_LOGS = 50
-SIZE_FILE_LOGS = 5 * 10 ** 6
+SIZE_FILE_LOGS = 1 * 10 ** 6
 DATE_FORMAT = "%H:%M:%S"
 DETAILLED_DESCR = "[%(levelname)s] - %(asctime)s - %(module)s - : %(message)s in %(pathname)s , line : %(lineno)d"
 
