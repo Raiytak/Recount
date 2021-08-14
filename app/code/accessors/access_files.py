@@ -64,10 +64,12 @@ class AccessExcel:
             self.removeCleanedExcel()
 
     def updateUserExcel(self):
+        if self.ExcelPaths.importedExcelExists() == True:
+            self.copyImportedExcel()
         if self.ExcelPaths.rawExcelExists() == True:
             self.copyRawExcel()
         else:
-            raise FileNotFoundError("No ")
+            raise FileNotFoundError("No Raw excel neither imported excel")
 
 
 class AccessDescrToTheme:

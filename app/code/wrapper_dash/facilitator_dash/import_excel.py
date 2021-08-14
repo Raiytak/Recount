@@ -1,19 +1,22 @@
-import os
 import io
 import base64
-import csv
 import pandas as pd
 
+from accessors.access_files import AccessUserFiles
 from wrapper_excel.excel_to_df import ExcelToDataframe
+from wrapper_excel.excel_encryption import ExcelEncryption
+
+import update_data
+
+import logging
+from logs.logs import paddedLogMessage
 
 
 class ImportExcelFileSaver:
-    def __init__(self, update_db):
+    def __init__(self):
         self.ExcelToDataframe = ExcelToDataframe()
-        self.AccessExcel = self.ExcelToDataframe.AccessExcel
+        self.ExcelEncryption = ExcelEncryption()
         self.ExcelPaths = self.ExcelToDataframe.ExcelPaths
-
-        self.update_db = update_db
 
     def getDataframe(self):
         return self.ExcelToDataframe.getDataframeOfRawExcel()
@@ -43,32 +46,38 @@ class ImportExcelFileSaver:
         )
         return content_type, content_decoded
 
-    def saveContentStringIntoXlsxFile(self, content_type, content_decoded):
-        path_file = self.ExcelPaths.rawCopiedExcelPath()
-        if content_type == "xlsx":
-            with open(path_file, "wb") as f:
-                f.write(content_decoded.read())
+    def saveContentStringIntoXlsxFile(self, username, file_data):
+        myAccessUserFiles = AccessUserFiles(username)
+        path_file = myAccessUserFiles.AccessExcel.ExcelPaths.importedExcelPath()
+        self.ExcelEncryption.encryptAndSaveDataToPath(file_data, path_file)
+        # self.ExcelEncryption.writeBinaryDataTo(file_data, path_file)
+        myAccessUserFiles.AccessExcel.updateUserExcel()
 
-    def checkIsAXlsxFile(self, content_type):
+    def checkIsXlsxFile(self, content_type):
         if content_type != "xlsx":
-            raise TypeError
+            raise TypeError("The file imported is not a '.xlsx' file")
 
-    def updateDbs(self):
-        self.update_db.updateAll()
-
-    def saveImportedFile(self, file_imported):
+    def saveImportedFile(self, username, file_imported):
         # If there is nothing to save, the function stops
         if file_imported != None:
+            logging.info(paddedLogMessage(f"{username}: Importing file ..."))
             try:
-                content_type, content_decoded = self.decodeImportedFile(file_imported)
-                self.checkIsAXlsxFile(content_type)
-                self.saveContentStringIntoXlsxFile(content_type, content_decoded)
-                return "File imported"
+                content_type, buffer_content = self.decodeImportedFile(file_imported)
+                file_data = buffer_content.read()
+                self.checkIsXlsxFile(content_type)
+                self.saveContentStringIntoXlsxFile(username, file_data)
+
+                update_data.updateAll(username)
+                logging.info(
+                    paddedLogMessage(f"{username}: File imported, update done")
+                )
 
             except TypeError:
-                # print(" >>> The file imported is not a '.xlsx' file <<< ")
-                return " >>> The file imported is not a '.xlsx' file <<< "
-        return ""
+                logging.error(
+                    paddedLogMessage(
+                        f"{username}: The file imported is not a '.xlsx' file"
+                    )
+                )
 
     # def saveTemporaryRawExcelFromInputData(self, data_excel):
     def saveNotebookDataTorawExcel(self, data_excel):

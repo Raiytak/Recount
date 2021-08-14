@@ -22,6 +22,8 @@ def paddedLogMessage(message, pattern="= "):
     space_left = SIZE_PADDED_LOGS - len(message)
     if space_left <= 0:
         return message
+    if message == "":
+        return pattern * ((6 * SIZE_PADDED_LOGS) // (len(pattern) * 4) + 2)
     empty_message = "$  {0: <" + str(SIZE_PADDED_LOGS) + "s}  $"
     empty_log_message = empty_message.replace("$", pattern * (SIZE_PADDED_LOGS // 8))
     log_message = empty_log_message.format(message)

@@ -177,6 +177,7 @@ def updateCleanTable(username):
 
 # == MAIN == FUNCTION : updates all the tables by removing ALL the older values
 def updateAll(username):
+    logging.info(paddedLogMessage(""))
     updateExcel(username)
 
     updateRawTable(username)
@@ -189,3 +190,4 @@ def updateAll(username):
     deleteTripsFromRaw(username)
 
     updateCleanTable(username)
+    logging.info(paddedLogMessage(""))

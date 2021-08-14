@@ -45,7 +45,7 @@ ConvertDfToGraph = DataframeToGraph(DataframeToListDict, ListDictToGraph)
 # Object used to save an excel uploaded by the user
 from wrapper_dash.facilitator_dash.import_excel import ImportExcelFileSaver
 
-ImportExcelFileSaver = ImportExcelFileSaver(update_data)
+ImportExcelFileSaver = ImportExcelFileSaver()
 
 from wrapper_dash.facilitator_dash.save_config import (
     ConfigNotebookExcelSaver,

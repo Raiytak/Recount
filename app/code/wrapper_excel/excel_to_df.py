@@ -24,20 +24,9 @@ class ExcelToDataframe:
         self.ExcelPaths = self.AccessExcel.ExcelPaths
         self.ExcelEncryption = ExcelEncryption()
 
-    def getDataframeOfEncryptedExcel(self, path_excel):
-        excel_data = self.ExcelEncryption.getDataFromEncryptedFileAtPath(path_excel)
-        dataframe = pd.read_excel(excel_data)
-        return dataframe
-
-    def getDataframeOfNonEncryptedExcel(self, path_excel):
-        dataframe = pd.read_excel(path_excel)
-        return dataframe
-
     def getDataframeOf(self, path_excel):
-        try:
-            dataframe = self.getDataframeOfEncryptedExcel(path_excel)
-        except Exception:
-            dataframe = self.getDataframeOfNonEncryptedExcel(path_excel)
+        excel_data = self.ExcelEncryption.getDataFrom(path_excel)
+        dataframe = pd.read_excel(excel_data)
         return dataframe
 
     def getDataframeOfExcel(self):

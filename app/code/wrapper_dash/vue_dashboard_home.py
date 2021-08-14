@@ -2,13 +2,13 @@ import dash_html_components as html
 import dash_core_components as dcc
 from dash.dependencies import Input, Output, State
 
-import datetime
-
-import wrapper_dash.reusable_components.reusable_inputs as reusable_inputs
-import wrapper_dash.reusable_components.reusable_graphs as reusable_graphs
-import wrapper_dash.reusable_components.reusable_links as reusable_links
+from wrapper_dash.reusable_components.reusable_inputs import ReusableInputs
+from wrapper_dash.reusable_components.reusable_graphs import ReusableGraphs
+from wrapper_dash.reusable_components.reusable_links import ReusableLinks
 
 import wrapper_dash.facilitator_dash.user_identification as user_identification
+
+import update_data
 
 
 class ElementsVue:
@@ -35,9 +35,9 @@ class ElementsVue:
 class EmptyVue:
     def __init__(self):
         self.name_vue = "dashboard-home-"
-        self.ReusableInputs = reusable_inputs.ReusableInputs(self.name_vue)
-        self.ReusableGraphs = reusable_graphs.ReusableGraphs(self.name_vue)
-        self.ReusableLinks = reusable_links.ReusableLinks()
+        self.ReusableInputs = ReusableInputs(self.name_vue)
+        self.ReusableGraphs = ReusableGraphs(self.name_vue)
+        self.ReusableLinks = ReusableLinks()
         self.ElementsVue = ElementsVue(self.ReusableInputs, self.ReusableGraphs)
 
     def getEmptyVue(self):
@@ -78,7 +78,9 @@ class AppDash(EmptyVue):
         def update_graph(selected_date_str, selected_periode, imported_excel):
             # Processing the actions received form the user
             username = user_identification.getUsername()
-            self.ImportExcelFileSaver.saveImportedFile(imported_excel)
+
+            self.ImportExcelFileSaver.saveImportedFile(username, imported_excel)
+
             dataframe = self.DateToDataframe.getDataframeFromDate(
                 username, selected_date_str, selected_periode
             )
