@@ -111,9 +111,9 @@ class AppDash:
         self.run()
 
     def run(self):
-        # self.app.run_server(debug=True)
+        self.app.run_server(debug=True)
         # self.app.run_server(debug=False, ssl_context=SSL_CONTEXT)
-        self.app.run_server(debug=True, ssl_context="adhoc")
+        # self.app.run_server(debug=True, ssl_context="adhoc")
 
     def setAuthentification(self):
         VALID_USERNAME_PASSWORD_PAIRS = myAccessUsers.getUsers()

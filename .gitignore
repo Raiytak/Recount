@@ -44,3 +44,4 @@ app/.pytest_cache
 
 # Other ignores
 app/code/logs/*.log
+app/code/test.py

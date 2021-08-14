@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 
 setup(
-    name="recount",
+    name="Recount",
     version="1.0",
     description="Python Distribution Utilities for Recount app",
     author="Mathieu Salaün",
@@ -22,7 +22,6 @@ setup(
         "pytest",
         "invoke",
         "cryptography",
-        "flask_talisman",
     ],
     # tests_require=["pytest"],
 )

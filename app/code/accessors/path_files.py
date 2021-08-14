@@ -156,6 +156,13 @@ class ConfigPath(FilesPaths):
             )
             return path_created
 
+    def getExcelKeyPath(self, name=""):
+        self.PathInformation.folders = [self.config_folder]
+        if name == "":
+            name = "excel.key"
+        self.PathInformation.filename = name
+        return self.formPathUsing(self.PathInformation)
+
 
 class DescrToThemePath(FilesPaths):
     def __init__(self, ROOT_PATH=DATA_PATH):

@@ -3,6 +3,7 @@ from wrapper_excel.check_conformity import ReviewerDataframe
 from wrapper_excel.cleaner_dataframe import CleanerDataframe
 from wrapper_excel.excel_to_df import ExcelToDataframe
 from wrapper_excel.fill_blanks import IntelligentFill
+from wrapper_excel.excel_encryption import ExcelEncryption
 
 
 class MainCleanerExcel:
@@ -12,6 +13,7 @@ class MainCleanerExcel:
         self.CleanerDf = CleanerDataframe()
         self.IntellFill = IntelligentFill()
         self.ReviewerDataframe = ReviewerDataframe()
+        self.ExcelEncryption = ExcelEncryption()
 
     def updateExcel(self):
         self.ExcelToDataframe.AccessUserFiles.AccessExcel.updateUserExcel()
@@ -43,7 +45,8 @@ class MainCleanerExcel:
         return self.ExcelToDataframe.getDataframeAndEqCol()
 
     def saveDataframeToCopiedExcel(self, dataframe):
-        # self.ExcelToDataframe.AccessExcel.removeCopiedExcel()
-        dataframe.to_excel(
-            self.ExcelToDataframe.AccessExcel.ExcelPaths.cleanedExcelPath()
-        )
+        path_excel = self.ExcelToDataframe.AccessExcel.ExcelPaths.cleanedExcelPath()
+        self.ExcelEncryption.encryptDataframe(dataframe, path_excel)
+        # dataframe.to_excel(
+        #     self.ExcelToDataframe.AccessExcel.ExcelPaths.cleanedExcelPath()
+        # )

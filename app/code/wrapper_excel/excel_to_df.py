@@ -5,9 +5,11 @@
 # The paths used are stored in the paths_docs module, and are used by the wrappers of this module.
 
 
+from logging import root
 import pandas as pd
 
 from accessors.access_files import AccessExcel, AccessUserFiles
+from wrapper_excel.excel_encryption import ExcelEncryption
 
 
 # This class load the copy_expenses.xmlx file in code/data and converts it to a dataframe used by other functions
@@ -20,23 +22,22 @@ class ExcelToDataframe:
             self.AccessUserFiles = None
             self.AccessExcel = AccessExcel()
         self.ExcelPaths = self.AccessExcel.ExcelPaths
+        self.ExcelEncryption = ExcelEncryption()
+
+    def getDataframeOfEncryptedExcel(self, path_excel):
+        excel_data = self.ExcelEncryption.getDataFromEncryptedFileAtPath(path_excel)
+        dataframe = pd.read_excel(excel_data)
+        return dataframe
+
+    def getDataframeOfNonEncryptedExcel(self, path_excel):
+        dataframe = pd.read_excel(path_excel)
+        return dataframe
 
     def getDataframeOf(self, path_excel):
-        xl_file = pd.ExcelFile(path_excel)
-        dfs = {
-            sheet_name: xl_file.parse(sheet_name) for sheet_name in xl_file.sheet_names
-        }
         try:
-            dataframe = dfs["Feuil1"]
-        except KeyError:
-            try:
-                dataframe = dfs["Sheet1"]
-            except KeyError:
-                raise Exception
-        list_columns = dataframe.columns
-        for column_name in list_columns:
-            if "Unnamed" in column_name:
-                dataframe = dataframe.drop(columns=column_name)
+            dataframe = self.getDataframeOfEncryptedExcel(path_excel)
+        except Exception:
+            dataframe = self.getDataframeOfNonEncryptedExcel(path_excel)
         return dataframe
 
     def getDataframeOfExcel(self):

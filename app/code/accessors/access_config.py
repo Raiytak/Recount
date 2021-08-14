@@ -28,3 +28,9 @@ class AccessConfig:
         cert_file = self.ConfigPath.getCertificatePath()
         private_key_file = self.ConfigPath.getPrivateKeyPath()
         return (cert_file, private_key_file)
+
+    def getExcelKey(self, name=""):
+        path_global_configs = self.ConfigPath.getExcelKeyPath(name)
+        with open(path_global_configs, "rb") as file:
+            excel_key = file.read()
+        return excel_key

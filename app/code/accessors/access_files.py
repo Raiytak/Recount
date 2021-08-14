@@ -19,6 +19,11 @@ class AccessExcel:
         self.ExcelPaths = ExcelPaths(ROOT_PATH)
         # self.useExampleIfNoRawExcel()
 
+    def getExcelFile(self, path_excel):
+        with open(path_excel, "rb") as file:
+            excel_file = file.read()
+        return excel_file
+
     def copyImportedExcelIfExists(self):
         if self.ExcelPaths.importedExcelExists() == True:
             self.copyImportedExcel()
