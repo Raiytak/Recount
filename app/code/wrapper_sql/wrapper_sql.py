@@ -1,6 +1,7 @@
 import pymysql
 from threading import Lock
 import logging
+import ssl
 
 
 class SQLConnector:
@@ -30,6 +31,7 @@ class SQLConnector:
             user=db_config["user"],
             passwd=db_config["password"],
             db=db_config["db"],
+            ssl={"fake_flag_to_enable_tls": True},
         )
         return myConnection, myConnection.cursor()
 
