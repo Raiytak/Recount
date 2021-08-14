@@ -9,7 +9,7 @@ from logging import root
 import pandas as pd
 
 from accessors.access_files import AccessExcel, AccessUserFiles
-from wrapper_excel.excel_encryption import ExcelEncryption
+from accessors.data_encryption import ExcelEncryption
 
 
 # This class load the copy_expenses.xmlx file in code/data and converts it to a dataframe used by other functions

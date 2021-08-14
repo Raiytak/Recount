@@ -3,8 +3,8 @@ import base64
 import pandas as pd
 
 from accessors.access_files import AccessUserFiles
+from accessors.data_encryption import ExcelEncryption
 from wrapper_excel.excel_to_df import ExcelToDataframe
-from wrapper_excel.excel_encryption import ExcelEncryption
 
 import update_data
 

@@ -3,7 +3,7 @@ from wrapper_excel.check_conformity import ReviewerDataframe
 from wrapper_excel.cleaner_dataframe import CleanerDataframe
 from wrapper_excel.excel_to_df import ExcelToDataframe
 from wrapper_excel.fill_blanks import IntelligentFill
-from wrapper_excel.excel_encryption import ExcelEncryption
+from accessors.data_encryption import ExcelEncryption
 
 
 class MainCleanerExcel:

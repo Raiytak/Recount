@@ -157,9 +157,16 @@ class ConfigPath(FilesPaths):
             return path_created
 
     def getExcelKeyPath(self, name=""):
-        self.PathInformation.folders = [self.config_folder]
+        self.PathInformation.folders = [self.config_folder, "keys"]
         if name == "":
             name = "excel.key"
+        self.PathInformation.filename = name
+        return self.formPathUsing(self.PathInformation)
+
+    def getDataSqlKeyPath(self, name=""):
+        self.PathInformation.folders = [self.config_folder, "keys"]
+        if name == "":
+            name = "data_sql.key"
         self.PathInformation.filename = name
         return self.formPathUsing(self.PathInformation)
 

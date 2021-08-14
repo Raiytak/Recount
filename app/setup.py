@@ -22,6 +22,7 @@ setup(
         "pytest",
         "invoke",
         "cryptography",
+        "cryptocode",
     ],
     # tests_require=["pytest"],
 )

@@ -1,7 +1,8 @@
 import pymysql
 from threading import Lock
 import logging
-import ssl
+
+from accessors.data_encryption import SqlEncryption
 
 
 class SQLConnector:
@@ -12,6 +13,7 @@ class SQLConnector:
     def __init__(self, db_config):
         self.DB_CONFIG = db_config
         self.connection, self.cursor = self._connect()
+        self.SqlEncryption = SqlEncryption()
 
     def __enter__(self):
         self.co_lock.acquire()
@@ -46,9 +48,7 @@ class WrapperOfTable(SQLConnector):
         self.table = table
 
     def _execute(self, request_sql):
-        # logging.debug(request_sql)
         request_sql = request_sql.replace("&", self.table)
-        # print(request_sql)
         if request_sql == "":
             return ""
         try:
@@ -62,6 +62,7 @@ class WrapperOfTable(SQLConnector):
         return ""
 
     def select(self, request_sql):
+        # logging.debug(request_sql)
         self._execute(request_sql)
         return self.cursor.fetchall()
 
@@ -76,6 +77,11 @@ class WrapperOfTable(SQLConnector):
         return self.select(request)
 
     def insert(self, request_sql):
+        # The encryption is taking too long, commented for now
+        # encrypted_insertion = self.SqlEncryption.encryptInsertion(request_sql)
+
+        # logging.debug(request_sql)
+        # logging.debug(encrypted_insertion)
         self._execute(request_sql)
         try:
             self.connection.commit()
