@@ -6,7 +6,8 @@ import pandas as pd
 import xlrd
 
 import re
-import cryptocode
+
+# import cryptocode
 
 from accessors.access_config import AccessConfig
 
@@ -15,7 +16,10 @@ class DataEncryption:
     def __init__(self, key):
         self.key = key
         if type(self.key) == bytes:
-            self.fernet = Fernet(self.key)
+            try:
+                self.fernet = Fernet(self.key)
+            except ValueError:
+                pass
 
     def writeNewKey(self, path_key):
         key = self.fernet.generate_key()
@@ -107,7 +111,18 @@ class SqlEncryption(DataEncryption):
     def encryptInsertion(self, insert_request):
         self.assureIsInsertionRequest(insert_request)
         list_columns, list_values = self.getColumnsAndValues(insert_request)
-        dict_encryption = self.encryptValuesOfColumns(list_columns, list_values)
+        dict_encryption = self.encryptValuesOfColumnsUsingAES(list_columns, list_values)
+        request_encrypted = self.replaceRequestByEncryptedValues(
+            insert_request, dict_encryption
+        )
+        return request_encrypted
+
+    def encryptManuallyInsertion(self, insert_request):
+        self.assureIsInsertionRequest(insert_request)
+        list_columns, list_values = self.getColumnsAndValues(insert_request)
+        dict_encryption = self.encryptValuesOfColumnsUsingCryptocode(
+            list_columns, list_values
+        )
         request_encrypted = self.replaceRequestByEncryptedValues(
             insert_request, dict_encryption
         )
@@ -129,7 +144,21 @@ class SqlEncryption(DataEncryption):
 
         return list_columns, list_values
 
-    def encryptValuesOfColumns(self, list_columns, list_values):
+    def encryptValuesOfColumnsUsingAES(self, list_columns, list_values):
+        dict_replacement = {}
+        for column in list_columns:
+            i_col = list_columns.index(column)
+            value_unchanged = list_values[i_col]
+            if value_unchanged == "nan":
+                dict_replacement[value_unchanged] = "NULL"
+            elif column not in self.list_columns_to_left_unchanged:
+                value_encrypted = self.encryptValueUsingAES(value_unchanged)
+                dict_replacement[value_unchanged] = value_encrypted
+            else:
+                dict_replacement[value_unchanged] = value_unchanged
+        return dict_replacement
+
+    def encryptValuesOfColumnsUsingCryptocode(self, list_columns, list_values):
         dict_replacement = {}
         for column in list_columns:
             i_col = list_columns.index(column)
@@ -137,17 +166,27 @@ class SqlEncryption(DataEncryption):
             if (column not in self.list_columns_to_left_unchanged) and (
                 value_unchanged != "nan"
             ):
-                value_encrypted = self.encryptValue(value_unchanged)
+                value_encrypted = self.encryptValueUsingCryptocode(value_unchanged)
                 dict_replacement[value_unchanged] = value_encrypted
             else:
                 dict_replacement[value_unchanged] = value_unchanged
         return dict_replacement
 
-    def encryptValue(self, value):
-        return cryptocode.encrypt(value, self.key)
+    def encryptValueUsingAES(self, value):
+        encrypted_value = "AES_ENCRYPT('" + value + "', " + self.key + ")"
+        return encrypted_value
 
-    def decryptValue(self, value):
-        return cryptocode.decrypt(value, self.key)
+    def decryptValueUsingAES(self, encrypted_value):
+        value = "AES_DECRYPT('" + encrypted_value + "', " + self.key + ")"
+        return value
+
+    def encryptValueUsingCryptocode(self, value):
+        # return cryptocode.encrypt(value, self.key)
+        return value
+
+    def decryptValueUsingCryptocode(self, value):
+        # return cryptocode.decrypt(value, self.key)
+        return value
 
     def replaceRequestByEncryptedValues(self, request, dict_values_encrypted):
         try:

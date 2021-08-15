@@ -3,6 +3,9 @@ app/code/config/*
 app/code/.env
 **.pem
 
+# Ignore the database other files
+database/init_**
+
 # Ignore the users's stuff
 app/code/data/users
 # Ignore old version, FOR NOW

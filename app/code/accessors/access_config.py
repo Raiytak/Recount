@@ -37,6 +37,6 @@ class AccessConfig:
 
     def getDataSqlKey(self, name=""):
         path_global_configs = self.ConfigPath.getDataSqlKeyPath(name)
-        with open(path_global_configs, "r") as file:
+        with open(path_global_configs, "rb") as file:
             excel_key = file.read()
         return excel_key

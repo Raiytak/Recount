@@ -8,9 +8,6 @@ logs.startLogs()
 import logging
 
 import update_data
-from request_data import DateToDataframe
-
-DateToDataframe = DateToDataframe()
 
 # Import the config file
 from accessors.access_config import AccessConfig
@@ -22,39 +19,13 @@ from accessors.access_users import AccessUsers
 
 myAccessUsers = AccessUsers()
 
-# Access the documents, to get the values, dataframe and update the docs. Need the paths to work.
-from accessors.access_files import AccessCTAuthorized
+# from wrapper_dash.facilitator_dash.save_config import (
+#     ConfigNotebookExcelSaver,
+#     StandardButtonsConfigSaver,
+# )
 
-
-myAccessCTAuthorized = AccessCTAuthorized()
-authorizedCT_json = myAccessCTAuthorized.getJson()
-
-
-# Objects used to clean and convert the data into dataframe and objects readable for the dash app
-# import wrapper_dash.facilitator_dash.prepare_dashboard as prepare_dashboard
-from wrapper_dash.facilitator_dash.convert_df_to_ld import DataframeToListOfDicts
-
-DataframeToListDict = DataframeToListOfDicts()
-from wrapper_dash.facilitator_dash.convert_ld_to_graph import ListDictToGraph
-
-ListDictToGraph = ListDictToGraph(authorizedCT_json)
-from wrapper_dash.facilitator_dash.main_convert_df_to_graph import DataframeToGraph
-
-ConvertDfToGraph = DataframeToGraph(DataframeToListDict, ListDictToGraph)
-
-# Object used to save an excel uploaded by the user
-from wrapper_dash.facilitator_dash.import_excel import ImportExcelFileSaver
-
-ImportExcelFileSaver = ImportExcelFileSaver()
-
-from wrapper_dash.facilitator_dash.save_config import (
-    ConfigNotebookExcelSaver,
-    StandardButtonsConfigSaver,
-)
-
-ConfigNotebookExcelSaver = ConfigNotebookExcelSaver()
-StandardButtonsConfigSaver = StandardButtonsConfigSaver()
-
+# ConfigNotebookExcelSaver = ConfigNotebookExcelSaver()
+# StandardButtonsConfigSaver = StandardButtonsConfigSaver()
 
 from wrapper_dash import vue_index, vue_home
 from wrapper_dash import vue_dashboard_home
@@ -75,10 +46,7 @@ class AppDash:
 
         self.vueIndex = vue_index.AppDash(self.app)
         self.vueHome = vue_home.AppDash(self.app)
-        self.vueDashboardHome = vue_dashboard_home.AppDash(
-            self.app, DateToDataframe, ConvertDfToGraph, ImportExcelFileSaver
-        )
-
+        self.vueDashboardHome = vue_dashboard_home.AppDash(self.app)
         self.vueTest = vue_test.AppDash(self.app)
 
     def setVueIndex(self):

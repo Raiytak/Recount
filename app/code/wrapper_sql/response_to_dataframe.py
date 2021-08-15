@@ -12,10 +12,12 @@ class ResponseSqlToDataframe:
         try:
             if dataframe.empty == False:
                 dataframe.columns = columns_name
-        except ValueError:
-            import pdb
-
-            pdb.set_trace()
+            else:
+                pass
+        except Exception(
+            f"Exception in response_to_dataframe.translateResponseSqlToDataframe"
+        ):
+            pass
         return dataframe
 
     def getEquivalentColumns(self, wrapper_table):
@@ -27,22 +29,7 @@ class ResponseSqlToDataframe:
     def getDataframeWithEmptyValues(self, wrapper_table):
         columns_name = wrapper_table.getNameColumns()
         dataframe = pd.DataFrame(
-            np.array(
-                [
-                    [
-                        0,
-                        "2000-01-01",
-                        0,
-                        "alimentary",
-                        "course",
-                        "walmart",
-                        "food",
-                        None,
-                        "card",
-                        0,
-                    ]
-                ]
-            ),
+            np.array([[0, "2000-01-01", 0, "", "no-data", "", "", None, "", "", 0]]),
             columns=columns_name,
         )
         return dataframe

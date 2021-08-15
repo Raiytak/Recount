@@ -8,7 +8,9 @@ from wrapper_dash.reusable_components.reusable_links import ReusableLinks
 
 import wrapper_dash.facilitator_dash.user_identification as user_identification
 
-import update_data
+from wrapper_dash.facilitator_dash.date_to_dataframe import DateToDataframe
+from wrapper_dash.facilitator_dash.convert_df_to_graph import DataframeToGraph
+from wrapper_dash.facilitator_dash.import_excel import ImportExcelFileSaver
 
 
 class ElementsVue:
@@ -64,12 +66,12 @@ class EmptyVue:
 
 # Dash Application
 class AppDash(EmptyVue):
-    def __init__(self, app, DateToDataframe, ConvertDfToGraph, ImportExcelFileSaver):
+    def __init__(self, app):
         super().__init__()
         self.app = app
-        self.DateToDataframe = DateToDataframe
-        self.ConvertDfToGraph = ConvertDfToGraph
-        self.ImportExcelFileSaver = ImportExcelFileSaver
+        self.DateToDataframe = DateToDataframe()
+        self.ConvertDfToGraph = DataframeToGraph()
+        self.ImportExcelFileSaver = ImportExcelFileSaver()
 
         self.setCallback()
 
@@ -81,7 +83,7 @@ class AppDash(EmptyVue):
 
             self.ImportExcelFileSaver.saveImportedFile(username, imported_excel)
 
-            dataframe = self.DateToDataframe.getDataframeFromDate(
+            dataframe, range_date = self.DateToDataframe.getDataframeFromDate(
                 username, selected_date_str, selected_periode
             )
             list_dataframes = self.DateToDataframe.getListDataframeByWeekFromDate(
@@ -91,16 +93,16 @@ class AppDash(EmptyVue):
             list_types_of_divs = self.getOutputTypesDiv()
 
             scatter_graph = self.ConvertDfToGraph.convertDataframeToGraph(
-                dataframe, list_types_of_divs[0]
+                dataframe, list_types_of_divs[0], range_date
             )
             pie_graph = self.ConvertDfToGraph.convertDataframeToGraph(
                 dataframe, list_types_of_divs[1]
             )
             mean_graph = self.ConvertDfToGraph.convertDataframeToGraph(
-                list_dataframes, list_types_of_divs[2]
+                list_dataframes, list_types_of_divs[2], range_date
             )
             food_graph = self.ConvertDfToGraph.convertDataframeToGraph(
-                list_dataframes, list_types_of_divs[3]
+                list_dataframes, list_types_of_divs[3], range_date
             )
 
             return scatter_graph, pie_graph, mean_graph, food_graph

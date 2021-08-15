@@ -7,6 +7,7 @@
 
 from logging import root
 import pandas as pd
+from pymysql import NULL
 
 from accessors.access_files import AccessExcel, AccessUserFiles
 from accessors.data_encryption import ExcelEncryption
@@ -26,7 +27,13 @@ class ExcelToDataframe:
 
     def getDataframeOf(self, path_excel):
         excel_data = self.ExcelEncryption.getDataFrom(path_excel)
-        dataframe = pd.read_excel(excel_data)
+        try:
+            dataframe = pd.read_excel(excel_data)
+        except TypeError:
+            # TODO : show error to user
+            dataframe = self.getDataframeOf(
+                self.AccessExcel.ExcelPaths.exampleExcelPath()
+            )
         return dataframe
 
     def getDataframeOfExcel(self):

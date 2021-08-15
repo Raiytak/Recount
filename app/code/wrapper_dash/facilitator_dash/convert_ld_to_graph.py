@@ -1,4 +1,5 @@
 import random
+import logging
 
 # TODO maybe change the logic of this modul, where the data is parsed
 class ListDictToGraph:  # add metadata
@@ -7,9 +8,9 @@ class ListDictToGraph:  # add metadata
         self.getColor = self.ColorSetter.convertThemeToColor
         self.getListColors = self.ColorSetter.convertListThemeToListColor
 
-    def getGraph(self, list_dict_of_expenses, type_graph):  # main of class
+    def getGraph(self, list_dict_of_expenses, type_graph, range_date):  # main of class
         if type_graph == "scatter-graph-all":
-            graph = self.scatterGraph(list_dict_of_expenses)
+            graph = self.scatterGraph(list_dict_of_expenses, range_date)
             return graph
 
         if type_graph == "pie-chart-category":
@@ -17,16 +18,18 @@ class ListDictToGraph:  # add metadata
             return graph
 
         if type_graph == "mean-bar":
-            graph = self.meanGraph(list_dict_of_expenses)
+            graph = self.meanGraph(list_dict_of_expenses, range_date)
             return graph
 
         if type_graph == "food-bar":
-            graph = self.foodGraph(list_dict_of_expenses)
+            graph = self.foodGraph(list_dict_of_expenses, range_date)
             return graph
 
         raise ValueError
 
-    def scatterGraph(self, list_dict_of_expenses):  # Needs list expenses by theme
+    def scatterGraph(
+        self, list_dict_of_expenses, range_date
+    ):  # Needs list expenses by theme
         list_data = []
         for dict_exp in list_dict_of_expenses:
             dict_exp["mode"] = "markers"
@@ -38,7 +41,7 @@ class ListDictToGraph:  # add metadata
             "layout": {
                 "title": {"text": "Expenses by category"},
                 "yaxis": {"type": "log", "title": "Expenses (euros)"},
-                "xaxis": {"title": "Day"},
+                "xaxis": {"title": "Day", "range": range_date},
             },
         }
         return fig_data
@@ -57,7 +60,7 @@ class ListDictToGraph:  # add metadata
         return fig_data
 
     def meanGraph(
-        self, list_dict_of_expenses
+        self, list_dict_of_expenses, range_date
     ):  # Needs list by week of the expenses by theme
         list_data = []
         for dict_exp in list_dict_of_expenses:
@@ -70,13 +73,13 @@ class ListDictToGraph:  # add metadata
                 "title": {"text": "Total expenses by week"},
                 "barmode": "stack",
                 "yaxis": {"title": "Expenses (euros)"},
-                "xaxis": {"title": "Day"},
+                "xaxis": {"title": "Day", "range": range_date},
             },
         }
         return fig_data
 
     def foodGraph(
-        self, list_dict_of_expenses
+        self, list_dict_of_expenses, range_date
     ):  # Needs list by week of the expenses of alimentaire by theme
         list_data = []
         for dict_exp in list_dict_of_expenses:
@@ -89,7 +92,7 @@ class ListDictToGraph:  # add metadata
                 "title": {"text": "Expenses by week in alimentary"},
                 "barmode": "stack",
                 "yaxis": {"title": "Expenses (euros)"},
-                "xaxis": {"title": "Day"},
+                "xaxis": {"title": "Day", "range": range_date},
             },
         }
         return fig_data
@@ -112,7 +115,7 @@ class ColorSetter:
                 list_colors.append(self.colors_json[theme])
             else:
                 list_colors.append("")
-                print("not in list")
+                logging.debug(f"The theme {theme} is not in the colors_json")
         return list_colors
 
     def _getAllAvailableThemes(self):
@@ -148,6 +151,5 @@ class ColorSetter:
         list_available_colors += other_colors
         len_themes = len(list_themes)
         if len_colors < len_themes:
-            print("Not enough color")
-            raise Exception
+            raise Exception("Not enough colors")
         return list_available_colors
