@@ -2,8 +2,6 @@ import dash_html_components as html
 import dash_core_components as dcc
 from dash.dependencies import Input, Output, State
 
-import wrapper_dash.vue_links_other_vues as vue_links_other_vues
-
 import wrapper_dash.reusable_components.reusable_inputs as reusable_inputs
 import wrapper_dash.reusable_components.reusable_links as reusable_links
 

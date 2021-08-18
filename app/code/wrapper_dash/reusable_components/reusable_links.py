@@ -2,12 +2,12 @@ import dash_html_components as html
 import dash_core_components as dcc
 from dash.dependencies import Input, State
 
-import wrapper_dash.reusable_components.reusable_styles as reusable_styles
+# from wrapper_dash.reusable_components.reusable_styles import *
 
 
 class ReusableSingleLinks:
     def __init__(self):
-        self.ReusableStyles = reusable_styles.ReusableStyles()
+        pass
 
     def getLinkPageHome(self):
         link_page_home = html.Button("Home", className="header-button")
@@ -63,7 +63,7 @@ class ReusableLinks(ReusableSingleLinks):
         logo_div = html.A(children=logo, href="/assets/notme.gif")
         return logo_div
 
-    def getHeaderSite(self):
+    def getNavDivSite(self):
         links_div = self.getLinksDiv()
 
         header_site = html.Header(children=[links_div], style={"display": "flex"})

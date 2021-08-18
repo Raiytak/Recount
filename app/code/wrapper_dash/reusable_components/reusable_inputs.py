@@ -1,7 +1,8 @@
 import dash_html_components as html
 import dash_core_components as dcc
-from dash.dependencies import Input, State
+from dash.dependencies import Input, Output, State
 
+from wrapper_dash.reusable_components.reusable_styles import *
 
 import datetime
 from dateutil.relativedelta import *
@@ -35,8 +36,11 @@ class ReusableSingleInputs(UniqueReusableSingleInputs):
 
         self.date_div_period_id = self.name_vue + "input-radio"
         self.date_div_date_id = self.name_vue + "input-date"
-        self.import_excel_id = self.name_vue + "upload-data"
+        self.import_excel_id = self.name_vue + "import-excel"
         self.submit_id = self.name_vue + "submit-button"
+        self.reset_user = self.name_vue + "reset-user"
+        self.export_excel = self.name_vue + "export-excel"
+        self.export_excel_button = self.name_vue + "export-excel-button"
 
         self.location_id = "default-url"
 
@@ -64,7 +68,7 @@ class ReusableSingleInputs(UniqueReusableSingleInputs):
                 {"label": "Week", "value": "week"},
                 {"label": "Month", "value": "month"},
                 {"label": "Quarter", "value": "semestre"},
-                # {"label":"Annual", "value":"annual"}
+                {"label": "Annual", "value": "annual"},
             ],
             value="month",
         )
@@ -73,10 +77,10 @@ class ReusableSingleInputs(UniqueReusableSingleInputs):
     def getPeriodCallback(self):
         return Input(self.date_div_period_id, "value")
 
-    def getImportExcelDiv(self):
+    def getImportExcelButton(self):
         excel_input = dcc.Upload(
             id=self.import_excel_id,
-            children=html.Div("Import excel File"),
+            children=html.Div("Upload my Excel"),
             multiple=False,
         )
         excel_input_div = html.Button(excel_input)
@@ -88,6 +92,33 @@ class ReusableSingleInputs(UniqueReusableSingleInputs):
 
     def getImportExcelStateCallback(self):
         callback = State(self.import_excel_id, "children")
+        return callback
+
+    def getResetUserData(self):
+        reset_button = html.Button(
+            id=self.reset_user, children="Reset My Data", n_clicks=0
+        )
+        return reset_button
+
+    def getResetUserDataCallback(self):
+        callback = Input(self.reset_user, "n_clicks")
+        return callback
+
+    def getExportExcelButton(self):
+        reset_button = html.Div(
+            [
+                html.Button("Download Excel", id=self.export_excel_button),
+                dcc.Download(id=self.export_excel),
+            ]
+        )
+        return reset_button
+
+    def getExportExcelInputCallback(self):
+        callback = Input(self.export_excel_button, "n_clicks")
+        return callback
+
+    def getExportExcelOutputCallback(self):
+        callback = Output(self.export_excel, "data")
         return callback
 
     def getUpdateDataDiv(self):
@@ -145,24 +176,27 @@ class ReusableInputs(ReusableSingleInputs):
         periode_input = self.getPeriodDiv()
         date_input = self.getDateDiv()
         date_input_div = html.Div(
-            children=[date_input, periode_input],
-            style={"display": "flex", "justify-content": "space-between"},
+            children=[date_input, periode_input], style=styleSpaceBetween()
         )
         return date_input_div
 
     def getDatePeriodCallbacks(self):
-        list_callbacks = [
-            self.getDateCallback(),
-            self.getPeriodCallback(),
-        ]
+        list_callbacks = [self.getDateCallback(), self.getPeriodCallback()]
         return list_callbacks
 
-    def getDatePeriodAndExcelDiv(self):
+    def getDashboardInputsDiv(self):
         date_period_div = self.getDatePeriodDiv()
-        import_excel_div = self.getImportExcelDiv()
+        reset_button = self.getResetUserData()
+        import_excel = self.getImportExcelButton()
+        export_excel = self.getExportExcelButton()
+        import_export_div = html.Div(
+            children=[import_excel, export_excel], style=syleFlexColumn()
+        )
+        buttons_div = html.Div(
+            children=[reset_button, import_export_div], style=syleFlex()
+        )
         all_divs = html.Div(
-            children=[date_period_div, import_excel_div],
-            style={"display": "flex", "justify-content": "space-between"},
+            children=[date_period_div, buttons_div], style=styleSpaceBetween()
         )
         return all_divs
 
@@ -174,3 +208,9 @@ class ReusableInputs(ReusableSingleInputs):
         list_callbacks.append(import_excel_callbacks)
 
         return list_callbacks
+
+    def getExportResetExcelCallbacks(self):
+        export_callback = self.getExportExcelInputCallback()
+        reset_callback = self.getResetUserDataCallback()
+
+        return [reset_callback, export_callback]

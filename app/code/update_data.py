@@ -191,3 +191,10 @@ def updateAll(username):
 
     updateCleanTable(username)
     logging.info(paddedLogMessage(""))
+
+
+def removeAllDataForUser(username):
+    rawTable.dumpTableForUser(username)
+    repayTable.dumpTableForUser(username)
+    tripTable.dumpTableForUser(username)
+    cleanTable.dumpTableForUser(username)

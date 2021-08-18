@@ -21,17 +21,23 @@ class ImportExcelFileSaver:
     def saveImportedFile(self, username, file_imported):
         # If there is nothing to save, the function stops
         if file_imported != None:
+            print(file_imported[100])
             logging.info(paddedLogMessage(f"{username}: Importing file ..."))
             try:
                 content_type, buffer_content = self.decodeImportedFile(file_imported)
-                file_data = buffer_content.read()
-                self.checkIsXlsxFile(content_type)
-                self.saveContentStringIntoXlsxFile(username, file_data)
+                print(content_type)
+                raise TypeError
+                if "xlsx" not in content_type:
+                    pass
+                else:
+                    file_data = buffer_content.read()
+                    self.checkIsXlsxFile(content_type)
+                    self.saveContentStringIntoXlsxFile(username, file_data)
 
-                update_data.updateAll(username)
-                logging.info(
-                    paddedLogMessage(f"{username}: File imported, update done")
-                )
+                    update_data.updateAll(username)
+                    logging.info(
+                        paddedLogMessage(f"{username}: File imported, update done")
+                    )
 
             except TypeError:
                 logging.error(

@@ -50,7 +50,7 @@ class AppDash:
         self.vueTest = vue_test.AppDash(self.app)
 
     def setVueIndex(self):
-        self.app.layout = self.vueIndex.setThisEmptyDefaultVue()
+        self.app.layout = self.vueIndex.setDefaultVue()
 
     # You can add a vue by inserting the desirated vue and path here
     def setCallback(self):
@@ -60,8 +60,7 @@ class AppDash:
         def display_page(pathname):
             username = user_identification.getUsername()
             dash.callback_context.response.set_cookie("username", username)
-
-            if pathname == "/" and len(pathname) == 1:
+            if pathname == "/":
                 return self.vueIndex.setThisVue()
             elif pathname == "/home":
                 return self.vueHome.setThisVue()

@@ -1,6 +1,7 @@
 import dash_html_components as html
 import dash_core_components as dcc
 from dash.dependencies import Output, State
+from wrapper_dash.reusable_components.reusable_styles import *
 
 
 class ReusableGraphs:
@@ -49,15 +50,13 @@ class ReusableGraphs:
         scatter_graph = self.getScatterGraphDiv()
         pie_chart_graph = self.getPieChartGraphDiv()
         upper_graphs = html.Div(
-            [scatter_graph, pie_chart_graph],
-            style={"display": "flex", "justify-content": "space-around"},
+            [scatter_graph, pie_chart_graph], style=styleSpaceAround()
         )
 
         mean_bar_graph = self.getMeanBarGraphDiv()
         food_bar_graph = self.getFoodBarGraphDiv()
         bottom_graphs = html.Div(
-            [mean_bar_graph, food_bar_graph],
-            style={"display": "flex", "justify-content": "space-around"},
+            [mean_bar_graph, food_bar_graph], style=styleSpaceAround()
         )
 
         dashboard_div = html.Div([upper_graphs, bottom_graphs])

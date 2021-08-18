@@ -12,6 +12,7 @@ import os
 import logging
 
 from accessors.path_files import *
+from accessors.data_encryption import ExcelEncryption
 
 
 class AccessExcel:
@@ -47,6 +48,9 @@ class AccessExcel:
         except FileNotFoundError:
             pass
 
+    def removeImportedExcel(self):
+        self.removeFile(self.ExcelPaths.importedExcelPath())
+
     def removeCleanedExcel(self):
         self.removeFile(self.ExcelPaths.cleanedExcelPath())
 
@@ -56,6 +60,7 @@ class AccessExcel:
     def removeAllExcels(self):
         self.removeRawExcel()
         self.removeCleanedExcel()
+        self.removeImportedExcel()
 
     def removeAllOldFiles(self):
         if self.ExcelPaths.rawExcelExists() == True:
@@ -181,6 +186,7 @@ class AccessUserFiles:
         self.UserDataPath = UserDataPath(username)
         ROOT_PATH = DATA_USERS_PATH / username
         self.AccessExcel = AccessExcel(ROOT_PATH)
+        self.ExcelEncryption = ExcelEncryption()
 
         self.createUserFolders()
         # self.removeOlderFiles()
@@ -219,3 +225,6 @@ class AccessUserFiles:
         self.AccessExcel.copyImportedExcelIfExists()
         self.AccessExcel.useExampleIfNoRawExcel()
         # self.AccessExcel.updateUserExcel()
+
+    def removeExcelsOfUser(self):
+        self.AccessExcel.removeAllExcels()
