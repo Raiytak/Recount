@@ -1,4 +1,5 @@
 import dash
+from accessors.path_files import FilesPaths
 
 
 def getIdButtonClicked():

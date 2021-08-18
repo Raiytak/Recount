@@ -71,6 +71,7 @@ class ReusableSingleInputs(UniqueReusableSingleInputs):
                 {"label": "Annual", "value": "annual"},
             ],
             value="month",
+            style={"font-size": "medium"},
         )
         return periode_input
 

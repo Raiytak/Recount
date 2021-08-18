@@ -49,6 +49,8 @@ class AppDash:
         self.vueDashboardHome = vue_dashboard_home.AppDash(self.app)
         self.vueTest = vue_test.AppDash(self.app)
 
+        # self.app.css.append_css({"external_url": "static/main.css"})
+
     def setVueIndex(self):
         self.app.layout = self.vueIndex.setDefaultVue()
 
@@ -67,6 +69,9 @@ class AppDash:
             elif pathname == "/dashhome":
                 update_data.updateAll(username)
                 return self.vueDashboardHome.setThisVue()
+            elif pathname == "/reset":
+                update_data.removeAllDataForUser(username)
+                return "All data has been reseted :)"
             elif pathname == "/test":
                 return self.vueTest.setThisVue()
             else:

@@ -2,6 +2,7 @@ from genericpath import exists
 import logging
 from logs.logs import paddedLogMessage
 from accessors.access_config import AccessConfig
+from accessors.access_files import AccessUserFiles
 
 
 def updatingByRemovingAllExistingRowsOfTable(wrapperTable):
@@ -194,6 +195,8 @@ def updateAll(username):
 
 
 def removeAllDataForUser(username):
+    myAccessUserFiles = AccessUserFiles(username)
+    myAccessUserFiles.removeExcelsOfUser()
     rawTable.dumpTableForUser(username)
     repayTable.dumpTableForUser(username)
     tripTable.dumpTableForUser(username)

@@ -26,18 +26,14 @@ class ImportExcelFileSaver:
             try:
                 content_type, buffer_content = self.decodeImportedFile(file_imported)
                 print(content_type)
-                raise TypeError
-                if "xlsx" not in content_type:
-                    pass
-                else:
-                    file_data = buffer_content.read()
-                    self.checkIsXlsxFile(content_type)
-                    self.saveContentStringIntoXlsxFile(username, file_data)
+                file_data = buffer_content.read()
+                self.checkIsXlsxFile(content_type)
+                self.saveContentStringIntoXlsxFile(username, file_data)
 
-                    update_data.updateAll(username)
-                    logging.info(
-                        paddedLogMessage(f"{username}: File imported, update done")
-                    )
+                update_data.updateAll(username)
+                logging.info(
+                    paddedLogMessage(f"{username}: File imported, update done")
+                )
 
             except TypeError:
                 logging.error(
