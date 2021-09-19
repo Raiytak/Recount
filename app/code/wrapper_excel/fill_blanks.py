@@ -9,22 +9,20 @@
 # meaning that this is the most probable one.
 
 import numpy as np
-import pandas as pd
 
-import stop_words
-
+from accessors.access_files import AccessDescrToTheme
 
 
-class IntelligentFill():
-    def __init__(self, AccessDescrToTheme):
-        self._descr_to_category_json = AccessDescrToTheme.getJsonDescrToTheme()      
-    
+class IntelligentFill:
+    def __init__(self):
+        self._descr_to_category_json = AccessDescrToTheme().getJsonDescrToTheme()
+
     def intelligentFillBlankCategoryUsingCompany(self, dataframe):
         if self._descr_to_category_json != {}:
             dataframe = self.fillBlanksUsingCompany(dataframe)
             # dataframe = self.fillBlanksUsingDescription(dataframe) #TODO
         return dataframe
-        
+
     def fillBlanksUsingCompany(self, dataframe):
         def fillRowUsingEntreprise(row):
             if row["Category"] == str(np.nan):
@@ -36,9 +34,10 @@ class IntelligentFill():
                 theme = self.convertCompanyToCategoryAndTheme(company, "Theme")
                 row["Theme"] = theme
             return row
+
         dataframe = dataframe.apply(fillRowUsingEntreprise, axis=1)
         return dataframe
-    
+
     def convertCompanyToCategoryAndTheme(self, company, c_t):
         conv_json = self._descr_to_category_json
         best_theme = str(np.nan)
@@ -50,16 +49,15 @@ class IntelligentFill():
                 if themes_json != {}:
                     best_theme = max(themes_json, key=themes_json.get)
             except KeyError:
-                pass #Means that there is no information for this company
+                pass  # Means that there is no information for this company
         return best_theme
 
 
+class UpdateConversionJson:
+    def __init__(self):
+        self.AccessDescrToTheme = AccessDescrToTheme()
+        self._descr_to_category_json = self.AccessDescrToTheme.getJsonDescrToTheme()
 
-class UpdateConversionJson():
-    def __init__(self, AccessDescrToTheme):
-        self.AccessDescrToTheme = AccessDescrToTheme
-        self._descr_to_category_json = AccessDescrToTheme.getJsonDescrToTheme()
-    
     def updateConversionJsonUsingDataframe(self, dataframe):
         list_c_d = ["Company", "Description"]
         company = "Company"
@@ -70,37 +68,52 @@ class UpdateConversionJson():
                 theme_or_subtheme = index[0]
                 entr_or_descr = index[1]
                 value = int(data[index])
-                self._updateConversionEntrepriseJson(entr_or_descr, theme_or_subtheme, value, cat_or_theme)
+                self._updateConversionEntrepriseJson(
+                    entr_or_descr, theme_or_subtheme, value, cat_or_theme
+                )
         self.AccessDescrToTheme.updateDescrConvJson(self._descr_to_category_json)
-        
-    
+
     def _updateConversionEntrepriseJson(self, company, c_t, value, type_output):
-        #type_output = "c_t" or "Theme"
+        # type_output = "c_t" or "Theme"
         if company != str(np.nan):
             try:
-                self._descr_to_category_json["Company"][company][type_output][c_t] += value
+                self._descr_to_category_json["Company"][company][type_output][
+                    c_t
+                ] += value
             except KeyError:
                 try:
-                    self._descr_to_category_json["Company"][company][type_output][c_t] = value
+                    self._descr_to_category_json["Company"][company][type_output][
+                        c_t
+                    ] = value
                 except KeyError:
                     try:
-                        self._descr_to_category_json["Company"][company][type_output] = {}
-                        self._descr_to_category_json["Company"][company][type_output][c_t] = value
+                        self._descr_to_category_json["Company"][company][
+                            type_output
+                        ] = {}
+                        self._descr_to_category_json["Company"][company][type_output][
+                            c_t
+                        ] = value
                     except KeyError:
                         try:
                             self._descr_to_category_json["Company"][company] = {}
-                            self._descr_to_category_json["Company"][company][type_output] = {}
-                            self._descr_to_category_json["Company"][company][type_output][c_t] = value
+                            self._descr_to_category_json["Company"][company][
+                                type_output
+                            ] = {}
+                            self._descr_to_category_json["Company"][company][
+                                type_output
+                            ][c_t] = value
                         except KeyError:
                             self._descr_to_category_json["Company"] = {}
                             self._descr_to_category_json["Company"][company] = {}
-                            self._descr_to_category_json["Company"][company][type_output] = {}
-                            self._descr_to_category_json["Company"][company][type_output][c_t] = value
-        
-        
+                            self._descr_to_category_json["Company"][company][
+                                type_output
+                            ] = {}
+                            self._descr_to_category_json["Company"][company][
+                                type_output
+                            ][c_t] = value
+
     # def getListStopWords(self):
     #     en_stop_words = stop_words.get_stop_words("english")
     #     fr_stop_words = stop_words.get_stop_words("french")
     #     stop_words = en_stop_words + fr_stop_words
     #     return stop_words
-    

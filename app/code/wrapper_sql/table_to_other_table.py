@@ -1,130 +1,160 @@
-import numpy as np
-import pandas as pd
+class RawToRepayement:
+    def __init__(self, rawTable, repayTable, username):
+        self.rawTable = rawTable
+        self.repayTable = repayTable
+        self.username = username
 
+    def __enter__(self):
+        pass
+        # self.myConnection, self.cursor = self._connect()
 
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        pass
+        # self._end_connection()
 
-class RawToRepayement():
-    def __init__(self, wrapper_table_raw, wrapper_table_repayement):
-        self.table_raw = wrapper_table_raw
-        self.table_rep = wrapper_table_repayement
-        self.name = "rawToRepayement"
-        
     def selectRepayementRows(self):
-        request = "SELECT * FROM & where category = 'reimbursement'"
-        response = self.table_raw.select(request)
+        request = (
+            "SELECT * FROM & where category = 'reimbursement' AND username = '"
+            + self.username
+            + "'"
+        )
+        response = self.rawTable.select(request)
         return response
-    
+
     def insertAllReqs(self, requests):
         for req in requests:
-            self.table_rep.insert(req)
-            
+            self.repayTable.insert(req)
+
     def selectRepayementIds(self):
         request = "SELECT ID FROM &"
-        response = self.table_rep.select(request)
+        response = self.repayTable.select(request)
         return response
-        
+
     def deleteRepayementRowsInRaw(self, requests):
         for req in requests:
-            self.table_raw.deleteRowId(req)
-            
-    
+            self.rawTable.deleteRowId(req)
+
     def getEquivalentColumns(self):
         # "origin":["destination"]
         equivalent_columns = {
-            "username":["username"],
-            "ID":["ID"], "theme":["ID_pay_orig"],
-            "date":["date"], "amount":["amount"]
+            "username": ["username"],
+            "ID": ["ID"],
+            "theme": ["ID_pay_orig"],
+            "date": ["date"],
+            "amount": ["amount"],
         }
         return equivalent_columns
 
 
-class RawToTrip():
-    def __init__(self, wrapper_table_raw, wrapper_table_trip):
-        self.table_raw = wrapper_table_raw
-        self.table_trip = wrapper_table_trip
-        self.name = "rawToTrip"
-        
+class RawToTrip:
+    def __init__(self, rawTable, tripTable, username):
+        self.rawTable = rawTable
+        self.tripTable = tripTable
+        self.username = username
+
+    def __enter__(self):
+        pass
+        # self.myConnection, self.cursor = self._connect()
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        pass
+        # self._end_connection()
+
     def selectTripRows(self):
-        request = "SELECT * FROM & where trip IS NOT NULL"
-        response = self.table_raw.select(request)
+        request = (
+            "SELECT * FROM & WHERE trip IS NOT NULL AND username = '"
+            + self.username
+            + "'"
+        )
+        response = self.rawTable.select(request)
         return response
-    
+
     def insertAllReqs(self, requests):
         for req in requests:
-            self.table_trip.insert(req)
-            
+            self.tripTable.insert(req)
+
     def selectTripIds(self):
-        request = "SELECT ID FROM &"
-        response = self.table_trip.select(request)
+        request = "SELECT ID FROM & WHERE username = '" + self.username + "'"
+        response = self.tripTable.select(request)
         return response
-        
+
     def deleteTripRowsInRaw(self, requests):
         for req in requests:
-            self.table_raw.deleteRowId(req)
-            
-            
+            self.rawTable.deleteRowId(req)
+
     def getEquivalentColumns(self):
         # "origin":["destination"]
-        columns = self.table_raw.getNameColumns()
-        equivalent_columns = {col:[col] for col in columns}
+        columns = self.rawTable.getNameColumns()
+        equivalent_columns = {col: [col] for col in columns}
         return equivalent_columns
 
+    def dumpTripTableForUser(self, username):
+        self.tripTable.dumpTableForUser(username)
+
+    def insertAllReqsInTrip(self, list_request_sql):
+        self.tripTable.insertAllReqs(list_request_sql)
 
 
-class RawToClean():
-    def __init__(self, wrapper_table_raw, wrapper_table_clean):
-        self.table_raw = wrapper_table_raw
-        self.table_clean = wrapper_table_clean
-        self.name = "rawToClean"
-        
+class RawToClean:
+    def __init__(self, rawTable, cleanTable, username):
+        self.rawTable = rawTable
+        self.cleanTable = cleanTable
+        self.username = username
+
+    def __enter__(self):
+        pass
+        # self.myConnection, self.cursor = self._connect()
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        pass
+        # self._end_connection()
+
     def selectAllRemainingRowsInRaw(self):
         request = "SELECT * FROM &"
-        response = self.table_raw.select(request)
+        response = self.rawTable.select(request)
         return response
-    
+
     def insertAllReqs(self, requests):
         for req in requests:
-            self.table_clean.insert(req)
-            
+            self.cleanTable.insert(req)
+
     def getEquivalentColumns(self):
         # "origin":["destination"]
-        columns = self.table_clean.getNameColumns()
-        equivalent_columns = {col:[col] for col in columns}
+        columns = self.cleanTable.getNameColumns()
+        equivalent_columns = {col: [col] for col in columns}
         return equivalent_columns
-    
-    
-    
-class TripToClean():
-    def __init__(self, wrapper_table_trip, wrapper_table_clean):
-        self.table_trip = wrapper_table_trip
-        self.table_clean = wrapper_table_clean
-        self.name = "tripToClean"
-        
+
+
+class TripToClean:
+    def __init__(self, tripTable, cleanTable, username):
+        self.tripTable = tripTable
+        self.cleanTable = cleanTable
+        self.username = username
+
+    def __enter__(self):
+        pass
+        # self.myConnection, self.cursor = self._connect()
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        pass
+        # self._end_connection()
+
     def selectAllRemainingRowsInTrip(self):
-        request = "SELECT * FROM &"
-        response = self.table_trip.select(request)
+        request = "SELECT * FROM & WHERE username = '" + self.username + "'"
+        response = self.tripTable.select(request)
         return response
-    
+
     def insertAllReqs(self, requests):
-        self.table_clean.dumpTable()
+        self.cleanTable.dumpTable()
         for req in requests:
-            self.table_clean.insert(req)
-            
+            self.cleanTable.insert(req)
+
     def insertAllReqs(self, requests):
         for req in requests:
-            self.table_clean.insert(req)
-            
-            
+            self.cleanTable.insert(req)
+
     def getEquivalentColumns(self):
         # "origin":["destination"]
-        columns = self.table_clean.getNameColumns()
-        equivalent_columns = {col:[col] for col in columns}
+        columns = self.cleanTable.getNameColumns()
+        equivalent_columns = {col: [col] for col in columns}
         return equivalent_columns
-    
-
-
-    
-    
-
-    
-    

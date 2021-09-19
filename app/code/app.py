@@ -1,125 +1,100 @@
 import dash
-import dash_auth
+from wrapper_dash.facilitator_dash.encrypted_auth import EncryptedAuth
 from dash.dependencies import Input, Output
 
-import update_db
+from logs import logs
 
-import communication_db_user
-DateToDataframe = communication_db_user.DateToDataframe()
+logs.startLogs()
+import logging
 
+import update_data
 
 # Import the config file
-import config.access_config as access_config
-myAccessConfig = access_config.AccessConfig()
-import config.access_users as access_users
-myAccessUsers = access_users.AccessUsers()
+from accessors.access_config import AccessConfig
 
-# Get the different paths of the files used in the app.
-import accessors.path_docs as path_docs
-myExcelPath = path_docs.ExcelPath()
-myCatThemeAuthPath = path_docs.CategoryAndThemeAuthorizedPath()
-myNotebookExcelConfigPath = path_docs.NotebookConfigPath()
-myStandardButtonsConfigPath = path_docs.StandardButtonsConfigPath()
+myAccessConfig = AccessConfig()
+SSL_CONTEXT = myAccessConfig.getSSLContext()
 
-# Access the documents, to get the values, dataframe and update the docs. Need the paths to work.
-import accessors.access_docs as access_docs
-myAccessExcel = access_docs.AccessExcel(myExcelPath)
-myAccessCTAuthorized = access_docs.AccessCTAuthorized(myCatThemeAuthPath)
-myAccessNotebookExcelConfig = access_docs.AccessNotebookConfig(myNotebookExcelConfigPath)
-myAccessStandardButtonsConfig = access_docs.AccessStandardButtonsConfig(myStandardButtonsConfigPath)
-authorizedCT_json = myAccessCTAuthorized.getJson()
+from accessors.access_users import AccessUsers
 
-import wrapper_excel.convert_excel_to_df as convert_excel_to_df
-myExcelToDataframe = convert_excel_to_df.ExcelToDataframe(myAccessExcel)
+access_users = AccessUsers()
 
+# from wrapper_dash.facilitator_dash.save_config import (
+#     ConfigNotebookExcelSaver,
+#     StandardButtonsConfigSaver,
+# )
 
-# Objects used to clean and convert the data into dataframe and objects readable for the dash app
-# import wrapper_dash.facilitator_dash.prepare_dashboard as prepare_dashboard
-import wrapper_dash.facilitator_dash.convert_df_to_ld as convert_df_to_ld
-DataframeToListDict = convert_df_to_ld.DataframeToListOfDicts()
-import wrapper_dash.facilitator_dash.convert_ld_to_graph as convert_ld_to_graph
-ListDictToGraph = convert_ld_to_graph.ListDictToGraph(authorizedCT_json)
-import wrapper_dash.facilitator_dash.main_convert_df_to_graph as main_convert_df_to_graph
-ConvertDfToGraph = main_convert_df_to_graph.DataframeToGraph(DataframeToListDict, ListDictToGraph)
-
-# Object used to save an excel uploaded by the user
-import wrapper_dash.facilitator_dash.import_excel as import_excel
-ImportExcelFileSaver = import_excel.ImportExcelFileSaver(myExcelToDataframe, update_db)    
-
-import wrapper_dash.facilitator_dash.save_config as save_config
-ConfigNotebookExcelSaver = save_config.ConfigNotebookExcelSaver(myAccessNotebookExcelConfig) 
-StandardButtonsConfigSaver = save_config.StandardButtonsConfigSaver(myAccessStandardButtonsConfig)     
-
-
+# ConfigNotebookExcelSaver = ConfigNotebookExcelSaver()
+# StandardButtonsConfigSaver = StandardButtonsConfigSaver()
 
 from wrapper_dash import vue_index, vue_home
-from wrapper_dash import vue_dashboard_home, vue_categories
-from wrapper_dash import vue_notebook_excel
+from wrapper_dash import vue_dashboard_home
 from wrapper_dash import vue_test
 
-import wrapper_dash.facilitator_dash.user_from_flask as user_from_flask
-
+import wrapper_dash.facilitator_dash.user_identification as user_identification
 
 # Dash Application
-class AppDash():
+class AppDash:
     def __init__(self):
-        external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
-        self.app = dash.Dash(__name__, external_stylesheets=external_stylesheets, suppress_callback_exceptions=True)
+        external_stylesheets = ["https://codepen.io/chriddyp/pen/bWLwgP.css"]
+        self.app = dash.Dash(
+            __name__,
+            external_stylesheets=external_stylesheets,
+            suppress_callback_exceptions=True,
+        )
         self.setAuthentification()
 
-        self.vueIndex = vue_index.AppDash(self.app)
-        self.vueHome = vue_home.AppDash(self.app)
-        self.vueDashboardHome = vue_dashboard_home.AppDash(self.app, DateToDataframe, ConvertDfToGraph, ImportExcelFileSaver)
-        self.vueCategoriesFile = vue_categories.AppDash(self.app, myAccessCTAuthorized, StandardButtonsConfigSaver)
+        self.vue_index = vue_index.AppDash(self.app)
+        self.vue_home = vue_home.AppDash(self.app)
+        self.vue_dashboard_home = vue_dashboard_home.AppDash(self.app)
+        self.vue_test = vue_test.AppDash(self.app)
 
-        self.vueNotebookExcel = vue_notebook_excel.AppDash(self.app, myExcelToDataframe, ImportExcelFileSaver, ConfigNotebookExcelSaver, StandardButtonsConfigSaver)
-    
-        self.vueTest = vue_test.AppDash(self.app)
+        # self.app.css.append_css({"external_url": "static/main.css"})
 
-
-
-    def setVueIndex(self):
-        self.app.layout = self.vueIndex.setThisEmptyDefaultVue()
+    def setvue_index(self):
+        self.app.layout = self.vue_index.setDefaultVue()
 
     # You can add a vue by inserting the desirated vue and path here
     def setCallback(self):
-        @self.app.callback(Output('default-page-content', 'children'),
-                    Input('default-url', 'pathname'))
+        @self.app.callback(
+            Output("default-page-content", "children"), Input("default-url", "pathname")
+        )
         def display_page(pathname):
-            username = user_from_flask.getUsername()
-            dash.callback_context.response.set_cookie('username', username)
-
-            if pathname == '/' and len(pathname) == 1:
-                return self.vueIndex.setThisVue()
-            elif pathname == '/home':
-                return self.vueHome.setThisVue()
-            elif pathname == '/dashhome':
-                update_db.updateAll(username)  
-                return self.vueDashboardHome.setThisVue()
-            elif pathname == '/categories':
-                return self.vueCategoriesFile.setThisVue()
-            elif pathname == '/excel':
-                return self.vueNotebookExcel.setThisVue()
-            elif pathname == '/test':
-                return self.vueTest.setThisVue()
+            username = user_identification.getUsername()
+            dash.callback_context.response.set_cookie("username", username)
+            if pathname == "/":
+                return self.vue_index.setThisVue()
+            elif pathname == "/home":
+                return self.vue_home.setThisVue()
+            elif pathname == "/dashhome":
+                update_data.updateAll(username)
+                return self.vue_dashboard_home.setThisVue()
+            elif pathname == "/reset":
+                update_data.removeAllDataForUser(username)
+                return "All data has been reseted :)"
+            elif pathname == "/test":
+                return self.vue_test.setThisVue()
             else:
-                return '404'
-            pass
+                return "404 Page not found."
 
-
-    
     def launch(self):
-        self.setVueIndex()
+        self.setvue_index()
         self.setCallback()
-        print("-#- Application Running -#-\n")
         self.run()
+
     def run(self):
         self.app.run_server(debug=True)
-        
+        # self.app.run_server(debug=False, ssl_context=SSL_CONTEXT)
+        # self.app.run_server(debug=True, ssl_context="adhoc")
 
     def setAuthentification(self):
-        VALID_USERNAME_PASSWORD_PAIRS = myAccessUsers.getUsers()
-        auth = dash_auth.BasicAuth(
-            self.app,
-            VALID_USERNAME_PASSWORD_PAIRS
-        )
+        VALID_USERNAME_PASSWORD_PAIRS = access_users.getUsers()
+        EncryptedAuth(self.app, VALID_USERNAME_PASSWORD_PAIRS)
+
+
+# --- MAIN PART ---
+if __name__ == "__main__":
+    # --- INIT ---
+    logging.info("-#- Application Running -#-\n")
+    myApp = AppDash()
+    myApp.launch()
