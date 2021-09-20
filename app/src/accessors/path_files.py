@@ -10,14 +10,14 @@ import re
 from pathlib import Path
 
 
-def _getCodePath():
+def _getSrcPath():
     root_path = os.path.abspath(__file__)
     app_path = Path(re.sub("(app).*", "app", root_path))
-    code_path = app_path / "code"
+    code_path = app_path / "src"
     return code_path
 
 
-CODE_PATH = _getCodePath()
+CODE_PATH = _getSrcPath()
 if CODE_PATH not in sys.path:
     sys.path = [CODE_PATH] + sys.path
 DATA_PATH = CODE_PATH / "data"

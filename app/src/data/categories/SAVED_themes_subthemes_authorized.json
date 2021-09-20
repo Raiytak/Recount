@@ -1,0 +1,18 @@
+{
+    "alimentaire": ["course", "gourmandise", "restaurant", "patisserie", "test_alimentaire", "alcool"],
+
+    "equipement": ["cuisine", "sport", "meuble", "litterie", "habit", "telephone", "informatique", "autre"],
+
+    "logement": ["loyer","hotel", "lessive"],
+
+    "transport": ["bus", "avion", "taxi", "train", "voiture", "autorisation"],
+
+    "sante": ["assurance", "medecin", "dentiste", "osteopathe", "urgence", "hopital", "creme"],
+
+    "loisir": ["activite", "jeu_video", "jeu_de_societe", "livre", "bar", "cinema", "sortie", "visite", "streaming"],
+
+    "ecole": ["inscription", "fourniture"],
+
+    "autre": ["poste", "cadeau", "imprimante", "coiffeur", "retrait", "autorisation"]
+
+}

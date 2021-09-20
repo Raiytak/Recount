@@ -79,10 +79,15 @@ class ExcelEncryption(DataEncryption):
         super().__init__(excel_key)
 
     def getDataFrom(self, path_excel):
-        if xlrd.inspect_format(path_excel) == None:
-            return self.getDataFromEncryptedFileAtPath(path_excel)
-        else:
-            return self.readBinaryDataFrom(path_excel)
+        try:
+            if xlrd.inspect_format(path_excel) == None:
+                return self.getDataFromEncryptedFileAtPath(path_excel)
+            else:
+                return self.readBinaryDataFrom(path_excel)
+        except AttributeError:
+            import pdb
+
+            pdb.set_trace()
 
     def encryptDataframe(self, dataframe, path_excel):
         buffer = io.BytesIO()

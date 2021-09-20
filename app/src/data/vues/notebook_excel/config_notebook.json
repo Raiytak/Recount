@@ -1,0 +1,12 @@
+{
+    "columns_name": {
+        "ID": "ID",
+        "Expense Euros": "D\u00e9penses en Euros",
+        "Expense Dollars": "D\u00e9penses en Dollars",
+        "Description": "Description",
+        "Date": "Date",
+        "Category": "Cat\u00e9gorie",
+        "Type": "Moyen de payement",
+        "Trip": "Voyage"
+    }
+}

@@ -2,6 +2,8 @@ import dash
 from wrapper_dash.facilitator_dash.encrypted_auth import EncryptedAuth
 from dash.dependencies import Input, Output
 
+import flask
+
 from logs import logs
 
 logs.startLogs()
@@ -35,12 +37,13 @@ import wrapper_dash.facilitator_dash.user_identification as user_identification
 
 # Dash Application
 class AppDash:
-    def __init__(self):
+    def __init__(self, environment):
         external_stylesheets = ["https://codepen.io/chriddyp/pen/bWLwgP.css"]
         self.app = dash.Dash(
             __name__,
             external_stylesheets=external_stylesheets,
             suppress_callback_exceptions=True,
+            server=flask.Flask(__name__),
         )
         self.setAuthentification()
 
@@ -77,10 +80,9 @@ class AppDash:
             else:
                 return "404 Page not found."
 
-    def launch(self):
+    def set_default_page(self):
         self.setVueIndex()
         self.setCallback()
-        self.run()
 
     def run(self):
         self.app.run_server(debug=True)
@@ -92,9 +94,13 @@ class AppDash:
         EncryptedAuth(self.app, VALID_USERNAME_PASSWORD_PAIRS)
 
 
-# --- MAIN PART ---
-if __name__ == "__main__":
-    # --- INIT ---
+def create_dash_app(environment):
     logging.info("-#- Application Running -#-\n")
-    myApp = AppDash()
-    myApp.launch()
+    dash_app = AppDash(environment)
+    dash_app.set_default_page()
+    return dash_app
+
+
+if __name__ == "__main__":
+    dash_app = create_dash_app("development")
+    dash_app.run()
