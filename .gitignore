@@ -32,6 +32,9 @@ app/Pipfile.lock
 app/recount.egg-info
 app/pyvenv.cfg
 
+# Ignoring virtualenv manually created
+*virtual*
+
 # Ignoring files created by venv.
 # Those should only be created using :
 #       python -venv .
