@@ -56,7 +56,12 @@ cleanTable = WrapperOfTable("clean_expenses", db_config)
 def updateExcel(username):
     logging.info(paddedLogMessage(f"{username}: Update excel files"))
     mainCleaner = MainCleanerExcel(username)
-    mainCleaner.updateExcel()
+    try:
+        mainCleaner.updateExcel()
+    except Exception as exp:
+        logging.info(paddedLogMessage(f"The excel files created errors: {exp}"))
+        return False
+    return True
 
 
 @updatingByRemovingAllExistingRowsOfTable(rawTable)
@@ -176,11 +181,8 @@ def updateCleanTable(username):
     cleanTable.insertAllReqs(list_requests)
 
 
-# == MAIN == FUNCTION : updates all the tables by removing ALL the older values
-def updateAll(username):
-    logging.info(paddedLogMessage(""))
-    updateExcel(username)
-
+# Updates all the tables by removing ALL the older values
+def updateSqlDb(username):
     updateRawTable(username)
 
     updateRepayementsTable(username)
@@ -192,6 +194,13 @@ def updateAll(username):
 
     updateCleanTable(username)
     logging.info(paddedLogMessage(""))
+
+
+def updateAll(username):
+    logging.info(paddedLogMessage(""))
+    sql_is_to_update = updateExcel(username)
+    if sql_is_to_update == True:
+        updateSqlDb(username)
 
 
 def removeAllDataForUser(username):

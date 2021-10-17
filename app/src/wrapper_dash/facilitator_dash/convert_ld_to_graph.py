@@ -3,8 +3,8 @@ import logging
 
 # TODO maybe change the logic of this modul, where the data is parsed
 class ListDictToGraph:  # add metadata
-    def __init__(self, autorized_tst_json):
-        self.ColorSetter = ColorSetter(autorized_tst_json)
+    def __init__(self, autorized_ct_json):
+        self.ColorSetter = ColorSetter(autorized_ct_json)
         self.getColor = self.ColorSetter.convertThemeToColor
         self.getListColors = self.ColorSetter.convertListThemeToListColor
 
@@ -99,8 +99,8 @@ class ListDictToGraph:  # add metadata
 
 
 class ColorSetter:
-    def __init__(self, autorized_tst_json):
-        self.autorized_tst_json = autorized_tst_json
+    def __init__(self, autorized_ct_json):
+        self.autorized_ct_json = autorized_ct_json
         self.colors_json = self._getColorsJson()
 
     def convertThemeToColor(self, theme):
@@ -119,7 +119,7 @@ class ColorSetter:
         return list_colors
 
     def _getAllAvailableThemes(self):
-        list_themes = list(self.autorized_tst_json.keys())
+        list_themes = list(self.autorized_ct_json.keys())
         return list_themes
 
     def _getColorsJson(self):

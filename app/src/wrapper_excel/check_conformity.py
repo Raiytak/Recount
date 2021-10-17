@@ -7,33 +7,34 @@ from accessors.access_files import AccessCTAuthorized as AccessCTAuthorized
 
 class ReviewerDataframe:
     def __init__(self):
-        self._tst_json = AccessCTAuthorized().getJson()
+        self._ct_json = AccessCTAuthorized().getJson()
 
     def checkConformity(self, dataframe):
-        self.checkThemesAndSubthemes(dataframe)
+        pass
+        # self.checkCategoryThemes(dataframe)
 
-    def checkThemesAndSubthemes(self, dataframe):
-        def chekTSTByRow(row):
+    def checkCategoryThemes(self, dataframe):
+        """This function returns the row only if it recognises the category and theme"""
+
+        def chekCTByRow(row):
             category = row["Category"]
             if (category == str(np.nan)) or (category == "reimbursement"):
                 return row
-            if category in self._tst_json.keys():
+            if category in self._ct_json.keys():
                 theme = row["Theme"]
-                if (theme in self._tst_json[category]) or (theme == str(np.nan)):
+                if (theme in self._ct_json[category]) or (theme == str(np.nan)):
                     return row
-                self.printSubthemeError(row)
-                print("Error of THEME in row :\n", row)
-                # raise Exception
-            self.printThemeError(row)
-            print("Error of CATEGORY in row :\n", row)
-            # raise Exception
+                raise Exception(
+                    "ERROR THEME : In row "
+                    + row["ID"]
+                    + "orthograph error in theme : "
+                    + row["Theme"]
+                )
+            raise Exception(
+                "ERROR CATEGORY : In row "
+                + row["ID"]
+                + "orthograph error in category : "
+                + row["Category"]
+            )
 
-        dataframe.apply(chekTSTByRow, axis=1)
-
-    def printSubthemeError(self, row):
-        print("ERROR THEME :")
-        print("In row ", row["ID"], "orthograph error in theme : ", row["Theme"])
-
-    def printThemeError(self, row):
-        print("ERROR CATEGORY :")
-        print("In row ", row["ID"], "orthograph error in category : ", row["Category"])
+        dataframe.apply(chekCTByRow, axis=1)

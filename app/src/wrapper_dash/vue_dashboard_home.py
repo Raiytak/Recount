@@ -129,6 +129,7 @@ class AppDash(EmptyVue):
             id_component_called = tools.getIdButtonClicked()
             if "import" in id_component_called:
                 self.ImportExcelFileSaver.saveImportedFile(username, imported_excel)
+                update_data.updateAll(username)
 
             dataframe, range_date = self.DateToDataframe.getDataframeFromDate(
                 username, selected_date_str, selected_periode

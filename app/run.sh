@@ -1,7 +1,7 @@
 #!/bin/bash
-cd /home/mathieu/Desktop/Projets/Recount/app
+cd /home/$USER/Desktop/Projets/Recount/app
 virtualenv venv
 source venv/bin/activate
 pip install -r requirements.txt
-gunicorn -c gunicorn.conf.py --chdir src/ "wsgi:create_app('production')"
+gunicorn -c gunicorn.conf.py "wsgi:create_app('production')"
 
