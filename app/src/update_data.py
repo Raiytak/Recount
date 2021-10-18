@@ -75,6 +75,8 @@ def updateRawTable(username):
         dataframe, equivalent_columns
     )
     rawTable.insertAllReqs(list_requests)
+    # Remove all excels except the raw one
+    removeAllExcelsExceptRawForUser(username)
 
 
 @updatingByRemovingAllExistingRowsOfTable(repayTable)
@@ -204,9 +206,22 @@ def updateAll(username):
 
 
 def removeAllDataForUser(username):
-    myAccessUserFiles = AccessUserFiles(username)
-    myAccessUserFiles.removeExcelsOfUser()
+    removeAllExcelsForUser(username)
+    removeAllSqlDataForUser(username)
+
+
+def removeAllSqlDataForUser(username):
     rawTable.dumpTableForUser(username)
     repayTable.dumpTableForUser(username)
     tripTable.dumpTableForUser(username)
     cleanTable.dumpTableForUser(username)
+
+
+def removeAllExcelsForUser(username):
+    myAccessUserFiles = AccessUserFiles(username)
+    myAccessUserFiles.removeExcelsOfUser()
+
+
+def removeAllExcelsExceptRawForUser(username):
+    myAccessUserFiles = AccessUserFiles(username)
+    myAccessUserFiles.removeExcelsExceptRawOfUser()

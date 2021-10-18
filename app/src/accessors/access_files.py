@@ -62,6 +62,10 @@ class AccessExcel:
         self.removeCleanedExcel()
         self.removeImportedExcel()
 
+    def removeAllExcelsExceptRaw(self):
+        self.removeCleanedExcel()
+        self.removeImportedExcel()
+
     def removeAllOldFiles(self):
         if self.ExcelPaths.rawExcelExists() == True:
             self.removeRawExcel()
@@ -228,3 +232,6 @@ class AccessUserFiles:
 
     def removeExcelsOfUser(self):
         self.AccessExcel.removeAllExcels()
+
+    def removeExcelsExceptRawOfUser(self):
+        self.AccessExcel.removeAllExcelsExceptRaw()

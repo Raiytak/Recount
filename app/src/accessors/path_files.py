@@ -90,6 +90,11 @@ class ExcelPaths(FilesPaths):
         self.PathInformation.filename = "raw_expenses.xlsx"
         return self.formPathUsing(self.PathInformation)
 
+    def exportExcelPath(self):
+        if self.rawExcelExists():
+            return self.rawExcelPath()
+        return self.exampleExcelPath()
+
     def exampleExcelPath(self):
         TEMP_PATH = self.PathInformation.root
 
