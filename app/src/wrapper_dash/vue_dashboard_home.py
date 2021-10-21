@@ -169,7 +169,13 @@ class AppDash(EmptyVue):
                 path_excel = myAccessUserFiles.AccessExcel.ExcelPaths.rawExcelPath()
                 myExcelToDataframe = ExcelToDataframe(username)
                 df_excel = myExcelToDataframe.getDataframeOf(path_excel)
-                # print(df_excel)
+
+                def delete_df_unnamed_col(df):
+                    for col in df.columns:
+                        if "Unnamed" in col:
+                            del df[col]
+
+                delete_df_unnamed_col(df_excel)
                 excel_exported = dcc.send_data_frame(
                     df_excel.to_excel, "recount_excel.xlsx", sheet_name="Sheet_name_1"
                 )
