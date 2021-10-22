@@ -1,3 +1,9 @@
+# -*- coding: utf-8 -*-
+""" 
+                    ====     DESCRIPTION    ====
+Module that handle the logs of the application.
+"""
+
 import logging
 import logging.config
 from logging import Formatter, StreamHandler, Filter
@@ -19,6 +25,7 @@ LIST_LOGS = [APP_INFO_LOGS, EXCEPT_LOGS, DB_COM_LOGS]
 
 
 def paddedLogMessage(message, pattern="= "):
+    """Pad a message with the provided pattern"""
     space_left = SIZE_PADDED_LOGS - len(message)
     if space_left <= 0:
         return message
@@ -101,6 +108,7 @@ def removeOldLogs(path_logs_folder):
 
 
 def startLogs():
+    """Initiates and launches the logs of the application"""
     path_logs_folder = getLogsPath()
     removeOldLogs(path_logs_folder)
 
