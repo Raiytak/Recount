@@ -199,12 +199,16 @@ class AccessUserFiles:
     def createUserFolders(self):
         self.createUserMainFolder()
         self.createUserExcelsFolder()
+        self.createUserNotebookFolder()
 
     def createUserMainFolder(self):
         self.createFolder(self.UserDataPath.userMainFolderExists)
 
     def createUserExcelsFolder(self):
         self.createFolder(self.UserDataPath.userExcelsFolderExists)
+
+    def createUserNotebookFolder(self):
+        self.createFolder(self.UserDataPath.userNotebookFolderExists)
 
     def createFolder(self, folderExists):
         is_created, folder_path = folderExists()

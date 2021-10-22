@@ -234,3 +234,6 @@ class UserDataPath(FilesPaths):
 
     def userExcelsFolderExists(self):
         return self.userFolderExists(self.excels_folder)
+
+    def userNotebookFolderExists(self):
+        return self.userFolderExists(self.notebook_excel)
