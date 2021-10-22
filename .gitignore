@@ -1,17 +1,17 @@
 # Ignore the important stuff
-app/code/config/*
-app/code/.env
+app/src/config/*
+app/src/.env
 **.pem
 
 # Ignore the database other files
 database/init_**
 
 # Ignore the users's stuff
-app/code/data/users
+app/src/data/users
 # Ignore old version, FOR NOW
-app/code/data/vues
-app/code/data/categories
-app/code/data/dates_voyages.json
+app/src/data/vues
+app/src/data/categories
+app/src/data/dates_voyages.json
 
 # Ignore the __pycache__ files created by python
 **__pycache__**
@@ -19,11 +19,11 @@ app/code/data/dates_voyages.json
 
 # Ignoring files created by setuptools and other tools used
 # to create packages.
-app/code/build
-app/code/dist
+app/src/build
+app/src/dist
 **recount.egg-info**
-app/code/MANIFEST
-app/code/pyproject.toml
+app/src/MANIFEST
+app/src/pyproject.toml
 
 # Ignoring files created by pipenv.
 # Those should only be created using pipenv install -e .
@@ -49,5 +49,5 @@ app/include
 app/.pytest_cache
 
 # Other ignores
-app/code/logs/*.log
-app/code/test.py
+app/src/logs/*.log
+app/src/test.py
