@@ -17,9 +17,6 @@ from accessors.access_config import AccessConfig
 myAccessConfig = AccessConfig()
 SSL_CONTEXT = myAccessConfig.getSSLContext()
 
-from accessors.access_users import AccessUsers
-
-myAccessUsers = AccessUsers()
 
 # from wrapper_dash.facilitator_dash.save_config import (
 #     ConfigNotebookExcelSaver,
@@ -90,7 +87,7 @@ class AppDash:
         # self.app.run_server(debug=True, ssl_context="adhoc")
 
     def setAuthentification(self):
-        VALID_USERNAME_PASSWORD_PAIRS = myAccessUsers.getUsers()
+        VALID_USERNAME_PASSWORD_PAIRS = myAccessConfig.getUsers()
         EncryptedAuth(self.app, VALID_USERNAME_PASSWORD_PAIRS)
 
 

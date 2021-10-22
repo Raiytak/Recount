@@ -1,8 +1,10 @@
 # -*- coding: utf-8 -*-
-
-# === DESCRIPTION ===
-# This file aims to do return the paths of the documents used in the app.
-# The manipulations are done in other modules.
+""" 
+                    ====     DESCRIPTION    ====
+This file contains the paths of the documents used in the app.
+The manipulations of those files are done in other access_files or in the 
+class directly.
+"""
 
 import os
 import sys
@@ -10,10 +12,11 @@ import re
 from pathlib import Path
 
 
+# ROOT PATH of the project.
+# Detected using the path from which the application is launched
 def _getAppPath():
     root_path = os.path.abspath(__file__)
     app_path = Path(re.sub("(app).*", "app", root_path))
-    # src_path = app_path / "src"
     return app_path
 
 
@@ -31,9 +34,8 @@ class PathInformation:
     filename = ""
 
 
-# Path to the file data used by the application.
 class FilesPaths:
-    # @showFunctionCalling
+    """Paths to the folders used by the application"""
     def __init__(self, ROOT_PATH=SRC_PATH):
         self.PathInformation = PathInformation()
         self.PathInformation.root = ROOT_PATH
@@ -69,59 +71,11 @@ class FilesPaths:
         return bool_exists, path_file
 
 
-# Path to the excels used :
-#   the source excel (from the user or excel_example)
-#   and the copy excel (copied, cleaned and manipulated by the applciation)
-class ExcelPaths(FilesPaths):
-    def __init__(self, ROOT_PATH=DATA_PATH):
-        super().__init__(ROOT_PATH)
-
-    def importedExcelPath(self):
-        self.PathInformation.folders = [self.excels_folder]
-        self.PathInformation.filename = "imported_excel.xlsx"
-        return self.formPathUsing(self.PathInformation)
-
-    def cleanedExcelPath(self):
-        self.PathInformation.folders = [self.excels_folder]
-        self.PathInformation.filename = "cleaned_expenses.xlsx"
-        return self.formPathUsing(self.PathInformation)
-
-    def rawExcelPath(self):
-        self.PathInformation.folders = [self.excels_folder]
-        self.PathInformation.filename = "raw_expenses.xlsx"
-        return self.formPathUsing(self.PathInformation)
-
-    def exportExcelPath(self):
-        if self.rawExcelExists():
-            return self.rawExcelPath()
-        return self.exampleExcelPath()
-
-    def exampleExcelPath(self):
-        TEMP_PATH = self.PathInformation.root
-
-        self.PathInformation.root = DATA_PATH
-        self.PathInformation.folders = [self.example_folder]
-        self.PathInformation.filename = "example_expenses_en.xlsx"
-        example_path = self.formPathUsing(self.PathInformation)
-
-        self.PathInformation.root = TEMP_PATH
-        return example_path
-
-    def pathExists(self, my_path):
-        is_present = os.path.exists(my_path)
-        return is_present
-
-    def importedExcelExists(self):
-        return self.pathExists(self.importedExcelPath())
-
-    def rawExcelExists(self):
-        return self.pathExists(self.rawExcelPath())
-
-    def copiedExcelExists(self):
-        return self.pathExists(self.cleanedExcelPath())
-
-
 class ConfigPath(FilesPaths):
+    """Path to the configs containing all the secrets of the application :
+        -private keys that encrypt / decrypt the excels
+        -users name and password
+        -server certificates"""
     def __init__(self, ROOT_PATH=SRC_PATH):
         super().__init__(ROOT_PATH)
 
@@ -177,7 +131,61 @@ class ConfigPath(FilesPaths):
         return self.formPathUsing(self.PathInformation)
 
 
+class ExcelPaths(FilesPaths):
+    """Path to the excels used :
+        -source excel (from the user (saved / imported) or from the folder examples)
+        -copy excel (copy of the source excel, cleaned and
+                    manipulated by the application, then removed)"""
+    def __init__(self, ROOT_PATH=DATA_PATH):
+        super().__init__(ROOT_PATH)
+
+    def importedExcelPath(self):
+        self.PathInformation.folders = [self.excels_folder]
+        self.PathInformation.filename = "imported_excel.xlsx"
+        return self.formPathUsing(self.PathInformation)
+
+    def cleanedExcelPath(self):
+        self.PathInformation.folders = [self.excels_folder]
+        self.PathInformation.filename = "cleaned_expenses.xlsx"
+        return self.formPathUsing(self.PathInformation)
+
+    def rawExcelPath(self):
+        self.PathInformation.folders = [self.excels_folder]
+        self.PathInformation.filename = "raw_expenses.xlsx"
+        return self.formPathUsing(self.PathInformation)
+
+    def exportExcelPath(self):
+        if self.rawExcelExists():
+            return self.rawExcelPath()
+        return self.exampleExcelPath()
+
+    def exampleExcelPath(self):
+        TEMP_PATH = self.PathInformation.root
+
+        self.PathInformation.root = DATA_PATH
+        self.PathInformation.folders = [self.example_folder]
+        self.PathInformation.filename = "example_expenses_en.xlsx"
+        example_path = self.formPathUsing(self.PathInformation)
+
+        self.PathInformation.root = TEMP_PATH
+        return example_path
+
+    def pathExists(self, my_path):
+        is_present = os.path.exists(my_path)
+        return is_present
+
+    def importedExcelExists(self):
+        return self.pathExists(self.importedExcelPath())
+
+    def rawExcelExists(self):
+        return self.pathExists(self.rawExcelPath())
+
+    def copiedExcelExists(self):
+        return self.pathExists(self.cleanedExcelPath())
+
+
 class DescrToThemePath(FilesPaths):
+    """Path to the file that converts description to a couple category theme (AI)"""
     def __init__(self, ROOT_PATH=DATA_PATH):
         super().__init__(ROOT_PATH)
 
@@ -188,6 +196,8 @@ class DescrToThemePath(FilesPaths):
 
 
 class CategoryAndThemeAuthorizedPath(FilesPaths):
+    """Path to the file that contains the authorized cat and theme by user"""
+    # TODO: change this to for each user + save
     def __init__(self, ROOT_PATH=DATA_PATH):
         super().__init__(ROOT_PATH)
 
@@ -203,6 +213,8 @@ class CategoryAndThemeAuthorizedPath(FilesPaths):
 
 
 class NotebookConfigPath(FilesPaths):
+    """Path to the file that contains the saved information of the notebook of each user"""
+    # TODO: change this to for each user + save
     def __init__(self, ROOT_PATH=DATA_PATH):
         super().__init__(ROOT_PATH)
 
@@ -213,6 +225,8 @@ class NotebookConfigPath(FilesPaths):
 
 
 class StandardButtonsConfigPath(FilesPaths):
+    """Path to the file that contains the saved information of the buttons of each user"""
+    # TODO: change this to for each user + save
     def __init__(self, ROOT_PATH=DATA_PATH):
         super().__init__(ROOT_PATH)
 
@@ -223,6 +237,7 @@ class StandardButtonsConfigPath(FilesPaths):
 
 
 class UserDataPath(FilesPaths):
+    """Path to the files of the designated user"""
     def __init__(self, username):
         USER_DATA_PATH = DATA_USERS_PATH / username
         super().__init__(USER_DATA_PATH)

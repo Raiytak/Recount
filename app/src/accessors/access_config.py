@@ -1,9 +1,18 @@
+# -*- coding: utf-8 -*-
+""" 
+                    ====     DESCRIPTION    ====
+This file aims to do the CRUD manipulations on the CONF files used by the application.
+It contains all the secrets of the application such as its private keys and users information.
+"""
+
+
 from decouple import config
 from accessors.path_files import ConfigPath
 import json
 
 
 class AccessConfig:
+    """CRUD operations on the config files of the application"""
     def __init__(self):
         self.ConfigPath = ConfigPath()
         self.db_conf = ["host", "port", "db", "user", "password"]
@@ -40,3 +49,9 @@ class AccessConfig:
         with open(path_global_configs, "rb") as file:
             excel_key = file.read()
         return excel_key
+
+    def getUsers(self):
+        path_users = self.ConfigPath.getUsersPath()
+        with open(path_users, "r") as json_file:
+            data = json.load(json_file)
+        return data
