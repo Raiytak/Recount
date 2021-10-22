@@ -15,7 +15,7 @@ import re
 
 # import cryptocode
 
-from accessors.access_config import AccessConfig
+from accessors.access_files import AccessConfig
 
 
 class DataEncryption:

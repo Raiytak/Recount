@@ -18,7 +18,7 @@ On the MySQL part:
 from genericpath import exists
 import logging
 from logs.logs import paddedLogMessage
-from accessors.access_config import AccessConfig
+from accessors.access_files import AccessConfig
 from accessors.access_files import AccessUserFiles
 
 

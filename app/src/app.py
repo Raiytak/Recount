@@ -22,7 +22,7 @@ import logging
 import update_data
 
 # Import the config file
-from accessors.access_config import AccessConfig
+from accessors.access_files import AccessConfig
 
 myAccessConfig = AccessConfig()
 SSL_CONTEXT = myAccessConfig.getSSLContext()

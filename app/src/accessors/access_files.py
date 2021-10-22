@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """ 
                     ====     DESCRIPTION    ====
-This file aims to do the CRUD manipulations on the USER files used by the application.
+This file aims to do the CRUD manipulations on the files used by the application.
 The paths used are stored in the paths_docs module, and are used by the wrappers of this module.
 """
 
@@ -14,9 +14,57 @@ import pandas as pd
 import json
 import os
 import logging
+from decouple import config
 
 from accessors.path_files import *
-from accessors.data_encryption import ExcelEncryption
+from accessors.path_files import ConfigPath
+
+
+class AccessConfig:
+    """CRUD operations on the config files of the application"""
+
+    def __init__(self):
+        self.ConfigPath = ConfigPath()
+        self.db_conf = ["host", "port", "db", "user", "password"]
+
+    def getDatabaseConfig(self):
+        environment_type = self.determineEnvironmentType()
+        global_configs = self.getGlobalConfigs()
+        db_configs = global_configs[environment_type]["mysql"]
+        dict_db_configs = {key: db_configs[key] for key in self.db_conf}
+        return dict_db_configs
+
+    def determineEnvironmentType(self):
+        return config("environment")
+
+    def getGlobalConfigs(self):
+        path_global_configs = self.ConfigPath.getApplicationConfigsPath()
+        with open(path_global_configs, "r") as json_file:
+            data = json.load(json_file)
+        return data
+
+    def getSSLContext(self):
+        cert_file = self.ConfigPath.getCertificatePath()
+        private_key_file = self.ConfigPath.getPrivateKeyPath()
+        return (cert_file, private_key_file)
+
+    def getExcelKey(self, name=""):
+        path_global_configs = self.ConfigPath.getExcelKeyPath(name)
+        with open(path_global_configs, "rb") as file:
+            excel_key = file.read()
+        return excel_key
+
+    def getDataSqlKey(self, name=""):
+        path_global_configs = self.ConfigPath.getDataSqlKeyPath(name)
+        with open(path_global_configs, "rb") as file:
+            excel_key = file.read()
+        return excel_key
+
+    def getUsers(self):
+        path_users = self.ConfigPath.getUsersPath()
+        with open(path_users, "r") as json_file:
+            data = json.load(json_file)
+        return data
 
 
 class AccessExcel:
@@ -210,6 +258,8 @@ class AccessUserFiles:
         self.UserDataPath = UserDataPath(username)
         ROOT_PATH = DATA_USERS_PATH / username
         self.AccessExcel = AccessExcel(ROOT_PATH)
+        from accessors.data_encryption import ExcelEncryption
+
         self.ExcelEncryption = ExcelEncryption()
 
         self.createUserFolders()
