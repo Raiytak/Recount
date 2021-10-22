@@ -7,11 +7,9 @@ app/src/.env
 database/init_**
 
 # Ignore the users's stuff
-app/src/data/users
+# app/data
 # Ignore old version, FOR NOW
-app/src/data/vues
-app/src/data/categories
-app/src/data/dates_voyages.json
+app/src/data_legacy
 
 # Ignore the __pycache__ files created by python
 **__pycache__**
