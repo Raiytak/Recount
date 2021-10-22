@@ -36,6 +36,7 @@ class PathInformation:
 
 class FilesPaths:
     """Paths to the folders used by the application"""
+
     def __init__(self, ROOT_PATH=SRC_PATH):
         self.PathInformation = PathInformation()
         self.PathInformation.root = ROOT_PATH
@@ -76,6 +77,7 @@ class ConfigPath(FilesPaths):
         -private keys that encrypt / decrypt the excels
         -users name and password
         -server certificates"""
+
     def __init__(self, ROOT_PATH=SRC_PATH):
         super().__init__(ROOT_PATH)
 
@@ -136,6 +138,7 @@ class ExcelPaths(FilesPaths):
         -source excel (from the user (saved / imported) or from the folder examples)
         -copy excel (copy of the source excel, cleaned and
                     manipulated by the application, then removed)"""
+
     def __init__(self, ROOT_PATH=DATA_PATH):
         super().__init__(ROOT_PATH)
 
@@ -186,6 +189,7 @@ class ExcelPaths(FilesPaths):
 
 class DescrToThemePath(FilesPaths):
     """Path to the file that converts description to a couple category theme (AI)"""
+
     def __init__(self, ROOT_PATH=DATA_PATH):
         super().__init__(ROOT_PATH)
 
@@ -197,6 +201,7 @@ class DescrToThemePath(FilesPaths):
 
 class CategoryAndThemeAuthorizedPath(FilesPaths):
     """Path to the file that contains the authorized cat and theme by user"""
+
     # TODO: change this to for each user + save
     def __init__(self, ROOT_PATH=DATA_PATH):
         super().__init__(ROOT_PATH)
@@ -214,6 +219,7 @@ class CategoryAndThemeAuthorizedPath(FilesPaths):
 
 class NotebookConfigPath(FilesPaths):
     """Path to the file that contains the saved information of the notebook of each user"""
+
     # TODO: change this to for each user + save
     def __init__(self, ROOT_PATH=DATA_PATH):
         super().__init__(ROOT_PATH)
@@ -226,6 +232,7 @@ class NotebookConfigPath(FilesPaths):
 
 class StandardButtonsConfigPath(FilesPaths):
     """Path to the file that contains the saved information of the buttons of each user"""
+
     # TODO: change this to for each user + save
     def __init__(self, ROOT_PATH=DATA_PATH):
         super().__init__(ROOT_PATH)
@@ -238,6 +245,7 @@ class StandardButtonsConfigPath(FilesPaths):
 
 class UserDataPath(FilesPaths):
     """Path to the files of the designated user"""
+
     def __init__(self, username):
         USER_DATA_PATH = DATA_USERS_PATH / username
         super().__init__(USER_DATA_PATH)

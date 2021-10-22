@@ -1,8 +1,18 @@
+# -*- coding: utf-8 -*-
+""" 
+                    ====     DESCRIPTION    ====
+MAIN FILE
+Handles the web instanciation and logic.
+"""
+
+
+import os
+import flask
+
 import dash
 from wrapper_dash.facilitator_dash.encrypted_auth import EncryptedAuth
 from dash.dependencies import Input, Output
 
-import flask
 
 from logs import logs
 
@@ -34,6 +44,10 @@ import wrapper_dash.facilitator_dash.user_identification as user_identification
 
 # Dash Application
 class AppDash:
+    """Framework Dash.
+    Here is handled the web part of the application."""
+
+    # TODO: use environment
     def __init__(self, environment):
         external_stylesheets = ["https://codepen.io/chriddyp/pen/bWLwgP.css"]
         self.app = dash.Dash(
@@ -91,13 +105,17 @@ class AppDash:
         EncryptedAuth(self.app, VALID_USERNAME_PASSWORD_PAIRS)
 
 
-def create_dash_app(environment):
+def create_dash_app():
     logging.info("-#- Application Running -#-\n")
+    # TODO: configure environment
+    environment = os.environ.get("ENVIRONMENT")
     dash_app = AppDash(environment)
     dash_app.set_default_page()
     return dash_app
 
 
 if __name__ == "__main__":
-    dash_app = create_dash_app("development")
+    """Launch the application by command line:
+    pipenv run python app.py"""
+    dash_app = create_dash_app()
     dash_app.run()

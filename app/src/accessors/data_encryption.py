@@ -21,6 +21,7 @@ from accessors.access_config import AccessConfig
 class DataEncryption:
     """Encryption logic that can be used on any document.
     It needs a private key to protect the data."""
+
     def __init__(self, key):
         self.key = key
         if type(self.key) == bytes:
@@ -82,6 +83,7 @@ class DataEncryption:
 
 class ExcelEncryption(DataEncryption):
     """Encryption logic of the excels."""
+
     def __init__(self):
         self.AccessConfig = AccessConfig()
         excel_key = self.AccessConfig.getExcelKey()
@@ -111,6 +113,7 @@ class ExcelEncryption(DataEncryption):
 
 class SqlEncryption(DataEncryption):
     """Encryption logic of the SQL exchanges."""
+
     def __init__(self):
         self.AccessConfig = AccessConfig()
         sql_key = self.AccessConfig.getDataSqlKey()

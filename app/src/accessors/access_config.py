@@ -13,6 +13,7 @@ import json
 
 class AccessConfig:
     """CRUD operations on the config files of the application"""
+
     def __init__(self):
         self.ConfigPath = ConfigPath()
         self.db_conf = ["host", "port", "db", "user", "password"]

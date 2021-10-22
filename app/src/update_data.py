@@ -1,3 +1,20 @@
+# -*- coding: utf-8 -*-
+""" 
+                    ====     DESCRIPTION    ====
+Contains the logic used to update the excels and the SQL data.
+
+On the excel part:
+    -raw_excel:      excel that contains the data given by the user
+    -imported_excel: data uploaded by the user, copied then removed
+    -clean_excel:    excel used for the converion to MySQL, then removed
+
+On the MySQL part:
+    -raw_expenses:      data imported from clean_excel
+    -reimbursement:     table containing the rows used for reimbursement
+    -trip_expenses:     table containing the rows of the different trips
+    -clean_expenses:    data cleaned, used to create graphs
+"""
+
 from genericpath import exists
 import logging
 from logs.logs import paddedLogMessage
@@ -54,6 +71,8 @@ cleanTable = WrapperOfTable("clean_expenses", db_config)
 
 
 def updateExcel(username):
+    """Copy the imported excel (if exists then remove it),
+    create a new excel that is used for cleaning the data that will then be uploaded on MySQL."""
     logging.info(paddedLogMessage(f"{username}: Update excel files"))
     mainCleaner = MainCleanerExcel(username)
     try:
@@ -66,6 +85,7 @@ def updateExcel(username):
 
 @updatingByRemovingAllExistingRowsOfTable(rawTable)
 def updateRawTable(username):
+    """Convert the cleaned excel to MySQL, then remove the cleaned excel (redundant data)"""
     logging.info(paddedLogMessage(f"{username}: Update 'raw_expenses' Table"))
     mainCleaner = MainCleanerExcel(username)
     dataframe, equivalent_columns = mainCleaner.getDataframeAndEqCol()
@@ -92,7 +112,7 @@ def updateRepayementsTable(username):
     repayTable.insertAllReqs(list_requests)
 
 
-# TODO using username
+# TODO verify use username
 def deleteRepayementsFromRaw(username):
     logging.info(
         paddedLogMessage(f"{username}: Delete 'reimbursement' in 'raw_expenses'")
@@ -104,7 +124,7 @@ def deleteRepayementsFromRaw(username):
         rawTable.deleteListRowsId(list_resp)
 
 
-# TODO using username
+# TODO verify use username
 def repayRepayements(username):
     logging.info(
         paddedLogMessage(f"{username}: Repay 'reimbursement' in 'raw_expenses'")
@@ -183,7 +203,6 @@ def updateCleanTable(username):
     cleanTable.insertAllReqs(list_requests)
 
 
-# Updates all the tables by removing ALL the older values
 def updateSqlDb(username):
     updateRawTable(username)
 
@@ -196,13 +215,6 @@ def updateSqlDb(username):
 
     updateCleanTable(username)
     logging.info(paddedLogMessage(""))
-
-
-def updateAll(username):
-    logging.info(paddedLogMessage(""))
-    sql_is_to_update = updateExcel(username)
-    if sql_is_to_update == True:
-        updateSqlDb(username)
 
 
 def removeAllDataForUser(username):
@@ -225,3 +237,15 @@ def removeAllExcelsForUser(username):
 def removeAllExcelsExceptRawForUser(username):
     myAccessUserFiles = AccessUserFiles(username)
     myAccessUserFiles.removeExcelsExceptRawOfUser()
+
+
+def updateAll(username):
+    """Updates all the tables of the given user.
+    For now it removes ALL the older values."""
+    # TODO: improve remove ALL -> update values
+    # TODO: use cache
+    # TODO: use data encryption
+    logging.info(paddedLogMessage(""))
+    sql_is_to_update = updateExcel(username)
+    if sql_is_to_update == True:
+        updateSqlDb(username)

@@ -21,6 +21,7 @@ from accessors.data_encryption import ExcelEncryption
 
 class AccessExcel:
     """CRUD operations on all the excels of the application"""
+
     def __init__(self, ROOT_PATH=DATA_PATH):
         self.ExcelPaths = ExcelPaths(ROOT_PATH)
         # self.useExampleIfNoRawExcel()
@@ -88,6 +89,7 @@ class AccessExcel:
 
 class AccessDescrToTheme:
     """CRUD operations on the descr_to_theme files of the application"""
+
     # TODO: change this to for each user + save
     def __init__(self):
         self.DescrToThemePath = DescrToThemePath()
@@ -115,6 +117,7 @@ class AccessDescrToTheme:
 
 class AccessCTAuthorized:
     """CRUD operations on the cat_theme_auth files of the application"""
+
     # TODO: change this to for each user + save
     def __init__(self):
         self.TSTAuth = CategoryAndThemeAuthorizedPath()
@@ -146,6 +149,7 @@ class AccessCTAuthorized:
 
 class AccessNotebookConfig:
     """CRUD operations on the notebook confs of the application"""
+
     # TODO: change this to for each user + save
     def __init__(self):
         self.NotebookConfigPath = NotebookConfigPath()
@@ -171,6 +175,7 @@ class AccessNotebookConfig:
 
 class AccessStandardButtonsConfig:
     """CRUD operations on the button confs of the application"""
+
     # TODO: change this to for each user + save
     def __init__(self):
         self.StandardButtonsConfigPath = StandardButtonsConfigPath()
@@ -200,6 +205,7 @@ class AccessStandardButtonsConfig:
 
 class AccessUserFiles:
     """CRUD operations on the files of the users"""
+
     def __init__(self, username):
         self.UserDataPath = UserDataPath(username)
         ROOT_PATH = DATA_USERS_PATH / username
