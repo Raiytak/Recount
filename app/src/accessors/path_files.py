@@ -10,17 +10,18 @@ import re
 from pathlib import Path
 
 
-def _getSrcPath():
+def _getAppPath():
     root_path = os.path.abspath(__file__)
     app_path = Path(re.sub("(app).*", "app", root_path))
-    code_path = app_path / "src"
-    return code_path
+    # src_path = app_path / "src"
+    return app_path
 
 
-CODE_PATH = _getSrcPath()
-if CODE_PATH not in sys.path:
-    sys.path = [CODE_PATH] + sys.path
-DATA_PATH = CODE_PATH / "data"
+APP_PATH = _getAppPath()
+if APP_PATH not in sys.path:
+    sys.path = [APP_PATH] + sys.path
+SRC_PATH = APP_PATH / "src"
+DATA_PATH = APP_PATH / "data"
 DATA_USERS_PATH = DATA_PATH / "users"
 
 
@@ -33,7 +34,7 @@ class PathInformation:
 # Path to the file data used by the application.
 class FilesPaths:
     # @showFunctionCalling
-    def __init__(self, ROOT_PATH=CODE_PATH):
+    def __init__(self, ROOT_PATH=SRC_PATH):
         self.PathInformation = PathInformation()
         self.PathInformation.root = ROOT_PATH
         self.data_folder = "data"
@@ -121,7 +122,7 @@ class ExcelPaths(FilesPaths):
 
 
 class ConfigPath(FilesPaths):
-    def __init__(self, ROOT_PATH=CODE_PATH):
+    def __init__(self, ROOT_PATH=SRC_PATH):
         super().__init__(ROOT_PATH)
 
     def getApplicationConfigsPath(self):
