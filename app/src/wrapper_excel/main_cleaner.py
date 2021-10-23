@@ -1,4 +1,10 @@
 # -*- coding: utf-8 -*-
+""" 
+                    ====     DESCRIPTION    ====
+Clean the raw_excel into clean_excel using the classes of this folder and the pandas'
+dataframe functionalities.
+"""
+
 from wrapper_excel.check_conformity import ReviewerDataframe
 from wrapper_excel.cleaner_dataframe import CleanerDataframe
 from wrapper_excel.excel_to_df import ExcelToDataframe
@@ -7,6 +13,8 @@ from accessors.data_encryption import ExcelEncryption
 
 
 class MainCleanerExcel:
+    """Clean raw_excel into clean excel using pandas' dataframe"""
+
     def __init__(self, username=""):
         self.username = username
         self.ExcelToDataframe = ExcelToDataframe(self.username)

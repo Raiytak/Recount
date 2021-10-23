@@ -34,8 +34,11 @@ class ResponseSqlToDataframe:
     # Create a dataframe with empty values
     def getDataframeWithEmptyValues(self, wrapper_table):
         columns_name = wrapper_table.getNameColumns()
+        import logging
+
+        logging.info(columns_name)
         dataframe = pd.DataFrame(
-            np.array([[0, "2000-01-01", 0, "", "no-data", "", "", None, "", "", 0]]),
+            np.array([[0, "2000-01-01", 0, "", "alimentary", "", "", None, "", "", 0]]),
             columns=columns_name,
         )
         return dataframe

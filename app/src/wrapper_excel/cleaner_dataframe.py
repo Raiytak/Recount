@@ -1,4 +1,10 @@
 # -*- coding: utf-8 -*-
+""" 
+                    ====     DESCRIPTION    ====
+Clean a dataframe to save it as the clean_excel 
+"""
+# TODO: change the currency logic
+
 import unidecode
 
 import numpy as np
@@ -7,6 +13,7 @@ import pandas as pd
 
 class CleanerDataframe:
     def addDateEverywhere(self, dataframe):
+        # TODO: improve this mechanism
         last_date = np.datetime64("2019-07-01")
         for i in range(len(dataframe)):
             current_date = dataframe.loc[i, "Date"]

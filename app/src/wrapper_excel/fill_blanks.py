@@ -1,12 +1,17 @@
 # -*- coding: utf-8 -*-
+""" 
+                    ====     DESCRIPTION    ====
+This module parse the description column of the excel to get information about the company and the theme of each row.
+To do so, the results are saved in the convert_descr_to_theme.json file in data.
 
-# === DESCRIPTION ===
-# This module parse the description column of the excel to get information about the company and the theme of each row.
-# To do so, the results are saved in the convert_descr_to_theme.json file in data.
-#
-# Each time a combo of category, theme and description is founded, it is created in this file or the combo number is increased by one.
-# When there is only a description on the row, the module looks at the existing combos and returns the one that has the maximum combo number,
-# meaning that this is the most probable one.
+Each time a combo of category, theme and description is founded, it is created in this file or the combo number is increased by one.
+When there is only a description on the row, the module looks at the existing combos and returns the one that has the maximum combo number,
+meaning that this is the most probable one.
+"""
+
+# TODO: make a convert_descr_to_theme.json file for each user and a global one
+# TODO: set the probability between 0 and 1, and count the number of occurence
+# TODO: have some sort of coefficient that reduces the power of each user each time they use / add a cat + theme
 
 import numpy as np
 

@@ -14,7 +14,7 @@ import pandas as pd
 import json
 import os
 
-from decouple import config
+# from decouple import config
 
 from accessors.path_files import *
 from accessors.path_files import ConfigPath
@@ -29,14 +29,15 @@ class AccessConfig:
 
     def getDatabaseConfig(self):
         # TODO: use environmenet variables the right way
-        environment_type = self.determineEnvironmentType()
+        # environment_type = self.determineEnvironmentType()
+        # db_configs = global_configs[environment_type]["mysql"]
         global_configs = self.getGlobalConfigs()
-        db_configs = global_configs[environment_type]["mysql"]
+        db_configs = global_configs["development"]["mysql"]
         dict_db_configs = {key: db_configs[key] for key in self.db_conf}
         return dict_db_configs
 
-    def determineEnvironmentType(self):
-        return config("environment")
+    # def determineEnvironmentType(self):
+    #     return config("environment")
 
     def getGlobalConfigs(self):
         path_global_configs = self.ConfigPath.getApplicationConfigsPath()
