@@ -28,6 +28,7 @@ class AccessConfig:
         self.db_conf = ["host", "port", "db", "user", "password"]
 
     def getDatabaseConfig(self):
+        # TODO: use environmenet variables the right way
         environment_type = self.determineEnvironmentType()
         global_configs = self.getGlobalConfigs()
         db_configs = global_configs[environment_type]["mysql"]

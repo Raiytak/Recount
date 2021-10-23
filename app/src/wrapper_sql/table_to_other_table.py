@@ -1,4 +1,13 @@
+# -*- coding: utf-8 -*-
+""" 
+                    ====     DESCRIPTION    ====
+Logic used to update the different tables when an update_all from update_data
+is called (except raw_expenses: table raw_repayement is filled first
+using the cleaned_excel and will be used to fill the others).
+"""
+
 class RawToRepayement:
+    """Select the repayement rows of raw_expenses and add them to the repayement table"""
     def __init__(self, rawTable, repayTable, username):
         self.rawTable = rawTable
         self.repayTable = repayTable
@@ -35,7 +44,6 @@ class RawToRepayement:
             self.rawTable.deleteRowId(req)
 
     def getEquivalentColumns(self):
-        # "origin":["destination"]
         equivalent_columns = {
             "username": ["username"],
             "ID": ["ID"],
@@ -47,6 +55,7 @@ class RawToRepayement:
 
 
 class RawToTrip:
+    """Select the trip rows of raw_expenses and add them to the trip table"""
     def __init__(self, rawTable, tripTable, username):
         self.rawTable = rawTable
         self.tripTable = tripTable
@@ -96,6 +105,7 @@ class RawToTrip:
 
 
 class RawToClean:
+    """Select the trip rows of raw_expenses and add them to the clean table"""
     def __init__(self, rawTable, cleanTable, username):
         self.rawTable = rawTable
         self.cleanTable = cleanTable
@@ -126,6 +136,7 @@ class RawToClean:
 
 
 class TripToClean:
+    """Select the trip rows of trip and add them to the clean table"""
     def __init__(self, tripTable, cleanTable, username):
         self.tripTable = tripTable
         self.cleanTable = cleanTable

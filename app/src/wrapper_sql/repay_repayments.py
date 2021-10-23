@@ -1,3 +1,10 @@
+# -*- coding: utf-8 -*-
+""" 
+                    ====     DESCRIPTION    ====
+Logic used to repay the flagged rows.
+It substracts the repayement to the original expense given on the clean table.
+"""
+
 import numpy as np
 
 

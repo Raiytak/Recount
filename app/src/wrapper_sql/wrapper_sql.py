@@ -1,3 +1,9 @@
+# -*- coding: utf-8 -*-
+""" 
+                    ====     DESCRIPTION    ====
+Creation and management of the MySQL connections, requests and return the responses.
+"""
+
 import pymysql
 from threading import Lock
 import logging
@@ -6,6 +12,10 @@ from accessors.data_encryption import SqlEncryption
 
 
 class SQLConnector:
+    """Create and manage a connection to the MySQL database"""
+    # TODO: Use Lock to serialize the requests
+    # TODO: better management of the creation and deletion 
+    #       of the SQLConnectors instancitaions
     connection = None
     cursor = None
     co_lock = Lock()
@@ -43,6 +53,7 @@ class SQLConnector:
 
 
 class WrapperOfTable(SQLConnector):
+    """Access to one table of the """
     def __init__(self, table, db_config):
         super().__init__(db_config)
         self.table = table
@@ -129,7 +140,6 @@ class WrapperOfTable(SQLConnector):
     def getNameColumns(self):
         database = self.getNameDatabase()
         table = self.getNameTable()
-        # request = "SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA='"+database+"' AND TABLE_NAME='"+table+"'"
         request = (
             "SELECT column_name FROM information_schema.columns WHERE table_schema='"
             + database

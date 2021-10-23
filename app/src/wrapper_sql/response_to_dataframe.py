@@ -1,3 +1,10 @@
+# -*- coding: utf-8 -*-
+""" 
+                    ====     DESCRIPTION    ====
+Convert the SQL responses to dataframes or list. 
+It is also used to set the right column names.
+"""
+
 import pandas as pd
 import numpy as np
 
@@ -15,7 +22,7 @@ class ResponseSqlToDataframe:
             else:
                 pass
         except Exception(
-            f"Exception in response_to_dataframe.translateResponseSqlToDataframe"
+            "Exception in response_to_dataframe.translateResponseSqlToDataframe"
         ):
             pass
         return dataframe
