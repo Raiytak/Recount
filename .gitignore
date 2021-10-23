@@ -9,7 +9,7 @@ database/init_**
 # Ignore the users's stuff
 # app/data
 # Ignore old version, FOR NOW
-app/src/data_legacy
+app/src/*data*
 
 # Ignore the __pycache__ files created by python
 **__pycache__**
