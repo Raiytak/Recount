@@ -13,8 +13,9 @@ from accessors.data_encryption import SqlEncryption
 
 class SQLConnector:
     """Create and manage a connection to the MySQL database"""
+
     # TODO: Use Lock to serialize the requests
-    # TODO: better management of the creation and deletion 
+    # TODO: better management of the creation and deletion
     #       of the SQLConnectors instancitaions
     connection = None
     cursor = None
@@ -54,6 +55,7 @@ class SQLConnector:
 
 class WrapperOfTable(SQLConnector):
     """Access to one table of the """
+
     def __init__(self, table, db_config):
         super().__init__(db_config)
         self.table = table

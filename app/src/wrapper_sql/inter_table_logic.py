@@ -11,6 +11,7 @@ import numpy as np
 
 class RawToRepayement:
     """Select the repayement rows of raw_expenses and add them to the repayement table"""
+
     def __init__(self, rawTable, repayTable, username):
         self.rawTable = rawTable
         self.repayTable = repayTable
@@ -59,6 +60,7 @@ class RawToRepayement:
 
 class RawToTrip:
     """Select the trip rows of raw_expenses and add them to the trip table"""
+
     def __init__(self, rawTable, tripTable, username):
         self.rawTable = rawTable
         self.tripTable = tripTable
@@ -109,6 +111,7 @@ class RawToTrip:
 
 class RawToClean:
     """Select the trip rows of raw_expenses and add them to the clean table"""
+
     def __init__(self, rawTable, cleanTable, username):
         self.rawTable = rawTable
         self.cleanTable = cleanTable
@@ -140,6 +143,7 @@ class RawToClean:
 
 class TripToClean:
     """Select the trip rows of trip and add them to the clean table"""
+
     def __init__(self, tripTable, cleanTable, username):
         self.tripTable = tripTable
         self.cleanTable = cleanTable
@@ -176,6 +180,7 @@ class TripToClean:
 
 class RepayPepayements:
     """Create and manage a connection to the MySQL database"""
+
     def __init__(self, rawTable, repayTbale, username):
         self.rawTable = rawTable
         self.repayTable = repayTbale
