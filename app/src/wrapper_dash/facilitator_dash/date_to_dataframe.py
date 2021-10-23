@@ -2,7 +2,7 @@ import datetime
 from dateutil.relativedelta import relativedelta
 
 from wrapper_sql.wrapper_sql import WrapperOfTable
-from wrapper_sql.response_to_dataframe import ResponseSqlToDataframe
+from wrapper_sql.df_sql_conversion import ResponseSqlToDataframe
 
 from accessors.access_files import AccessConfig
 
