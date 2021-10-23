@@ -3,8 +3,6 @@
                     ====     DESCRIPTION    ====
 Module that handle the logs of the application.
 """
-
-import logging
 import logging.config
 from logging import Formatter, StreamHandler, Filter
 from logging import INFO, DEBUG, WARNING, ERROR
@@ -24,17 +22,34 @@ DB_COM_LOGS = "db_coms.log"
 LIST_LOGS = [APP_INFO_LOGS, EXCEPT_LOGS, DB_COM_LOGS]
 
 
-def paddedLogMessage(message, pattern="= "):
+class LogStyle:
+    pattern = "= "
+    position = "<"
+
+
+def paddedLogMessage(message, pattern="= ", position="<"):
     """Pad a message with the provided pattern"""
     space_left = SIZE_PADDED_LOGS - len(message)
     if space_left <= 0:
         return message
     if message == "":
         return pattern * ((6 * SIZE_PADDED_LOGS) // (len(pattern) * 4) + 2)
-    empty_message = "$  {0: <" + str(SIZE_PADDED_LOGS) + "s}  $"
+    empty_message = "$  {0: " + position + str(SIZE_PADDED_LOGS) + "s}  $"
     empty_log_message = empty_message.replace("$", pattern * (SIZE_PADDED_LOGS // 8))
     log_message = empty_log_message.format(message)
     return log_message
+
+
+def printInfoLog(message, pattern="= ", position="<", to_highlight=False):
+    """Displays on the logs the padded message with the provided pattern and position
+        -position: <, >, ^"""
+    if to_highlight:
+        logging.info("")
+        logging.info(paddedLogMessage("", pattern))
+    logging.info(paddedLogMessage(message, pattern, position))
+    if to_highlight:
+        logging.info(paddedLogMessage("", pattern))
+        logging.info("")
 
 
 def infoOnlyFilter(record):

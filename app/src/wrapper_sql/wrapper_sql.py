@@ -4,9 +4,11 @@
 Creation and management of the MySQL connections, requests and return the responses.
 """
 
+import logging
+
 import pymysql
 from threading import Lock
-import logging
+
 
 from accessors.data_encryption import SqlEncryption
 

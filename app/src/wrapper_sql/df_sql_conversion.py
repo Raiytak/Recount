@@ -7,8 +7,6 @@ Convert dataframe to request SQL.
 import numpy as np
 import pandas as pd
 
-import logging
-
 
 class ResponseSqlToDataframe:
     def translateResponseSqlToDataframe(self, response_sql, wrapper_table):

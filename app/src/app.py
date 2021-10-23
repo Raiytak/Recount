@@ -5,7 +5,6 @@ MAIN FILE
 Handles the web instanciation and logic.
 """
 
-
 import os
 import flask
 
@@ -14,10 +13,10 @@ from wrapper_dash.facilitator_dash.encrypted_auth import EncryptedAuth
 from dash.dependencies import Input, Output
 
 
-from logs import logs
+from logs.logs import startLogs, printInfoLog
 
-logs.startLogs()
-import logging
+startLogs()
+
 
 import update_data
 
@@ -106,7 +105,7 @@ class AppDash:
 
 
 def create_dash_app():
-    logging.info("-#- Application Running -#-\n")
+    printInfoLog("Application Running", "-#", "^", to_highlight=True)
     # TODO: configure environment
     environment = os.environ.get("ENVIRONMENT")
     dash_app = AppDash(environment)

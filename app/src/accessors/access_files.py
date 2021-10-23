@@ -13,7 +13,7 @@ from shutil import copyfile
 import pandas as pd
 import json
 import os
-import logging
+
 from decouple import config
 
 from accessors.path_files import *

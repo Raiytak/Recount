@@ -4,7 +4,7 @@
 This file is the encryption overlayer, protecting the excels and SQL exchanges.
 """
 
-import logging
+
 from cryptography.fernet import Fernet
 import io
 

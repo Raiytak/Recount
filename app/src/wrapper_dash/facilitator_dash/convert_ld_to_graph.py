@@ -1,6 +1,7 @@
 import random
 import logging
 
+
 # TODO maybe change the logic of this modul, where the data is parsed
 class ListDictToGraph:  # add metadata
     def __init__(self, autorized_ct_json):

@@ -8,8 +8,8 @@ from wrapper_excel.excel_to_df import ExcelToDataframe
 
 import update_data
 
-import logging
-from logs.logs import paddedLogMessage
+
+from logs.logs import printInfoLog
 
 
 class ImportExcelFileSaver:
@@ -22,7 +22,7 @@ class ImportExcelFileSaver:
         # If there is nothing to save, the function stops
         if file_imported != None:
             print(file_imported[100])
-            logging.info(paddedLogMessage(f"{username}: Importing file ..."))
+            printInfoLog(f"{username}: Importing file ...")
             try:
                 content_type, buffer_content = self.decodeImportedFile(file_imported)
                 print(content_type)
@@ -31,16 +31,10 @@ class ImportExcelFileSaver:
                 self.saveContentStringIntoXlsxFile(username, file_data)
 
                 update_data.updateAll(username)
-                logging.info(
-                    paddedLogMessage(f"{username}: File imported, update done")
-                )
+                printInfoLog(f"{username}: File imported, update done")
 
             except TypeError:
-                logging.error(
-                    paddedLogMessage(
-                        f"{username}: The file imported is not a '.xlsx' file"
-                    )
-                )
+                printInfoLog(f"{username}: The file imported is not a '.xlsx' file")
 
     def decodeImportedFile(self, file_imported):
         (

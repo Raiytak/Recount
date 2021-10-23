@@ -16,8 +16,8 @@ On the MySQL part:
 """
 
 from genericpath import exists
-import logging
-from logs.logs import paddedLogMessage
+
+from logs.logs import printInfoLog
 from accessors.access_files import AccessConfig
 from accessors.access_files import AccessUserFiles
 
@@ -26,9 +26,7 @@ def updatingByRemovingAllExistingRowsOfTable(wrapperTable):
     def updateDecorator(func):
         def inner(*args, **kwargs):
             username = args[0]
-            logging.info(
-                paddedLogMessage(f"@{username}: Remove rows of '{wrapperTable.table}'")
-            )
+            printInfoLog(f"@{username}: Remove rows of '{wrapperTable.table}'")
             with wrapperTable:
                 wrapperTable.dumpTableForUser(username)
                 func(*args, **kwargs)
@@ -76,12 +74,12 @@ cleanTable = WrapperOfTable("clean_expenses", db_config)
 def updateExcel(username):
     """Copy the imported excel (if exists then remove it),
     create a new excel that is used for cleaning the data that will then be uploaded on MySQL."""
-    logging.info(paddedLogMessage(f"{username}: Update excel files"))
+    printInfoLog(f"{username}: Update excel files")
     mainCleaner = MainCleanerExcel(username)
     try:
         mainCleaner.updateExcel()
     except Exception as exp:
-        logging.info(paddedLogMessage(f"The excel files created errors: {exp}"))
+        printInfoLog(f"The excel files created errors: {exp}")
         return False
     return True
 
@@ -89,7 +87,7 @@ def updateExcel(username):
 @updatingByRemovingAllExistingRowsOfTable(rawTable)
 def updateRawTable(username):
     """Convert the cleaned excel to MySQL, then remove the cleaned excel (redundant data)"""
-    logging.info(paddedLogMessage(f"{username}: Update 'raw_expenses' Table"))
+    printInfoLog(f"{username}: Update 'raw_expenses' Table")
     mainCleaner = MainCleanerExcel(username)
     dataframe, equivalent_columns = mainCleaner.getDataframeAndEqCol()
     dataframe["username"] = username
@@ -104,7 +102,7 @@ def updateRawTable(username):
 
 @updatingByRemovingAllExistingRowsOfTable(repayTable)
 def updateRepayementsTable(username):
-    logging.info(paddedLogMessage(f"{username}: Update 'reimbursement' Table"))
+    printInfoLog(f"{username}: Update 'reimbursement' Table")
     rawToRepayement = RawToRepayement(rawTable, repayTable, username)
     response = rawToRepayement.selectRepayementRows()
     dataframe = convertRespToDf.translateResponseSqlToDataframe(response, rawTable)
@@ -117,9 +115,7 @@ def updateRepayementsTable(username):
 
 # TODO verify use username
 def deleteRepayementsFromRaw(username):
-    logging.info(
-        paddedLogMessage(f"{username}: Delete 'reimbursement' in 'raw_expenses'")
-    )
+    printInfoLog(f"{username}: Delete 'reimbursement' in 'raw_expenses'")
     rawToRepayement = RawToRepayement(rawTable, repayTable, username)
     response = rawToRepayement.selectRepayementIds()
     list_resp = convertRespToList.translateResponseSqlToList(response)
@@ -129,9 +125,7 @@ def deleteRepayementsFromRaw(username):
 
 # TODO verify use username
 def repayRepayements(username):
-    logging.info(
-        paddedLogMessage(f"{username}: Repay 'reimbursement' in 'raw_expenses'")
-    )
+    printInfoLog(f"{username}: Repay 'reimbursement' in 'raw_expenses'")
     repayRep = RepayPepayements(rawTable, repayTable, username)
     with repayRep:
         response_rep = repayRep.selectRepayementRows()
@@ -162,7 +156,7 @@ def repayRepayements(username):
 
 @updatingByRemovingAllExistingRowsOfTable(tripTable)
 def updateTripsTable(username):
-    logging.info(paddedLogMessage(f"{username}: Update 'trip_expenses'"))
+    printInfoLog(f"{username}: Update 'trip_expenses'")
     rawToTrip = RawToTrip(rawTable, tripTable, username)
     response = rawToTrip.selectTripRows()
     dataframe = convertRespToDf.translateResponseSqlToDataframe(response, rawTable)
@@ -174,9 +168,7 @@ def updateTripsTable(username):
 
 
 def deleteTripsFromRaw(username):
-    logging.info(
-        paddedLogMessage(f"{username}: Delete 'trip_expenses' in 'raw_expenses'")
-    )
+    printInfoLog(f"{username}: Delete 'trip_expenses' in 'raw_expenses'")
     rawToTrip = RawToTrip(rawTable, tripTable, username)
     response = rawToTrip.selectTripIds()
     list_resp = convertRespToList.translateResponseSqlToList(response)
@@ -186,7 +178,7 @@ def deleteTripsFromRaw(username):
 
 @updatingByRemovingAllExistingRowsOfTable(cleanTable)
 def updateCleanTable(username):
-    logging.info(paddedLogMessage(f"{username}: Update 'clean_expenses'"))
+    printInfoLog(f"{username}: Update 'clean_expenses'")
     rawToClean = RawToClean(rawTable, cleanTable, username)
     response = rawToClean.selectAllRemainingRowsInRaw()
     dataframe = convertRespToDf.translateResponseSqlToDataframe(response, rawTable)
@@ -195,7 +187,7 @@ def updateCleanTable(username):
         dataframe, equivalent_columns
     )
 
-    logging.info(paddedLogMessage(f"{username}: Adding trip expenses"))
+    printInfoLog(f"{username}: Adding trip expenses")
     tripToClean = TripToClean(tripTable, cleanTable, username)
     response = tripToClean.selectAllRemainingRowsInTrip()
     dataframe = convertRespToDf.translateResponseSqlToDataframe(response, tripTable)
@@ -217,7 +209,7 @@ def updateSqlDb(username):
     deleteTripsFromRaw(username)
 
     updateCleanTable(username)
-    logging.info(paddedLogMessage(""))
+    printInfoLog("")
 
 
 def removeAllDataForUser(username):
@@ -248,7 +240,7 @@ def updateAll(username):
     # TODO: improve remove ALL -> update values
     # TODO: use cache
     # TODO: use data encryption
-    logging.info(paddedLogMessage(""))
+    printInfoLog("")
     sql_is_to_update = updateExcel(username)
     if sql_is_to_update == True:
         updateSqlDb(username)
