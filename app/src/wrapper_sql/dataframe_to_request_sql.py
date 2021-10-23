@@ -1,25 +1,29 @@
+# -*- coding: utf-8 -*-
+""" 
+                    ====     DESCRIPTION    ====
+Convert dataframe to request SQL.
+"""
+
 import numpy as np
 import logging
 
 
-class PreRequestor:
-    dict_list_values = []
-    dict_equivalent_columns = []
-    elem_decorator = ""
-    symbol = ""
-
-
-class Requestor:
-    list_starting_req = []
-    list_elem_A_req = []
-    list_elem_B_req = []
-    list_bool = []
-    elem_decorator = ""
-    symbol = ""
-    length = 0
-
-
 class DataframeToSql:
+    class PreRequestor:
+        dict_list_values = []
+        dict_equivalent_columns = []
+        elem_decorator = ""
+        symbol = ""
+
+    class Requestor:
+        list_starting_req = []
+        list_elem_A_req = []
+        list_elem_B_req = []
+        list_bool = []
+        elem_decorator = ""
+        symbol = ""
+        length = 0
+
     def translateDataframeToInsertRequestSql(self, dataframe, equivalent_columns):
         # In the case where the dataframe is empty, we return an empty request
         if dataframe.empty == True:
@@ -59,7 +63,7 @@ class DataframeToSql:
         start_insert_into_reqs = ["INSERT INTO & ("] * dict_list_values["len"]
         start_values_reqs = ["VALUES ("] * dict_list_values["len"]
 
-        insert_prerequestor = PreRequestor()
+        insert_prerequestor = self.PreRequestor()
         insert_prerequestor.dict_list_values = dict_list_values
         insert_prerequestor.dict_equivalent_columns = dict_equivalent_columns
         insert_prerequestor.elem_decorator = ""
@@ -88,7 +92,7 @@ class DataframeToSql:
             dict_equivalent_columns, keys_to_keep
         )
 
-        update_prerequestor = PreRequestor()
+        update_prerequestor = self.PreRequestor()
         update_prerequestor.dict_list_values = dict_list_values
         update_prerequestor.dict_equivalent_columns = dict_eq_cols_reduced
         update_prerequestor.elem_decorator = "'"
@@ -107,7 +111,7 @@ class DataframeToSql:
             dict_equivalent_columns, keys_to_keep
         )
 
-        condition_prerequestor = PreRequestor()
+        condition_prerequestor = self.PreRequestor()
         condition_prerequestor.dict_list_values = dict_list_values
         condition_prerequestor.dict_equivalent_columns = dict_eq_cols_condition
         condition_prerequestor.elem_decorator = "'"
@@ -188,8 +192,8 @@ class DataframeToSql:
 
     def loopConcatenateRequestAndElementsForInsert(self, pre_requestor):
         insert_into_reqs, values_reqs = [""], [""]
-        insert_requestor = Requestor()
-        value_requestor = Requestor()
+        insert_requestor = self.Requestor()
+        value_requestor = self.Requestor()
         for column_excel in pre_requestor.dict_equivalent_columns.keys():
             column_sql = pre_requestor.dict_equivalent_columns[column_excel]
 
@@ -230,7 +234,7 @@ class DataframeToSql:
             list_values = pre_requestor.dict_list_values[column_excel]
             list_bool = self.boolListValuesNotNull(list_values)
 
-            new_requestor = Requestor()
+            new_requestor = self.Requestor()
             new_requestor.length = len(list_bool)
             new_requestor.elem_decorator = pre_requestor.elem_decorator
             new_requestor.symbol = pre_requestor.symbol
