@@ -52,13 +52,13 @@ myUpdateConversionJson = UpdateConversionJson()
 from wrapper_sql.wrapper_sql import WrapperOfTable
 from wrapper_sql.dataframe_to_request_sql import DataframeToSql
 from wrapper_sql.response_to_dataframe import ResponseSqlToDataframe, ResponseSqlToList
-from wrapper_sql.table_to_other_table import (
+from wrapper_sql.inter_table_logic import (
     RawToRepayement,
     RawToTrip,
     RawToClean,
     TripToClean,
+    RepayPepayements,
 )
-from wrapper_sql.repay_repayments import RepayPepayements
 
 convertDfToReq = DataframeToSql()
 convertRespToDf = ResponseSqlToDataframe()
