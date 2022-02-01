@@ -1,3 +1,14 @@
+# -*- coding: utf-8 -*-
+""" 
+                    ====     DESCRIPTION    ====
+Save the html elements content to let the user edit them and save their modifications.
+"""
+
+# TODO: use it
+# TODO: automatic detection of the html names + save + automatic detect reload
+
+
+
 from accessors.access_files import AccessNotebookConfig, AccessStandardButtonsConfig
 
 

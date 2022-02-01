@@ -1,3 +1,13 @@
+# -*- coding: utf-8 -*-
+""" 
+                    ====     DESCRIPTION    ====
+Save the excel imported by the user.
+"""
+
+# TODO: check the conformity of the imported excel
+# TODO: if not conform, notify the user
+#   give the choice to give another one or to use the defaul excel
+
 import io
 import base64
 import pandas as pd

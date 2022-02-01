@@ -1,9 +1,18 @@
+# -*- coding: utf-8 -*-
+""" 
+                    ====     DESCRIPTION    ====
+Gestion of the users' identification. 
+"""
+
+# TODO: create a vue for the connexion
+
 from dash_auth.auth import Auth
 import flask, base64, hashlib
 from types import MethodType
 
 
 class EncryptedAuth(Auth):
+    """Identification of the users. Encrypt the password given by the user"""
     def __init__(self, app, username_password_list):
         Auth.__init__(self, app)
         self._users = (
@@ -21,7 +30,7 @@ class EncryptedAuth(Auth):
         username, password = username_password_utf8.split(":")
         return (
             self._users.get(username)
-            == hashlib.new("sha224", password.encode()).hexdigest()
+            == hashlib.new("sha224", password.encode()).hexdigest() # Encryption of the password
         )
 
     def login_request(self):

@@ -26,20 +26,11 @@ from accessors.access_files import AccessConfig
 myAccessConfig = AccessConfig()
 SSL_CONTEXT = myAccessConfig.getSSLContext()
 
-
-# from wrapper_dash.facilitator_dash.save_config import (
-#     ConfigNotebookExcelSaver,
-#     StandardButtonsConfigSaver,
-# )
-
-# ConfigNotebookExcelSaver = ConfigNotebookExcelSaver()
-# StandardButtonsConfigSaver = StandardButtonsConfigSaver()
-
 from wrapper_dash import vue_index, vue_home
 from wrapper_dash import vue_dashboard_home
 from wrapper_dash import vue_test
 
-import wrapper_dash.facilitator_dash.user_identification as user_identification
+from wrapper_dash.facilitator_dash.tools import getUsername
 
 # Dash Application
 class AppDash:
@@ -73,7 +64,7 @@ class AppDash:
             Output("default-page-content", "children"), Input("default-url", "pathname")
         )
         def display_page(pathname):
-            username = user_identification.getUsername()
+            username = getUsername()
             dash.callback_context.response.set_cookie("username", username)
             if pathname == "/":
                 return self.vueIndex.setThisVue()

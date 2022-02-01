@@ -1,3 +1,11 @@
+# -*- coding: utf-8 -*-
+""" 
+                    ====     DESCRIPTION    ====
+Conversion of the users' file cat_thems_auth into a Dash vue.
+"""
+
+# TODO: do it
+
 import dash_html_components as html
 import dash_core_components as dcc
 
@@ -7,6 +15,7 @@ import wrapper_dash.reusable_components.reusable_outputs as reusable_outputs
 
 
 class ParserJsonToHtml:
+    """Conversion of the users' file cat_thems_auth into a Dash vue"""
     def __init__(self, ReusableInputs, ReusableOutputs):
         self.ReusableInputs = ReusableInputs
         self.ReusableOutputs = ReusableOutputs

@@ -11,11 +11,10 @@ from wrapper_dash.reusable_components.reusable_outputs import ReusableOutputs
 from wrapper_dash.reusable_components.reusable_graphs import ReusableGraphs
 from wrapper_dash.reusable_components.reusable_links import ReusableLinks
 
-import wrapper_dash.facilitator_dash.user_identification as user_identification
+from wrapper_dash.facilitator_dash.tools import getUsername, getIdButtonClicked
 from wrapper_dash.facilitator_dash.date_to_dataframe import DateToDataframe
 from wrapper_dash.facilitator_dash.convert_df_to_graph import DataframeToGraph
 from wrapper_dash.facilitator_dash.import_excel import ImportExcelFileSaver
-import wrapper_dash.facilitator_dash.tools as tools
 
 from wrapper_excel.excel_to_df import ExcelToDataframe
 
@@ -125,8 +124,8 @@ class AppDash(EmptyVue):
     def setCallback(self):
         @self.app.callback(self.getOutputCallbacks(), self.getInputCallbacks())
         def update_graph(selected_date_str, selected_periode, imported_excel):
-            username = user_identification.getUsername()
-            id_component_called = tools.getIdButtonClicked()
+            username = getUsername()
+            id_component_called = getIdButtonClicked()
             if "import" in id_component_called:
                 self.ImportExcelFileSaver.saveImportedFile(username, imported_excel)
                 update_data.updateAll(username)
@@ -160,11 +159,11 @@ class AppDash(EmptyVue):
             self.getExportResetExcelCallbacks(),
         )
         def export_or_reset_data(reset_nclicks, export_nclicks):
-            id_component_called = tools.getIdButtonClicked()
+            id_component_called = getIdButtonClicked()
             if "reset" in id_component_called:
                 return True, None
             elif "export" in id_component_called:
-                username = user_identification.getUsername()
+                username = getUsername()
                 myAccessUserFiles = AccessUserFiles(username)
                 path_excel = myAccessUserFiles.AccessExcel.ExcelPaths.rawExcelPath()
                 myExcelToDataframe = ExcelToDataframe(username)
@@ -188,7 +187,7 @@ class AppDash(EmptyVue):
             self.getResetExportConfirmInputCallback(),
         )
         def confirm_reset(conf_dial_submited):
-            username = user_identification.getUsername()
+            username = getUsername()
             myAccessUserFiles = AccessUserFiles(username)
 
             if conf_dial_submited != None:

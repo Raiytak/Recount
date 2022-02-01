@@ -1,3 +1,10 @@
+# -*- coding: utf-8 -*-
+""" 
+                    ====     DESCRIPTION    ====
+Convert a date and a period given by the user into a dataframe.
+The data comes from the user's data stored in MySQL.
+"""
+
 import datetime
 from dateutil.relativedelta import relativedelta
 
@@ -6,6 +13,7 @@ from wrapper_sql.df_sql_conversion import ResponseSqlToDataframe
 
 from accessors.access_files import AccessConfig
 
+# TODO: change this setup to environment
 myAccessConfig = AccessConfig()
 db_config = myAccessConfig.getDatabaseConfig()
 
