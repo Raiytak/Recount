@@ -1,15 +1,15 @@
 # Ignore the important stuff
-app/src/config/*
-app/src/.env
+recount/src/config/*
+recount/src/.env
 **.pem
 
 # Ignore the database other files
 database/init_**
 
 # Ignore the users's stuff
-# app/data
+# recount/data
 # Ignore old version, FOR NOW
-app/src/*data*
+recount/src/*data*
 
 # Ignore the __pycache__ files created by python
 **__pycache__**
@@ -17,18 +17,18 @@ app/src/*data*
 
 # Ignoring files created by setuptools and other tools used
 # to create packages.
-app/src/build
-app/src/dist
+recount/src/build
+recount/src/dist
 **recount.egg-info**
-app/src/MANIFEST
-app/src/pyproject.toml
+recount/src/MANIFEST
+recount/src/pyproject.toml
 
 # Ignoring files created by pipenv.
 # Those should only be created using pipenv install -e .
-app/Pipfile
-app/Pipfile.lock
-app/recount.egg-info
-app/pyvenv.cfg
+recount/Pipfile
+recount/Pipfile.lock
+recount/recount.egg-info
+recount/pyvenv.cfg
 
 # Ignoring virtualenv manually created
 *virtual*
@@ -38,14 +38,14 @@ app/pyvenv.cfg
 #       python -venv .
 #       source bin/activate
 #       pip install -e .
-app/bin
-app/etc
-app/share
-app/lib
-app/lib64
-app/include
-app/.pytest_cache
+recount/bin
+recount/etc
+recount/share
+recount/lib
+recount/lib64
+recount/include
+recount/.pytest_cache
 
 # Other ignores
-app/src/logs/*.log
-app/src/test.py
+recount/src/logs/*.log
+recount/src/test.py
