@@ -1,117 +1,15 @@
 # -*- coding: utf-8 -*-
 """ 
                     ====     DESCRIPTION    ====
-This file is the encryption overlayer, protecting the excels and SQL exchanges.
+This file is the encryption layer protecting SQL database.
 """
-
-
-from cryptography.fernet import Fernet
-import io
-
-import pandas as pd
-import xlrd
 
 import re
 
-# import cryptocode
-
-from accessors.access_files import AccessConfig
+from access_files import AccessConfig
 
 
-class DataEncryption:
-    """Encryption logic that can be used on any document.
-    It needs a private key to protect the data."""
-
-    def __init__(self, key):
-        self.key = key
-        if type(self.key) == bytes:
-            try:
-                self.fernet = Fernet(self.key)
-            except ValueError:
-                pass
-
-    def writeNewKey(self, path_key):
-        key = self.fernet.generate_key()
-        with open(path_key, "wb") as key_file:
-            key_file.write(key)
-
-    def encryptAndSaveDataToPath(self, file_data, file_path):
-        encrypted_data = self.encryptData(file_data)
-        self.writeBinaryDataTo(encrypted_data, file_path)
-
-    def getDataFromEncryptedFileAtPath(self, file_path):
-        with open(file_path, "rb") as file:
-            encrypted_data = file.read()
-        decrypted_data = self.fernet.decrypt(encrypted_data)
-        return decrypted_data
-
-    def getDataFromEncryptedData(self, encrypted_data):
-        decrypted_data = self.fernet.decrypt(encrypted_data)
-        return decrypted_data
-
-    def encryptFile(self, file_path):
-        file_data = self.readBinaryDataFrom(file_path)
-        encrypted_data = self.encryptData(file_data)
-        self.writeBinaryDataTo(encrypted_data, file_path)
-
-    def decryptFile(self, file_path):
-        encrypted_data = self.readBinaryDataFrom(file_path)
-        file_data = self.decryptData(encrypted_data)
-        self.writeBinaryDataTo(file_data, file_path)
-
-    def readBinaryDataFrom(self, file_path):
-        with open(file_path, "rb") as file:
-            file_data = file.read()
-        return file_data
-
-    def writeBinaryDataTo(self, file_data, file_path):
-        with open(file_path, "wb") as file:
-            file_data = file.write(file_data)
-
-    def writeStringDataTo(self, file_data, file_path):
-        with open(file_path, "w") as file:
-            file_data = file.write(file_data)
-
-    def encryptData(self, file_data):
-        encrypted_data = self.fernet.encrypt(file_data)
-        return encrypted_data
-
-    def decryptData(self, encrypted_data):
-        file_data = self.fernet.decrypt(encrypted_data)
-        return file_data
-
-
-class ExcelEncryption(DataEncryption):
-    """Encryption logic of the excels."""
-
-    def __init__(self):
-        self.AccessConfig = AccessConfig()
-        excel_key = self.AccessConfig.getExcelKey()
-        super().__init__(excel_key)
-
-    def getDataFrom(self, path_excel):
-        try:
-            if xlrd.inspect_format(path_excel) == None:
-                return self.getDataFromEncryptedFileAtPath(path_excel)
-            else:
-                return self.readBinaryDataFrom(path_excel)
-        except AttributeError:
-            import pdb
-
-            pdb.set_trace()
-
-    def encryptDataframe(self, dataframe, path_excel):
-        buffer = io.BytesIO()
-        with pd.ExcelWriter(buffer) as writer:
-            dataframe.to_excel(writer)
-            writer.save()
-        buffer.seek(0)
-        file_data = buffer.read()
-        encrypted_data = self.encryptData(file_data)
-        self.writeBinaryDataTo(encrypted_data, path_excel)
-
-
-class SqlEncryption(DataEncryption):
+class SqlEncryption:
     """Encryption logic of the SQL exchanges."""
 
     def __init__(self):

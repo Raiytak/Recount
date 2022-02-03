@@ -15,8 +15,6 @@ On the MySQL part:
     -clean_expenses:    data cleaned, used to create graphs
 """
 
-from genericpath import exists
-
 from logs.logs import printInfoLog
 from accessors.access_files import AccessConfig
 from accessors.access_files import AccessUserFiles
