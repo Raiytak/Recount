@@ -7,40 +7,36 @@ in the dat_theme_authorized file.
 
 import numpy as np
 
-from accessors.access_files import AccessCTAuthorized as AccessCTAuthorized
+import access
+
+AUTHORIZED_CATEGORIES = access.AccessUserFiles.categoriesAuthorized
 
 
-class ReviewerDataframe:
-    """"""
+# TODO : Improve readability and usefulness of this function
+# TODO: make this function work
+def checkConformity(self, dataframe):
+    """This function returns the row only if it recognises the category and theme"""
 
-    def __init__(self):
-        # TODO: do for each user (username)
-        self._ct_json = AccessCTAuthorized().getJson()
-
-    # TODO: make this function work
-    def checkConformity(self, dataframe):
-        """This function returns the row only if it recognises the category and theme"""
-
-        def chekCTByRow(row):
-            category = row["Category"]
-            if (category == str(np.nan)) or (category == "reimbursement"):
+    def chekCTByRow(row):
+        category = row["Category"]
+        if (category == str(np.nan)) or (category == "reimbursement"):
+            return row
+        if category in AUTHORIZED_CATEGORIES.keys():
+            theme = row["Theme"]
+            if (theme in AUTHORIZED_CATEGORIES[category]) or (theme == str(np.nan)):
                 return row
-            if category in self._ct_json.keys():
-                theme = row["Theme"]
-                if (theme in self._ct_json[category]) or (theme == str(np.nan)):
-                    return row
-                raise Exception(
-                    "ERROR THEME : In row "
-                    + row["ID"]
-                    + "orthograph error in theme : "
-                    + row["Theme"]
-                )
             raise Exception(
-                "ERROR CATEGORY : In row "
+                "ERROR THEME : In row "
                 + row["ID"]
-                + "orthograph error in category : "
-                + row["Category"]
+                + "orthograph error in theme : "
+                + row["Theme"]
             )
+        raise Exception(
+            "ERROR CATEGORY : In row "
+            + row["ID"]
+            + "orthograph error in category : "
+            + row["Category"]
+        )
 
-        # dataframe.apply(chekCTByRow, axis=1)
-        pass
+    # dataframe.apply(chekCTByRow, axis=1)
+    pass

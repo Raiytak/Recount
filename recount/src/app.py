@@ -9,22 +9,18 @@ import os
 import flask
 
 import dash
-from wrapper_dash.facilitator_dash.encrypted_auth import EncryptedAuth
+from com.authentification import EncryptedAuth
 from dash.dependencies import Input, Output
 
 
-from logs.logs import startLogs, printInfoLog
-
-startLogs()
-
+import logs
 
 import update_data
 
 # Import the config file
-from accessors.access_files import AccessConfig
+from access import AccessConfig
 
-myAccessConfig = AccessConfig()
-SSL_CONTEXT = myAccessConfig.getSSLContext()
+# SSL_CONTEXT = myAccessConfig.getSSLContext()
 
 from wrapper_dash import vue_index, vue_home
 from wrapper_dash import vue_dashboard_home
@@ -38,15 +34,17 @@ class AppDash:
     Here is handled the web part of the application."""
 
     # TODO: use environment
-    def __init__(self, environment):
+    def __init__(self):
         external_stylesheets = ["https://codepen.io/chriddyp/pen/bWLwgP.css"]
+        environment = os.environ.get("ENVIRONMENT")
+
         self.app = dash.Dash(
             __name__,
             external_stylesheets=external_stylesheets,
             suppress_callback_exceptions=True,
             server=flask.Flask(__name__),
         )
-        self.setAuthentification()
+        self.addAuthentification(self.app)
 
         self.vueIndex = vue_index.AppDash(self.app)
         self.vueHome = vue_home.AppDash(self.app)
@@ -85,21 +83,21 @@ class AppDash:
         self.setVueIndex()
         self.setCallback()
 
-    def run(self):
-        self.app.run_server(debug=True)
+    def run(self, debug=True, ssl_context=None, *args, **kwargs):
+        self.app.run_server(debug=debug, ssl_context=ssl_context, *args, **kwargs)
         # self.app.run_server(debug=False, ssl_context=SSL_CONTEXT)
         # self.app.run_server(debug=True, ssl_context="adhoc")
 
-    def setAuthentification(self):
-        VALID_USERNAME_PASSWORD_PAIRS = myAccessConfig.getUsers()
+    def addAuthentification(self):
+        VALID_USERNAME_PASSWORD_PAIRS = AccessConfig.users()
         EncryptedAuth(self.app, VALID_USERNAME_PASSWORD_PAIRS)
 
 
-def create_dash_app():
-    printInfoLog("Application Running", "-#", "^", to_highlight=True)
-    # TODO: configure environment
-    environment = os.environ.get("ENVIRONMENT")
-    dash_app = AppDash(environment)
+def createDashApp():
+    logs.formatAndDisplay(
+        "Application creation...", "-#", logs.Position.CENTER, to_highlight=True
+    )
+    dash_app = AppDash()
     dash_app.set_default_page()
     return dash_app
 
@@ -107,5 +105,9 @@ def create_dash_app():
 if __name__ == "__main__":
     """Launch the application by command line:
     pipenv run python app.py"""
-    dash_app = create_dash_app()
+    logs.startLogs()
+    logs.formatAndDisplay(
+        "Launch main sccript", "+#", logs.Position.CENTER, to_highlight=True
+    )
+    dash_app = createDashApp()
     dash_app.run()

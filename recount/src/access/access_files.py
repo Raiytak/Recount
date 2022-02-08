@@ -11,6 +11,9 @@ The paths used are stored in the paths_docs module, and are used by the wrappers
 import shutil
 import json
 import os
+import io
+from typing import Union
+import pandas
 
 from .path_files import *
 
@@ -85,7 +88,7 @@ class AccessConfig(AccessorFile):
 
     @classproperty
     def appConfigs(cls):
-        with open(ConfigPath.applicationConfigs, "r") as json_file:
+        with open(ConfigPath.application, "r") as json_file:
             data = json.load(json_file)
         return data
 
@@ -107,6 +110,15 @@ class AccessConfig(AccessorFile):
         cert_file = ConfigPath.certificate
         private_key_file = ConfigPath.privateKey
         return (cert_file, private_key_file)
+
+
+class AccessLog(AccessorFile):
+    """CRUD operations on the log files of the application"""
+
+    @classmethod
+    def removeLogs(cls):
+        for log_path in LogPath.logs_path:
+            cls.removeFile(log_path)
 
 
 class AccessUserFiles(AccessorFile):
@@ -138,7 +150,10 @@ class AccessUserFiles(AccessorFile):
         """If no path is provided, gets the 'expenses.xlsx' of the selected
         user, or the example one if no user is given"""
         if excel_path is None:
-            excel_path = self.user_files_path.excel
+            if self.user_files_path.pathExists(self.user_files_path.excel):
+                excel_path = self.user_files_path.excel
+            else:
+                excel_path = self.user_files_path.exampleExcel
         is_excel = self.isDecryptedExcelFile(excel_path)
         if is_excel == True:
             return self.dataOfBinary(excel_path)
@@ -153,11 +168,28 @@ class AccessUserFiles(AccessorFile):
     def copyExampleExcel(self):
         shutil.copyfile(UserFilesPath.exampleExcel, self.user_files_path.excel)
 
-    def saveExcel(self, data, name: str = None, to_encode=True):
+    def saveExcel(
+        self,
+        data: Union[bytes, pandas.core.frame.DataFrame],
+        name: str = None,
+        to_encode=True,
+    ):
+        def convertDataframeToBytes(dataframe):
+            buffer = io.BytesIO()
+            with pandas.ExcelWriter(buffer) as writer:
+                dataframe.to_excel(writer)
+                writer.save()
+            buffer.seek(0)
+            file_data = buffer.read()
+            return file_data
+
         if name is not None:
             file_path = FilePath.formPathUsing(self.user_files_path.excelFolder, name)
         else:
             file_path = self.user_files_path.excel
+
+        if type(data) == pandas.core.frame.DataFrame:
+            data = convertDataframeToBytes(data)
 
         if to_encode == True:
             encrypted_data = self.fernet_encryption.encryptData(data)

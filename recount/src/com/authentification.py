@@ -8,7 +8,6 @@ Gestion of the users' identification.
 
 from dash_auth.auth import Auth
 import flask, base64, hashlib
-from types import MethodType
 
 
 class EncryptedAuth(Auth):

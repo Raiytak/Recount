@@ -122,7 +122,7 @@ class ConfigPath(FilePath):
     root = FilePath.formPathUsing(APP_PATH, Folder.SOURCE, Folder.CONFIG)
 
     @classproperty
-    def applicationConfigs(cls):
+    def application(cls):
         return cls.formPathUsing(cls.root, "app_configs.json")
 
     @classproperty
@@ -137,29 +137,56 @@ class ConfigPath(FilePath):
     def sqlKey(cls):
         return cls.formPathUsing(cls.root, "keys", "data_sql.key")
 
-    @classproperty
-    def certificate(cls):  # TODO : Add certificates
-        return cls.formPathUsing(cls.root, "keys", "other-csr.pem")
-        path_exists, path_created = cls.pathExists(filename="other-csr.pem")
-        if path_exists:
-            return path_created
-        else:
-            path_exists, path_created = cls.pathExists(filename="server-csr.pem")
-            return cls.formPathUsing(cls.PathInformation)
+    # @classproperty
+    # def certificate(cls):  # TODO : Add certificates
+    #     return cls.formPathUsing(cls.root, "keys", "other-csr.pem")
+    #     path_exists, path_created = cls.pathExists(filename="other-csr.pem")
+    #     if path_exists:
+    #         return path_created
+    #     else:
+    #         path_exists, path_created = cls.pathExists(filename="server-csr.pem")
+    #         return cls.formPathUsing(cls.PathInformation)
+
+    # @classproperty
+    # def privateKey(cls):  # TODO : Add keys
+    #     list_folders = ["", "keys"]
+    #     path_exists, path_created = cls.pathExists(
+    #         list_folders, "other-private-key.pem"
+    #     )
+    #     if path_exists:
+    #         return path_created
+    #     else:
+    #         path_exists, path_created = cls.pathExists(
+    #             list_folders, "server-private-key.pem"
+    #         )
+    #         return path_created
+
+
+class LogPath(FilePath):
+    """Path to the logs of the application"""
+
+    root = FilePath.formPathUsing(APP_PATH, Folder.SOURCE, Folder.LOGS)
 
     @classproperty
-    def privateKey(cls):  # TODO : Add keys
-        list_folders = ["", "keys"]
-        path_exists, path_created = cls.pathExists(
-            list_folders, "other-private-key.pem"
-        )
-        if path_exists:
-            return path_created
-        else:
-            path_exists, path_created = cls.pathExists(
-                list_folders, "server-private-key.pem"
-            )
-            return path_created
+    def application(cls):
+        return cls.formPathUsing(cls.root, "application.log")
+
+    @classproperty
+    def db_com(cls):
+        return cls.formPathUsing(cls.root, "db_com.log")
+
+    @classproperty
+    def error(cls):
+        return cls.formPathUsing(cls.root, "error.log")
+
+    @classproperty
+    def logs_path(cls):
+        paths = [
+            getattr(LogPath, name)
+            for name in cls.__dict__.keys()
+            if not name.startswith("_") and name != "root" and name != "logs_path"
+        ]
+        return paths
 
 
 class UserFilesPath(FilePath):
