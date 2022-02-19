@@ -18,7 +18,7 @@ import logs
 import update_data
 
 # Import the config file
-from access import AccessConfig
+from access import ConfigAccess
 
 # SSL_CONTEXT = myAccessConfig.getSSLContext()
 
@@ -89,7 +89,7 @@ class AppDash:
         # self.app.run_server(debug=True, ssl_context="adhoc")
 
     def addAuthentification(self):
-        VALID_USERNAME_PASSWORD_PAIRS = AccessConfig.users()
+        VALID_USERNAME_PASSWORD_PAIRS = ConfigAccess.users()
         EncryptedAuth(self.app, VALID_USERNAME_PASSWORD_PAIRS)
 
 

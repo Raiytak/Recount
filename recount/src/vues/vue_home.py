@@ -11,7 +11,7 @@ from wrapper_dash.reusable_components.reusable_links import ReusableLinks
 import wrapper_dash.facilitator_dash.user_identification as user_identification
 import wrapper_dash.facilitator_dash.tools as tools
 
-from accessors.access_files import AccessUserFiles
+from accessors.access_files import UserFilesAccess
 
 import update_data
 

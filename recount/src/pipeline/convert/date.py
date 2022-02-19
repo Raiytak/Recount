@@ -11,10 +11,10 @@ from dateutil.relativedelta import relativedelta
 from wrapper_sql.wrapper_sql import WrapperOfTable
 from wrapper_sql.df_sql_conversion import ResponseSqlToDataframe
 
-from accessors.access_files import AccessConfig
+from accessors.access_files import ConfigAccess
 
 # TODO: change this setup to environment
-myAccessConfig = AccessConfig()
+myAccessConfig = ConfigAccess()
 db_config = myAccessConfig.getDatabaseConfig()
 
 # TODO simplify this class

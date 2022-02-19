@@ -11,59 +11,50 @@ meaning that this is the most probable one.
 
 import numpy as np
 
-import access
-
 
 # TODO 9169: rework of intelligent fill, improve robustness and logic
-# TODO: make a convert_descr_to_theme.json file for each user and a global one
-# TODO: set the probability between 0 and 1, and count the number of occurence
-# TODO: have some sort of coefficient that reduces the power of each user each time they use / add a cat + theme
 
 
 class IntelligentFill:
-    def __init__(self, username=None):
-        access_user_files = access.AccessUserFiles(username)
-        self.description_to_category = access_user_files.descriptionToCategory
+    def __init__(self, intelligent_fill):
+        self.intelligent_fill = intelligent_fill
 
     def fillBlanks(self, dataframe):
-        if self.description_to_category != {}:
+        if self.intelligent_fill != {}:
             self.fillBlanksUsingCompany(dataframe)
-            # dataframe = self.fillBlanksUsingDescription(dataframe) #TODO
 
+    # TODO: Add only if category in user's authorized categories
     def fillBlanksUsingCompany(self, dataframe):
         def fillRowUsingEntreprise(row):
             if row["Category"] == str(np.nan):
                 company = row["Company"]
-                category = self.convertCompanyToCategoryAndTheme(company, "Category")
+                category = self.convertCompanyToCategory(company)
                 row["Category"] = category
-            if row["Theme"] == str(np.nan):
-                company = row["Company"]
-                theme = self.convertCompanyToCategoryAndTheme(company, "Theme")
-                row["Theme"] = theme
             return row
 
         dataframe = dataframe.apply(fillRowUsingEntreprise, axis=1)
         return dataframe
 
-    def convertCompanyToCategoryAndTheme(self, company, c_t):
-        conv_json = self.description_to_category
-        best_theme = str(np.nan)
+    def convertCompanyToCategory(self, company):
+        best_category = str(np.nan)
         if company != str(np.nan):
-            try:
-                themes_json = conv_json["Company"][company][c_t]
-                if str(np.nan) in themes_json.keys():
-                    del themes_json[str(np.nan)]
-                if themes_json != {}:
-                    best_theme = max(themes_json, key=themes_json.get)
-            except KeyError:
-                pass  # Means that there is no information for this company
-        return best_theme
+            categories = self.intelligent_fill["Company"]
+            if company in categories.keys():
+                if categories[company] != {}:
+                    best_category = max(categories, key=categories.get)
+        return best_category
+
+
+# TODO: Refactor this function
+# TODO 1093 : Adapt intelligent fill update
+# TODO: set the probability between 0 and 1, and count the number of occurence
+# TODO: have some sort of coefficient that reduces the power of each user each time they use / add a cat + theme
 
 
 class UpdateConversionJson:
     def __init__(self):
         self.AccessDescrToTheme = AccessDescrToTheme()
-        self.description_to_category = self.AccessDescrToTheme.getJsonDescrToTheme()
+        self.intelligent_fill = self.AccessDescrToTheme.getJsonDescrToTheme()
 
     def updateConversionJsonUsingDataframe(self, dataframe):
         list_c_d = ["Company", "Description"]
@@ -78,46 +69,36 @@ class UpdateConversionJson:
                 self._updateConversionEntrepriseJson(
                     entr_or_descr, theme_or_subtheme, value, cat_or_theme
                 )
-        self.AccessDescrToTheme.updateDescrConvJson(self.description_to_category)
+        self.AccessDescrToTheme.updateDescrConvJson(self.intelligent_fill)
 
     def _updateConversionEntrepriseJson(self, company, c_t, value, type_output):
         # type_output = "c_t" or "Theme"
         if company != str(np.nan):
             try:
-                self.description_to_category["Company"][company][type_output][
-                    c_t
-                ] += value
+                self.intelligent_fill["Company"][company][type_output][c_t] += value
             except KeyError:
                 try:
-                    self.description_to_category["Company"][company][type_output][
-                        c_t
-                    ] = value
+                    self.intelligent_fill["Company"][company][type_output][c_t] = value
                 except KeyError:
                     try:
-                        self.description_to_category["Company"][company][
-                            type_output
-                        ] = {}
-                        self.description_to_category["Company"][company][type_output][
+                        self.intelligent_fill["Company"][company][type_output] = {}
+                        self.intelligent_fill["Company"][company][type_output][
                             c_t
                         ] = value
                     except KeyError:
                         try:
-                            self.description_to_category["Company"][company] = {}
-                            self.description_to_category["Company"][company][
-                                type_output
-                            ] = {}
-                            self.description_to_category["Company"][company][
-                                type_output
-                            ][c_t] = value
+                            self.intelligent_fill["Company"][company] = {}
+                            self.intelligent_fill["Company"][company][type_output] = {}
+                            self.intelligent_fill["Company"][company][type_output][
+                                c_t
+                            ] = value
                         except KeyError:
-                            self.description_to_category["Company"] = {}
-                            self.description_to_category["Company"][company] = {}
-                            self.description_to_category["Company"][company][
-                                type_output
-                            ] = {}
-                            self.description_to_category["Company"][company][
-                                type_output
-                            ][c_t] = value
+                            self.intelligent_fill["Company"] = {}
+                            self.intelligent_fill["Company"][company] = {}
+                            self.intelligent_fill["Company"][company][type_output] = {}
+                            self.intelligent_fill["Company"][company][type_output][
+                                c_t
+                            ] = value
 
     # def getListStopWords(self):
     #     en_stop_words = stop_words.get_stop_words("english")

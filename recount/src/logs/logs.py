@@ -138,7 +138,7 @@ class ApplicationLogger:
 
 def startLogs(stdout_filter: Filter = Filter.INFO):
     """Initiates and launches the logs of the application"""
-    access.AccessLog.removeLogs()
+    access.LogAccess.removeLogs()
 
     stream_stdout = ApplicationHandler.createStreamInfoHandler()
     stream_stdout.addFilter(stdout_filter.value())

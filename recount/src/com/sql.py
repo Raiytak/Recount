@@ -11,7 +11,14 @@ from threading import Lock
 import pymysql
 import weakref
 
-from access.access_files import AccessConfig, classproperty
+from access.access_files import ConfigAccess, classproperty
+
+
+class Table(Enum):
+    """Name of the available tables"""
+
+    EXPENSE = "expense"
+    REIMBURSEMENT = "reimbursement"
 
 
 class SqlSocket:
@@ -22,7 +29,7 @@ class SqlSocket:
 
     def createSocket(self, db_config):
         if db_config is None:
-            db_config = AccessConfig.databaseConfig
+            db_config = ConfigAccess.database_config
         new_socket = pymysql.connect(
             host=db_config["host"],
             user=db_config["user"],
@@ -161,11 +168,6 @@ class SqlRequest:
             ")",
         )
         self.by_hand = by_hand
-        # if not self.is_clean:
-        #     raise ArgumentError(
-        #         "The constructed SqlRequest was provided wrongful arguments"
-        #         + " and could not be instanciated properly"
-        #     )
 
     def __str__(self) -> str:  # TODO : replace & by tables, or not
         if self.action == SqlKeyword.SELECT.value:
@@ -246,18 +248,6 @@ class SqlRequest:
         )
         return request
 
-    # @property
-    # def is_clean(self) -> bool:
-    #     if self.is_empty:
-    #         return False
-    #     return True
-
-    # @property
-    # def is_empty(self) -> bool:
-    #     if (self.action is None) or (self.table_name is None):
-    #         return True
-    #     return False
-
 
 class SqlTable:
     """Access to one table of the """
@@ -328,6 +318,7 @@ class SqlTable:
         )
         response = self.select(request)
         name_columns = [col[0] for col in response]
+        assert type(name_columns) == list  # TODO : Remove
         return name_columns
 
     def selectAll(self):
@@ -389,8 +380,8 @@ class UserSqlTable(SqlTable):
 #     """Encryption logic of the SQL exchanges."""
 
 #     def __init__(self):
-#         self.AccessConfig = AccessConfig()
-#         sql_key = self.AccessConfig.getDataSqlKey()
+#         self.ConfigAccess = ConfigAccess()
+#         sql_key = self.ConfigAccess.getDataSqlKey()
 #         self.list_columns_to_left_unchanged = [
 #             "ID",
 #             "_id",

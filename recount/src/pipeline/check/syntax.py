@@ -9,7 +9,7 @@ import numpy as np
 
 import access
 
-AUTHORIZED_CATEGORIES = access.AccessUserFiles.categoriesAuthorized
+AUTHORIZED_CATEGORIES = access.UserFilesAccess.categories
 
 
 # TODO : Improve readability and usefulness of this function

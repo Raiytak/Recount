@@ -12,7 +12,7 @@ import io
 import base64
 import pandas as pd
 
-from accessors.access_files import AccessUserFiles
+from accessors.access_files import UserFilesAccess
 from accessors.data_encryption import ExcelEncryption
 from wrapper_excel.excel_to_df import ExcelToDataframe
 
@@ -72,7 +72,7 @@ class ImportExcelFileSaver:
         return content_type, content_decoded
 
     def saveContentStringIntoXlsxFile(self, username, file_data):
-        myAccessUserFiles = AccessUserFiles(username)
+        myAccessUserFiles = UserFilesAccess(username)
         path_file = myAccessUserFiles.AccessExcel.ExcelPaths.importedExcelPath()
         self.ExcelEncryption.encryptAndSaveDataToPath(file_data, path_file)
         myAccessUserFiles.AccessExcel.updateUserExcel()

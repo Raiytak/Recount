@@ -5,22 +5,28 @@ This file aims to do the CRUD manipulations on the files used by the application
 The paths used are stored in the paths_docs module, and are used by the wrappers of this module.
 """
 
-"""ACHTUNG: To access user files, you should always do it using AccessUserFiles class !"""
+"""ACHTUNG: To access user files, you should always do it using UserFilesAccess class !"""
 
 
+from importlib.resources import path
 import shutil
 import json
 import os
 import io
 from typing import Union
 import pandas
+import urllib.request
+from currency_converter import ECB_URL
 
 from .path_files import *
 
 from cryptography.fernet import Fernet
 
+__all__ = ["ConfigAccess", "LogAccess", "UserFilesAccess"]
 
-def is_excel(path_file):
+
+def isExcel(path_file):
+    # TODO 2496: use openpyxl instead
     excel_sigs = [
         (b"\x50\x4B\x05\x06", 2, -22, 4),
         (b"\x09\x08\x10\x00\x00\x06\x05\x00", 0, 512, 8),  # Saved from Excel
@@ -47,7 +53,23 @@ def is_excel(path_file):
     return False
 
 
-class AccessorFile:
+def isExchangeRatesFileUpToDate():
+    if len(ConfigPath.currencies_rates_filenames) == 0:
+        return False
+    return (
+        ConfigPath.currencies_rates.name == ConfigPath.today_currencies_rates_filename
+    )
+
+
+def updateCurrenciesRates():
+    # Delete the older file
+    for filename in ConfigPath.currencies_rates_filenames:
+        ConfigAccess.removeFile(ConfigPath.formPathUsing(ConfigPath.root, filename))
+    # Import the currencies rates up to date
+    urllib.request.urlretrieve(ECB_URL, ConfigPath.currencies_rates)
+
+
+class FileAccessor:
     @staticmethod
     def dataOfBinary(file_path: Path):
         with open(file_path, "rb") as file:
@@ -76,29 +98,39 @@ class AccessorFile:
             os.remove(path_file)
 
 
-class AccessConfig(AccessorFile):
+class ConfigAccess(FileAccessor):
     """CRUD operations on the config files of the application"""
 
     @classproperty
-    def databaseConfig(cls):
+    def database_config(cls):
         stage = os.getenv("RECOUNT_STAGE")
-        app_configs = cls.appConfigs
+        app_configs = cls.app_configs
         db_configs = app_configs[stage]["mysql"]
         return db_configs
 
     @classproperty
-    def appConfigs(cls):
+    def app_configs(cls):
         with open(ConfigPath.application, "r") as json_file:
             data = json.load(json_file)
         return data
 
     @classproperty
-    def excelKey(cls):
-        return cls.dataOfBinary(ConfigPath.excelKey)
+    def currencies(cls):
+        return cls.dataOfJson(ConfigPath.currencies)
 
     @classproperty
-    def sqlKey(cls):
-        return cls.dataOfBinary(ConfigPath.sqlKey)
+    def currencies_rates_path(cls):
+        if not isExchangeRatesFileUpToDate():
+            updateCurrenciesRates()
+        return ConfigPath.currencies_rates
+
+    @classproperty
+    def excel_key(cls):
+        return cls.dataOfBinary(ConfigPath.excel_key)
+
+    @classproperty
+    def sql_ey(cls):
+        return cls.dataOfBinary(ConfigPath.sql_ey)
 
     @classproperty
     def users(cls):
@@ -106,13 +138,13 @@ class AccessConfig(AccessorFile):
 
     # TODO 5155: add SSL context
     @classproperty
-    def sslContext(cls):
+    def ssl_context(cls):
         cert_file = ConfigPath.certificate
         private_key_file = ConfigPath.privateKey
         return (cert_file, private_key_file)
 
 
-class AccessLog(AccessorFile):
+class LogAccess(FileAccessor):
     """CRUD operations on the log files of the application"""
 
     @classmethod
@@ -121,30 +153,42 @@ class AccessLog(AccessorFile):
             cls.removeFile(log_path)
 
 
-class AccessUserFiles(AccessorFile):
+class UserFilesAccess(FileAccessor):
     """CRUD operations on all the excels of the application"""
 
     def __init__(self, username: str = None):
+        self.fernet_encryption = FernetEncryption(ConfigAccess.excel_key)
         if username is None:
             self.user_files_path = UserFilesPath
         else:
             self.user_files_path = UserFilesPath(username)
             self.initializeUserFolders()
 
-        self.fernet_encryption = FernetEncryption(AccessConfig.excelKey)
-
     def initializeUserFolders(self):
-        if not FilePath.pathExists(self.user_files_path.userFolder):
+        if not FilePath.pathExists(self.user_files_path.user_folder):
             self.createUserFolder()
         if not FilePath.pathExists(self.user_files_path.excel):
-            self.copyExampleExcel()
+            self.copyAndEncryptExampleExcel()
+        if not FilePath.pathExists(self.user_files_path.categories):
+            shutil.copy(
+                UserFilesPath.example_categories, self.user_files_path.categories
+            )
+        if not FilePath.pathExists(self.user_files_path.intelligent_fill):
+            shutil.copy(
+                UserFilesPath.example_intelligent_fill,
+                self.user_files_path.intelligent_fill,
+            )
+        if not FilePath.pathExists(self.user_files_path.translations):
+            shutil.copy(
+                UserFilesPath.example_translations, self.user_files_path.translations,
+            )
 
     def createUserFolder(self):
-        os.mkdir(self.user_files_path.userFolder)
+        os.mkdir(self.user_files_path.user_folder)
 
     def removeUserFolder(self):
-        if FilePath.pathExists(self.user_files_path.userFolder):
-            shutil.rmtree(self.user_files_path.userFolder, ignore_errors=False)
+        if FilePath.pathExists(self.user_files_path.user_folder):
+            shutil.rmtree(self.user_files_path.user_folder, ignore_errors=False)
 
     def excel(self, excel_path: Path = None):
         """If no path is provided, gets the 'expenses.xlsx' of the selected
@@ -153,20 +197,25 @@ class AccessUserFiles(AccessorFile):
             if self.user_files_path.pathExists(self.user_files_path.excel):
                 excel_path = self.user_files_path.excel
             else:
-                excel_path = self.user_files_path.exampleExcel
+                excel_path = self.user_files_path.example_excel
         is_excel = self.isDecryptedExcelFile(excel_path)
         if is_excel == True:
-            return self.dataOfBinary(excel_path)
+            data = self.dataOfBinary(excel_path)
         elif is_excel == False:
             encrypted_data = self.dataOfBinary(excel_path)
-            return self.fernet_encryption.decryptData(encrypted_data)
+            data = self.fernet_encryption.decryptData(encrypted_data)
+        return data
+
+    def dataframe(self, excel_path: Path = None):
+        return pandas.read_excel(self.excel(excel_path))
 
     @staticmethod
     def isDecryptedExcelFile(excel_path):
-        return is_excel(excel_path)
+        return isExcel(excel_path)
 
-    def copyExampleExcel(self):
-        shutil.copyfile(UserFilesPath.exampleExcel, self.user_files_path.excel)
+    def copyAndEncryptExampleExcel(self):
+        data = self.excel(UserFilesPath.example_excel)
+        self.saveExcel(data)
 
     def saveExcel(
         self,
@@ -174,6 +223,11 @@ class AccessUserFiles(AccessorFile):
         name: str = None,
         to_encode=True,
     ):
+        """
+        Save the excel into the user's data folder.
+        name: Used to name the excel, 'expenses' by default
+        """
+
         def convertDataframeToBytes(dataframe):
             buffer = io.BytesIO()
             with pandas.ExcelWriter(buffer) as writer:
@@ -184,7 +238,9 @@ class AccessUserFiles(AccessorFile):
             return file_data
 
         if name is not None:
-            file_path = FilePath.formPathUsing(self.user_files_path.excelFolder, name)
+            file_path = FilePath.formPathUsing(
+                self.user_files_path.user_folder, name + ".xlsx"
+            )
         else:
             file_path = self.user_files_path.excel
 
@@ -200,23 +256,30 @@ class AccessUserFiles(AccessorFile):
     def removeExcel(self):
         self.removeFile(self.user_files_path.excel)
 
-    # TODO 7737: change this to for each user + save
     @property
-    def descriptionToCategory(self):
-        return self.dataOfJson(self.user_files_path.descriptionToCategory)
+    def intelligent_fill(self):
+        return self.dataOfJson(self.user_files_path.intelligent_fill)
 
-    # TODO 7737: change this to for each user + save
-    def updateDescriptionToCategory(self, data: dict):
-        self.writeJson(self.user_files_path.descriptionToCategory, data)
+    def updateIntelligentFill(self, data: dict):
+        self.writeJson(self.user_files_path.intelligent_fill, data)
 
-    # TODO 7737: change this to for each user + save
     @property
-    def categoriesAuthorized(self):
-        return self.dataOfJson(self.user_files_path.categoriesAuthorized)
+    def categories(self):
+        return self.dataOfJson(self.user_files_path.categories)
 
-    # TODO 7737: change this to for each user + save
-    def updateCategoriesAuthorized(self, data: dict):
-        return self.writeJson(self.user_files_path.categoriesAuthorized, data)
+    def updateCategories(self, data: dict):
+        return self.writeJson(self.user_files_path.categories, data)
+
+    @property
+    def translations(self):
+        return self.dataOfJson(self.user_files_path.translations)
+
+    def updateTranslations(self, data: dict):
+        return self.writeJson(self.user_files_path.translations, data)
+
+    @property
+    def equivalent_columns(self):
+        return self.translations["equivalent_columns"]
 
 
 class FernetEncryption:
@@ -240,7 +303,7 @@ class FernetEncryption:
         return file_data
 
 
-# class AccessNotebookConfig(AccessorFile):
+# class AccessNotebookConfig(FileAccessor):
 #     """CRUD operations on the notebook confs of the application"""
 
 #     # TODO: change this to for each user + save
@@ -266,7 +329,7 @@ class FernetEncryption:
 #         return json_formatted_str
 
 
-# class AccessStandardButtonsConfig(AccessorFile):
+# class AccessStandardButtonsConfig(FileAccessor):
 #     """CRUD operations on the button confs of the application"""
 
 #     # TODO: change this to for each user + save
@@ -294,3 +357,15 @@ class FernetEncryption:
 #         data = self.getJson()
 #         json_formatted_str = json.dumps(data, indent=4)
 #         return json_formatted_str
+
+
+class UnittestFilesAccess(FileAccessor):
+    """CRUD operations on the unittest files"""
+
+    @classproperty
+    def pipeline_test_files(cls):
+        return [
+            (pandas.read_excel(input_file), cls.dataOfJson(output_file))
+            for input_file, output_file in UnittestFilesPath.pipeline_test_files
+        ]
+

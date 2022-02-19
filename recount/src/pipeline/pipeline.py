@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 """ 
                     ====     DESCRIPTION    ====
+TODO: redo comments
 Contains the logic used to update the excels and the SQL data.
 
 On the excel part:
@@ -23,68 +24,65 @@ import pipeline.convert as convert
 import pipeline.cleaner as cleaner
 import pipeline.check as check
 
-# convertDfToReq = DataframeToSql()
-# convertRespToDf = ResponseSqlToDataframe()
-# convertRespToList = ResponseSqlToList()
 
-# tripTable = WrapperOfTable("trip_expenses", db_config)
-# repayTable = WrapperOfTable("reimbursement", db_config)
-# cleanTable = WrapperOfTable("clean_expenses", db_config)
-
-
+# TODO: test
 class UpdatePipeline:
     def __init__(self, username: str, db_config=None):
         self.username = username
         if db_config is None:
-            db_config = access.AccessConfig.databaseConfig
-        self.raw_table = com.UserSqlTable(username, "raw_expenses", db_config)
-        # self.raw_table = com.UserSqlTable("raw_expenses", db_config)
-        # self.raw_table = com.UserSqlTable("raw_expenses", db_config)
-        # self.raw_table = com.UserSqlTable("raw_expenses", db_config)
-        self.excel_to_dataframe = convert.ExcelToDataframe(username=username)
-        self.intelligent_fill = cleaner.IntelligentFill(username=username)
+            db_config = access.ConfigAccess.database_config
+
+        self.expense_table = com.UserSqlTable(username, com.Table.EXPENSE, db_config)
+        self.reimbursement_table = com.UserSqlTable(
+            username, com.Table.REIMBURSEMENT, db_config
+        )
+
+        self.user_files = access.UserFilesAccess(username=username)
+        self.equivalent_columns = self.user_files.equivalent_columns
+        self.df_to_sql = convert.DataframeToSql(self.equivalent_columns)
+        self.intelligent_fill = cleaner.IntelligentFill(
+            self.user_files.intelligent_fill
+        )
+        self.cleaner_dataframe = cleaner.CleanerDataframe(self.equivalent_columns)
 
     def getDataframeFromExcel(self):
-        return self.excel_to_dataframe.getDataframe()
-
-    def getEquivalentColumns(self):
-        return self.excel_to_dataframe.getEquivalentColumns()
+        return self.user_files.dataframe()
 
     def process(self):
         dataframe = self.getDataframeFromExcel()
-        equivalent_columns = self.getEquivalentColumns()
         self.cleanDataframe(dataframe)
-        self.updateRawTable(dataframe, equivalent_columns)
+        self.updateRawTable(dataframe)
 
     def cleanDataframe(self, dataframe):
-        cleaner.addDateEverywhere(dataframe)
-        cleaner.convertDateToStr(dataframe)
+        self.cleaner_dataframe.addDateEverywhere(dataframe)
+        self.cleaner_dataframe.addCurrencyEverywhere(dataframe)
 
-        cleaner.removeLinesWithoutExpense(dataframe)
+        self.cleaner_dataframe.removeLinesWithoutAmount(dataframe)
 
-        cleaner.summarizeExpenses(dataframe)
-        cleaner.convertExpensesToStr(dataframe)
+        # self.cleaner_dataframe.convertAmountWithCurrencyAndDateIntoEuro(dataframe)
+        self.cleaner_dataframe.convertAmountToStr(dataframe)
 
-        cleaner.normalizeDescription(dataframe)
-        cleaner.splitAndCleanCategory(dataframe)
-        cleaner.splitAndCleanDescription(dataframe)
+        self.cleaner_dataframe.splitAndCleanDescription(dataframe)
+        self.cleaner_dataframe.normalizeDescription(dataframe)
+        self.cleaner_dataframe.normalizeCompany(dataframe)
 
         self.intelligent_fill.fillBlanks(dataframe)
 
-        cleaner.removeUselessColumns(dataframe)
-        cleaner.removeAllApostrophes(dataframe)
+        self.cleaner_dataframe.normalizeImportantColumns(dataframe)
+        self.cleaner_dataframe.removeUselessColumns(dataframe)
 
-        cleaner.convertStrNanToNan(dataframe)
+        self.cleaner_dataframe.convertStrNanToNan(dataframe)
 
-    def updateRawTable(self, dataframe, equivalent_columns):
+    def updateRawTable(self, dataframe):
         """Update table by removing all user entries"""
-        logs.formatAndDisplay(f"@{self.username}: Update '{self.raw_table.table_name}'")
-        self.dumpUserOfTable(self.raw_table)
-        list_requests = convert.DataframeToSql.translateIntoInsertRequests(
-            dataframe, equivalent_columns, self.raw_table.table_name
+        logs.formatAndDisplay(
+            f"@{self.username}: Update '{self.expense_table.table_name}'"
         )
-        # TODO: Adapt to table columns (delete raw ?)
-        self.raw_table.insertAllReqs(list_requests)
+        self.dumpUserOfTable(self.expense_table)
+        list_requests = self.df_to_sql.translateDataframeIntoInsertRequests(
+            dataframe, self.expense_table
+        )
+        self.expense_table.insertAllReqs(list_requests)
 
     def dumpUserOfTable(self, wrapperTable: com.UserSqlTable):
         logs.formatAndDisplay(
@@ -93,25 +91,12 @@ class UpdatePipeline:
         wrapperTable.dumpTable()
 
 
-# def updateExcel(username):
-#     """Copy the imported excel (if exists then remove it),
-#     create a new excel that is used for cleaning the data that will then be uploaded on MySQL."""
-#     logs.formatAndDisplay(f"{username}: Update excel files")
-#     mainCleaner = MainCleanerExcel(username)
-#     try:
-#         mainCleaner.updateExcel()
-#     except Exception as exp:
-#         logs.formatAndDisplay(f"The excel files created errors: {exp}")
-#         return False
-#     return True
-
-
 # @dumpUserOfTable(repayTable)
 # def updateRepayementsTable(username):
 #     logs.formatAndDisplay(f"{username}: Update 'reimbursement' Table")
-#     rawToRepayement = RawToRepayement(raw_table, repayTable, username)
+#     rawToRepayement = RawToRepayement(expense_table, repayTable, username)
 #     response = rawToRepayement.selectRepayementRows()
-#     dataframe = convertRespToDf.translateResponseSqlToDataframe(response, raw_table)
+#     dataframe = convertRespToDf.translateResponseSqlToDataframe(response, expense_table)
 #     equivalent_columns = rawToRepayement.getEquivalentColumns()
 #     list_requests = convertDfToReq.translateDataframeToInsertRequestSql(
 #         dataframe, equivalent_columns
@@ -122,17 +107,17 @@ class UpdatePipeline:
 # # TODO verify use username
 # def deleteRepayementsFromRaw(username):
 #     logs.formatAndDisplay(f"{username}: Delete 'reimbursement' in 'raw_expenses'")
-#     rawToRepayement = RawToRepayement(raw_table, repayTable, username)
+#     rawToRepayement = RawToRepayement(expense_table, repayTable, username)
 #     response = rawToRepayement.selectRepayementIds()
 #     list_resp = convertRespToList.translateResponseSqlToList(response)
-#     with raw_table:
-#         raw_table.deleteListRowsId(list_resp)
+#     with expense_table:
+#         expense_table.deleteListRowsId(list_resp)
 
 
 # # TODO verify use username
 # def repayRepayements(username):
 #     logs.formatAndDisplay(f"{username}: Repay 'reimbursement' in 'raw_expenses'")
-#     repayRep = RepayPepayements(raw_table, repayTable, username)
+#     repayRep = RepayPepayements(expense_table, repayTable, username)
 #     with repayRep:
 #         response_rep = repayRep.selectRepayementRows()
 #         dataframe_rep = convertRespToDf.translateResponseSqlToDataframe(
@@ -144,13 +129,13 @@ class UpdatePipeline:
 #         repayRep.deleteRowsOfRawIds(list_ids_pay_orig)
 
 #         dataframe_raw = convertRespToDf.translateResponseSqlToDataframe(
-#             response_raw, raw_table
+#             response_raw, expense_table
 #         )
 #         dataframe_cleaned = repayRep.addDfRawAndDfRepayement(
 #             dataframe_raw, dataframe_rep
 #         )
 
-#         equivalent_columns = convertRespToDf.getEquivalentColumns(raw_table)
+#         equivalent_columns = convertRespToDf.getEquivalentColumns(expense_table)
 #         requests_cleaned_rows = convertDfToReq.translateDataframeToInsertRequestSql(
 #             dataframe_cleaned, equivalent_columns
 #         )
@@ -163,9 +148,9 @@ class UpdatePipeline:
 # @dumpUserOfTable(tripTable)
 # def updateTripsTable(username):
 #     logs.formatAndDisplay(f"{username}: Update 'trip_expenses'")
-#     rawToTrip = RawToTrip(raw_table, tripTable, username)
+#     rawToTrip = RawToTrip(expense_table, tripTable, username)
 #     response = rawToTrip.selectTripRows()
-#     dataframe = convertRespToDf.translateResponseSqlToDataframe(response, raw_table)
+#     dataframe = convertRespToDf.translateResponseSqlToDataframe(response, expense_table)
 #     equivalent_columns = rawToTrip.getEquivalentColumns()
 #     list_requests = convertDfToReq.translateDataframeToInsertRequestSql(
 #         dataframe, equivalent_columns
@@ -175,19 +160,19 @@ class UpdatePipeline:
 
 # def deleteTripsFromRaw(username):
 #     logs.formatAndDisplay(f"{username}: Delete 'trip_expenses' in 'raw_expenses'")
-#     rawToTrip = RawToTrip(raw_table, tripTable, username)
+#     rawToTrip = RawToTrip(expense_table, tripTable, username)
 #     response = rawToTrip.selectTripIds()
 #     list_resp = convertRespToList.translateResponseSqlToList(response)
-#     with raw_table:
-#         raw_table.deleteListRowsId(list_resp)
+#     with expense_table:
+#         expense_table.deleteListRowsId(list_resp)
 
 
 # @dumpUserOfTable(cleanTable)
 # def updateCleanTable(username):
 #     logs.formatAndDisplay(f"{username}: Update 'clean_expenses'")
-#     rawToClean = RawToClean(raw_table, cleanTable, username)
+#     rawToClean = RawToClean(expense_table, cleanTable, username)
 #     response = rawToClean.selectAllRemainingRowsInRaw()
-#     dataframe = convertRespToDf.translateResponseSqlToDataframe(response, raw_table)
+#     dataframe = convertRespToDf.translateResponseSqlToDataframe(response, expense_table)
 #     equivalent_columns = rawToClean.getEquivalentColumns()
 #     list_requests = convertDfToReq.translateDataframeToInsertRequestSql(
 #         dataframe, equivalent_columns
@@ -228,19 +213,19 @@ class UpdatePipeline:
 
 
 # def removeAllSqlDataForUser(username):
-#     raw_table.dumpTableForUser(username)
+#     expense_table.dumpTableForUser(username)
 #     repayTable.dumpTableForUser(username)
 #     tripTable.dumpTableForUser(username)
 #     cleanTable.dumpTableForUser(username)
 
 
 # def removeAllExcelsForUser(username):
-#     myAccessUserFiles = access.AccessUserFiles(username)
+#     myAccessUserFiles = access.UserFilesAccess(username)
 #     myAccessUserFiles.removeExcelsOfUser()
 
 
 # def removeAllExcelsExceptRawForUser(username):
-#     myAccessUserFiles = access.AccessUserFiles(username)
+#     myAccessUserFiles = access.UserFilesAccess(username)
 #     myAccessUserFiles.removeExcelsExceptRawOfUser()
 
 

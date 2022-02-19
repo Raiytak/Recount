@@ -6,7 +6,7 @@ The manipulations of those files are done in other access_files or in the
 class directly.
 """
 
-"""ACHTUNG: To access user files, you should always do it using AccessUserFiles class !"""
+"""ACHTUNG: To access user files, you should always do it using UserFilesAccess class !"""
 
 
 from argparse import ArgumentError
@@ -16,6 +16,7 @@ import re
 from pathlib import Path
 from enum import Enum
 import abc
+from datetime import date
 from typing import Union, List
 
 
@@ -119,7 +120,7 @@ class ConfigPath(FilePath):
         -users name and password
         -server certificates"""
 
-    root = FilePath.formPathUsing(APP_PATH, Folder.SOURCE, Folder.CONFIG)
+    root = FilePath.formPathUsing(APP_PATH, Folder.CONFIG)
 
     @classproperty
     def application(cls):
@@ -130,11 +131,35 @@ class ConfigPath(FilePath):
         return cls.formPathUsing(cls.root, "users.json")
 
     @classproperty
-    def excelKey(cls):
+    def currencies(cls):
+        return cls.formPathUsing(cls.root, "currencies.json")
+
+    @classproperty
+    def currencies_rates_filenames(cls):
+        filenames = [
+            filename for filename in os.listdir(cls.root) if filename.startswith("ecb_")
+        ]
+        return filenames
+
+    @classproperty
+    def currencies_rates(cls):
+        filenames = cls.currencies_rates_filenames
+        if len(filenames) == 0:
+            filename = cls.today_currencies_rates_filename
+        else:
+            filename = filenames[0]
+        return cls.formPathUsing(cls.root, filename)
+
+    @classproperty
+    def today_currencies_rates_filename(cls):
+        return f"ecb_{date.today():%Y%m%d}.zip"
+
+    @classproperty
+    def excel_key(cls):
         return cls.formPathUsing(cls.root, "keys", "excel.key")
 
     @classproperty
-    def sqlKey(cls):
+    def sql_ey(cls):
         return cls.formPathUsing(cls.root, "keys", "data_sql.key")
 
     # @classproperty
@@ -201,10 +226,10 @@ class UserFilesPath(FilePath):
     def __init__(self, username: str = None):
         if username is not None:
             self.username = username
-            self.root = self.userFolder
+            self.root = self.user_folder
 
     @property
-    def userFolder(self):
+    def user_folder(self):
         return FilePath.formPathUsing(
             APP_PATH, Folder.DATA, Folder.USERS, self.username
         )
@@ -214,26 +239,32 @@ class UserFilesPath(FilePath):
         return self.formPathUsing(self.root, "expenses.xlsx")
 
     @property
-    def excelFolder(self):
-        return self.root
+    def categories(self):
+        return self.formPathUsing(self.root, "categories.json")
+
+    @property
+    def intelligent_fill(self):
+        return self.formPathUsing(self.root, "intelligent_fill.json")
+
+    @property
+    def translations(self):
+        return self.formPathUsing(self.root, "translations.json")
 
     @classproperty
-    def exampleExcel(cls):
+    def example_excel(cls):
         return cls.formPathUsing(cls.root, "example_expenses_en.xlsx")
 
-    # TODO 7737: change this to for each user + save
-    @property
-    def categoriesAuthorized(self):
-        return self.formPathUsing(
-            APP_PATH, Folder.DATA, Folder.GLOBAL, "categories_themes_authorized.json"
-        )
+    @classproperty
+    def example_categories(cls):
+        return cls.formPathUsing(cls.root, "example_categories.json")
 
-    # TODO 7737: change this to for each user + save
-    @property
-    def descriptionToCategory(self):
-        return self.formPathUsing(
-            APP_PATH, Folder.DATA, Folder.GLOBAL, "convert_descr_to_theme.json"
-        )
+    @classproperty
+    def example_intelligent_fill(cls):
+        return cls.formPathUsing(cls.root, "example_intelligent_fill.json")
+
+    @classproperty
+    def example_translations(cls):
+        return cls.formPathUsing(cls.root, "example_translations.json")
 
 
 #     def getNotebookConfigPath(self):
@@ -247,3 +278,63 @@ class UserFilesPath(FilePath):
 #         self.PathInformation.folders = [self.vues_folder, self.standard_buttons]
 #         self.PathInformation.filename = "config_buttons.json"
 #         return self.formPathUsing(self.PathInformation)
+
+
+class UnittestFilesPath(FilePath):
+    """Path to the files used by the unittests"""
+
+    root = FilePath.formPathUsing(APP_PATH, Folder.SOURCE, "unittests", "test_files")
+
+    @classproperty
+    def folder(cls):
+        return cls.root
+
+    @classproperty
+    def pipeline_test_files(cls):
+        """Returns the paired input output files for the test of pipeline"""
+        input_files = [
+            path
+            for path in cls.root.iterdir()
+            if path.is_file() and ("pipeline_input" in path.stem)
+        ]
+        output_files = [
+            path
+            for path in cls.root.iterdir()
+            if path.is_file() and ("pipeline_output" in path.stem)
+        ]
+
+        paired_test_files = []
+        for input_file in input_files:
+            filename = input_file.stem
+            number = filename.split("_")[-1]
+
+            output_file = next(
+                output_file
+                for output_file in output_files
+                if number in output_file.stem
+            )
+            paired_test_files.append([input_file, output_file])
+        return paired_test_files
+
+    def getInputFileNumber(cls, number):
+        return next(
+            [
+                path
+                for path in cls.root.iterdir()
+                if path.is_file()
+                and ("pipeline_input" in path.stem)
+                and (number in path.stem)
+            ]
+        )
+
+    def getOutputFileNumber(cls, number):
+        return next(
+            [
+                path
+                for path in cls.root.iterdir()
+                if path.is_file()
+                and ("pipeline_output" in path.stem)
+                and (number in path.stem)
+            ]
+        )
+

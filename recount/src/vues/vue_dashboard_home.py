@@ -4,7 +4,7 @@ from dash.dependencies import Input, Output, State
 
 import update_data
 
-from accessors.access_files import AccessUserFiles
+from accessors.access_files import UserFilesAccess
 
 from wrapper_dash.reusable_components.reusable_inputs import ReusableInputs
 from wrapper_dash.reusable_components.reusable_outputs import ReusableOutputs
@@ -18,7 +18,7 @@ from wrapper_dash.facilitator_dash.import_excel import ImportExcelFileSaver
 
 from wrapper_excel.excel_to_df import ExcelToDataframe
 
-from accessors.access_files import AccessUserFiles
+from accessors.access_files import UserFilesAccess
 
 
 class ElementsVue:
@@ -164,7 +164,7 @@ class AppDash(EmptyVue):
                 return True, None
             elif "export" in id_component_called:
                 username = getUsername()
-                myAccessUserFiles = AccessUserFiles(username)
+                myAccessUserFiles = UserFilesAccess(username)
                 path_excel = myAccessUserFiles.AccessExcel.ExcelPaths.rawExcelPath()
                 myExcelToDataframe = ExcelToDataframe(username)
                 df_excel = myExcelToDataframe.getDataframeOf(path_excel)
@@ -188,7 +188,7 @@ class AppDash(EmptyVue):
         )
         def confirm_reset(conf_dial_submited):
             username = getUsername()
-            myAccessUserFiles = AccessUserFiles(username)
+            myAccessUserFiles = UserFilesAccess(username)
 
             if conf_dial_submited != None:
                 myAccessUserFiles.removeExcelsOfUser()
