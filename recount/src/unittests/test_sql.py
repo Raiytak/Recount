@@ -18,10 +18,7 @@ from com.sql import (
 #   - assert all functions work
 #   - assert list requests work
 
-
-USERNAME = "hello"
-DB_CONFIG = {}
-TABLE_NAME = "my_table"
+from .__init__ import *
 
 
 def test_sql_manager_singleton():

@@ -290,8 +290,8 @@ class UnittestFilesPath(FilePath):
         return cls.root
 
     @classproperty
-    def pipeline_test_files(cls):
-        """Returns the paired input output files for the test of pipeline"""
+    def pipeline_test_values(cls):
+        """Returns the paired input output files for the tests of pipeline"""
         input_files = [
             path
             for path in cls.root.iterdir()
@@ -316,6 +316,35 @@ class UnittestFilesPath(FilePath):
             paired_test_files.append([input_file, output_file])
         return paired_test_files
 
+    # TODO
+    @classproperty
+    def convert_test_values(cls):
+        """Returns the paired input output files for the tests of convert"""
+        input_files = [
+            path
+            for path in cls.root.iterdir()
+            if path.is_file() and ("pipeline_input" in path.stem)
+        ]
+        output_files = [
+            path
+            for path in cls.root.iterdir()
+            if path.is_file() and ("pipeline_output" in path.stem)
+        ]
+
+        paired_test_files = []
+        for input_file in input_files:
+            filename = input_file.stem
+            number = filename.split("_")[-1]
+
+            output_file = next(
+                output_file
+                for output_file in output_files
+                if number in output_file.stem
+            )
+            paired_test_files.append([input_file, output_file])
+        return paired_test_files
+
+    @classmethod
     def getInputFileNumber(cls, number):
         return next(
             [
@@ -327,6 +356,7 @@ class UnittestFilesPath(FilePath):
             ]
         )
 
+    @classmethod
     def getOutputFileNumber(cls, number):
         return next(
             [

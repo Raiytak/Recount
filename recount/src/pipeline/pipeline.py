@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+# TODO: update description
 """ 
                     ====     DESCRIPTION    ====
 TODO: redo comments
@@ -78,11 +79,12 @@ class UpdatePipeline:
         logs.formatAndDisplay(
             f"@{self.username}: Update '{self.expense_table.table_name}'"
         )
-        self.dumpUserOfTable(self.expense_table)
+        # self.dumpUserOfTable(self.expense_table)
         list_requests = self.df_to_sql.translateDataframeIntoInsertRequests(
             dataframe, self.expense_table
         )
-        self.expense_table.insertAllReqs(list_requests)
+        print(list_requests)
+        # self.expense_table.insertAllReqs(list_requests)
 
     def dumpUserOfTable(self, wrapperTable: com.UserSqlTable):
         logs.formatAndDisplay(

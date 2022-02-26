@@ -1,14 +1,16 @@
-from unittest.mock import Mock
 import pytest
 import json
 
 from access.access_files import UnittestFilesAccess
 import pipeline
 
-USERNAME = "hello"
+
+from .__init__ import *
 
 
-@pytest.mark.parametrize(("input", "expected"), UnittestFilesAccess.pipeline_test_files)
+@pytest.mark.parametrize(
+    ("input", "expected"), UnittestFilesAccess.pipeline_test_values
+)
 def test_pipeline_process(input, expected):
     usr_pipeline = pipeline.UpdatePipeline(USERNAME)
     usr_pipeline.cleanDataframe(input)

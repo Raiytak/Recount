@@ -1,12 +1,11 @@
-from unittest.mock import Mock
-import pytest
 import pandas
 
 import access
 from access.path_files import UserFilesPath
 import pipeline
 
-USERNAME = "hello"
+
+from .__init__ import *
 
 # Initialization
 _user_access = access.UserFilesAccess(USERNAME)

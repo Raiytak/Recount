@@ -101,6 +101,10 @@ class FileAccessor:
 class ConfigAccess(FileAccessor):
     """CRUD operations on the config files of the application"""
 
+    class AppStages(Enum):
+        DEVELOPMENT = "development"
+        PRODUCTION = "production"
+
     @classproperty
     def database_config(cls):
         stage = os.getenv("RECOUNT_STAGE")
@@ -282,6 +286,10 @@ class UserFilesAccess(FileAccessor):
         return self.translations["equivalent_columns"]
 
 
+# TODO: handle concurrency on writing root convert company in category
+#       by doing a Lock
+
+
 class FernetEncryption:
     """Encryption logic that can be used on any document.
     It needs a private key to protect the data."""
@@ -363,9 +371,17 @@ class UnittestFilesAccess(FileAccessor):
     """CRUD operations on the unittest files"""
 
     @classproperty
-    def pipeline_test_files(cls):
+    def pipeline_test_values(cls):
         return [
             (pandas.read_excel(input_file), cls.dataOfJson(output_file))
-            for input_file, output_file in UnittestFilesPath.pipeline_test_files
+            for input_file, output_file in UnittestFilesPath.pipeline_test_values
+        ]
+
+    # TODO
+    @classproperty
+    def convert_test_values(cls):
+        return [
+            pandas.read_excel(input_file)
+            for input_file, output_file in UnittestFilesPath.convert_test_values
         ]
 

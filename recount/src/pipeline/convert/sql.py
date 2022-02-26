@@ -24,6 +24,7 @@ class DataframeToSql:
         sql_columns = table.columns_name
         excel_columns = [self.equivalent_columns[col] for col in sql_columns]
         rows = self.extractRows(dataframe, excel_columns)
+        breakpoint()
 
         requests = [
             SqlRequest(
@@ -36,9 +37,9 @@ class DataframeToSql:
         ]
         return requests
 
-    def extractRows(self, dataframe, columns: list) -> list:
+    def extractRows(self, dataframe, columns: list) -> dict:
         selection = dataframe.loc[:, columns]
-        return selection.tolist()
+        return selection.to_dict(orient="records")
 
 
 # TODO: test
