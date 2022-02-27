@@ -95,8 +95,8 @@ class FilePath:
 
     @staticmethod
     def pathExists(*folders_and_file: List[Union[str, Folder, Path]]):
-        path_file = FilePath.formPathUsing(*folders_and_file)
-        bool_exists = os.path.exists(path_file)
+        file_path = FilePath.formPathUsing(*folders_and_file)
+        bool_exists = os.path.exists(file_path)
         return bool_exists
 
     @staticmethod
@@ -248,7 +248,7 @@ class UserFilesPath(FilePath):
 
     @property
     def translations(self):
-        return self.formPathUsing(self.root, "translations.json")
+        return self.formPathUsing(self.root, "user_translations.json")
 
     @classproperty
     def example_excel(cls):
@@ -295,7 +295,7 @@ class UnittestFilesPath(FilePath):
         input_files = [
             path
             for path in cls.root.iterdir()
-            if path.is_file() and ("pipeline_input" in path.stem)
+            if path.is_file() and ("excel_input" in path.stem)
         ]
         output_files = [
             path
@@ -323,12 +323,12 @@ class UnittestFilesPath(FilePath):
         input_files = [
             path
             for path in cls.root.iterdir()
-            if path.is_file() and ("pipeline_input" in path.stem)
+            if path.is_file() and ("excel_input" in path.stem)
         ]
         output_files = [
             path
             for path in cls.root.iterdir()
-            if path.is_file() and ("pipeline_output" in path.stem)
+            if path.is_file() and ("convert_output" in path.stem)
         ]
 
         paired_test_files = []
@@ -351,7 +351,7 @@ class UnittestFilesPath(FilePath):
                 path
                 for path in cls.root.iterdir()
                 if path.is_file()
-                and ("pipeline_input" in path.stem)
+                and ("excel_input" in path.stem)
                 and (number in path.stem)
             ]
         )

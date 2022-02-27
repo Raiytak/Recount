@@ -1,0 +1,7 @@
+INSERT INTO expense (ID, amount, description, date, category, travel, company) VALUES ('1', '246.55', '1er loyer du campus laval', '2019-08-01 00:00:00', 'housing:rent', 'NY', 'campus laval');
+INSERT INTO expense (ID, amount, description, date, category, travel, company) VALUES ('2', '545.23', 'billet france -> quebec', '2019-08-01 00:00:00', 'transport:plane', 'NY', 'avion');
+INSERT INTO expense (ID, amount, description, date, category, travel) VALUES ('3', '30.0', 'equipement fnac, oreiller', '2019-08-04 00:00:00', 'equipement:other', 'NY');
+INSERT INTO expense (ID, amount, description, date, category) VALUES ('4', '135.0', 'pharmacie creme visage + dermatologue', '2019-08-06 00:00:00', 'health');
+INSERT INTO expense (ID, amount, date, category, travel, company) VALUES ('5', '16.0', '2019-08-10 00:00:00', 'alimentary', 'NY', 'mcdo');
+INSERT INTO expense (ID, amount, date, reimbursement, company) VALUES ('6', '50.0', '2019-08-10 00:00:00', '4.0', 'leclerc');
+INSERT INTO expense (ID, amount, date, category, company) VALUES ('7', '30.0', '2019-08-15 00:00:00', 'alimentary', 'franprix');

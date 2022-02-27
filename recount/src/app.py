@@ -15,7 +15,7 @@ from dash.dependencies import Input, Output
 
 import logs
 
-import update_data
+import pipeline
 
 # Import the config file
 from access import ConfigAccess
@@ -63,13 +63,14 @@ class AppDash:
         )
         def display_page(pathname):
             username = getUsername()
+            user_pipeline = pipeline.UpdatePipeline(username)
             dash.callback_context.response.set_cookie("username", username)
             if pathname == "/":
                 return self.vueIndex.setThisVue()
             elif pathname == "/home":
                 return self.vueHome.setThisVue()
             elif pathname == "/dashhome":
-                update_data.updateAll(username)
+                user_pipeline.updateTables()
                 return self.vueDashboardHome.setThisVue()
             elif pathname == "/reset":
                 update_data.removeAllDataForUser(username)

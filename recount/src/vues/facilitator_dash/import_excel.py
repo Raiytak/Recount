@@ -73,8 +73,8 @@ class ImportExcelFileSaver:
 
     def saveContentStringIntoXlsxFile(self, username, file_data):
         myAccessUserFiles = UserFilesAccess(username)
-        path_file = myAccessUserFiles.AccessExcel.ExcelPaths.importedExcelPath()
-        self.ExcelEncryption.encryptAndSaveDataToPath(file_data, path_file)
+        file_path = myAccessUserFiles.AccessExcel.ExcelPaths.importedExcelPath()
+        self.ExcelEncryption.encryptAndSaveDataToPath(file_data, file_path)
         myAccessUserFiles.AccessExcel.updateUserExcel()
 
     def checkIsXlsxFile(self, content_type):

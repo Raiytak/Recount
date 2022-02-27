@@ -1,3 +1,5 @@
+from com.sql import Table
+
 USERNAME = "hello"
 DB_CONFIG = {}
-TABLE_NAME = "my_table"
+TABLE_NAME = Table.EXPENSE

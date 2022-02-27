@@ -84,10 +84,6 @@ class CleanerDataframe:
         return self.equivalent_columns["description"]
 
     @property
-    def description(self):
-        return self.equivalent_columns["description"]
-
-    @property
     def company(self):
         return self.equivalent_columns["company"]
 
@@ -133,7 +129,7 @@ class CleanerDataframe:
     def convertAmountToStr(self, dataframe):
         dataframe[self.amount] = dataframe[self.amount].apply(str)
 
-    def normalizeImportantColumns(self, dataframe):
+    def normalizeColumnsName(self, dataframe):
         dataframe.rename(
             columns={
                 value: key
@@ -151,26 +147,49 @@ class CleanerDataframe:
         ]
         dataframe.drop(columns=list_columns, axis=1, inplace=True)
 
+    def normalizeColumn(self, dataframe, column):
+        for cleaner in [
+            unidecode.unidecode,
+            lambda text: text.lower(),
+            lambda text: text.replace("'", "_"),
+        ]:
+
+            def applyCleanerIfStr(text):
+                if type(text) is str:
+                    return cleaner(text)
+                return text
+
+            dataframe[column] = dataframe[column].apply(applyCleanerIfStr)
+
     def normalizeDescription(self, dataframe):
-        dataframe[self.description] = dataframe[self.description].apply(str)
-        dataframe[self.description] = dataframe[self.description].apply(
-            self.removeAccentAndLowerStr
-        )
+        self.normalizeColumn(dataframe, self.description)
 
     def normalizeCompany(self, dataframe):
-        dataframe[self.company] = dataframe[self.company].apply(str)
-        dataframe[self.company] = dataframe[self.company].apply(
-            self.removeAccentAndLowerStr
-        )
+        self.normalizeColumn(dataframe, self.company)
 
     # TODO: Improve robustness of split and clean (use regex too)
     def splitAndCleanDescription(self, dataframe):
+
+        # TODO: improve
+        def removeSpaceInList(list_text):
+            list_ret = []
+            for text in list_text:
+                if text != "":
+                    first_text = text
+                    if text[0] == " ":
+                        first_text = first_text[1:]
+                    second_text = first_text
+                    if text[-1] == " ":
+                        second_text = second_text[:-1]
+                    list_ret.append(second_text)
+            return list_ret
+
         def isOnlyCompany(raw_description):
             splited_descr = raw_description.split()
             if len(splited_descr) > 1:
                 return False
             resplited_descr = splited_descr[0].split(":")
-            resplited_descr = self.removeSpaceInList(resplited_descr)
+            resplited_descr = removeSpaceInList(resplited_descr)
             if len(resplited_descr) > 1:
                 return False
             return True
@@ -179,7 +198,7 @@ class CleanerDataframe:
             if isOnlyCompany(raw_description):
                 return raw_description
             list_descr = raw_description.split(":")
-            list_descr = self.removeSpaceInList(list_descr)
+            list_descr = removeSpaceInList(list_descr)
             if len(list_descr) > 1:
                 entreprise = list_descr[0]
                 if len(entreprise) == 0:
@@ -208,31 +227,3 @@ class CleanerDataframe:
         dataframe[self.description] = dataframe[self.description].apply(
             removeCompanyFromDescription
         )
-
-    def removeAccentAndLowerStr(self, text):
-        text = unidecode.unidecode(text)  # Remove accents
-        text = text.lower()
-        return text
-
-    def removeApostrophe(self, text):
-        """Have to remove the apostrophes because that pymysql doesn't support it"""
-        if type(text) is str:
-            text = text.replace("'", " ")
-        return text
-
-    # TODO: improve
-    def removeSpaceInList(self, list_text):
-        list_ret = []
-        for text in list_text:
-            if text != "":
-                first_text = text
-                if text[0] == " ":
-                    first_text = first_text[1:]
-                second_text = first_text
-                if text[-1] == " ":
-                    second_text = second_text[:-1]
-                list_ret.append(second_text)
-        return list_ret
-
-    def convertStrNanToNan(self, dataframe):
-        dataframe.replace("nan", np.NaN, inplace=True)

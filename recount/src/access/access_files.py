@@ -25,7 +25,7 @@ from cryptography.fernet import Fernet
 __all__ = ["ConfigAccess", "LogAccess", "UserFilesAccess"]
 
 
-def isExcel(path_file):
+def isExcel(file_path):
     # TODO 2496: use openpyxl instead
     excel_sigs = [
         (b"\x50\x4B\x05\x06", 2, -22, 4),
@@ -45,7 +45,7 @@ def isExcel(path_file):
     ]
 
     for sig, whence, offset, size in excel_sigs:
-        with open(path_file, "rb") as file:
+        with open(file_path, "rb") as file:
             file.seek(offset, whence)  # Seek to the offset.
             bytes = file.read(size)  # Capture the specified number of bytes.
             if bytes == sig:
@@ -71,6 +71,17 @@ def updateCurrenciesRates():
 
 class FileAccessor:
     @staticmethod
+    def dataOf(file_path):
+        with open(file_path, "r") as file:
+            data = file.read()
+        return data
+
+    @staticmethod
+    def write(file_path, data: str):
+        with open(file_path, "w") as file:
+            file.write(data)
+
+    @staticmethod
     def dataOfBinary(file_path: Path):
         with open(file_path, "rb") as file:
             data = file.read()
@@ -83,19 +94,19 @@ class FileAccessor:
 
     @staticmethod
     def dataOfJson(file_path: Path):
-        with open(file_path, "r") as json_file:
+        with open(file_path, "r", encoding="utf-8") as json_file:
             data = json.load(json_file)
         return data
 
     @staticmethod
     def writeJson(file_path: Path, data: dict):
-        with open(file_path, "w") as json_file:
-            json.dump(data, json_file)
+        with open(file_path, "w", encoding="utf-8") as json_file:
+            json.dump(data, json_file, indent=4)
 
     @staticmethod
-    def removeFile(path_file):
-        if FilePath.pathExists(path_file):
-            os.remove(path_file)
+    def removeFile(file_path):
+        if FilePath.pathExists(file_path):
+            os.remove(file_path)
 
 
 class ConfigAccess(FileAccessor):
@@ -377,11 +388,9 @@ class UnittestFilesAccess(FileAccessor):
             for input_file, output_file in UnittestFilesPath.pipeline_test_values
         ]
 
-    # TODO
     @classproperty
     def convert_test_values(cls):
         return [
-            pandas.read_excel(input_file)
+            (pandas.read_excel(input_file), cls.dataOf(output_file).split("\n"))
             for input_file, output_file in UnittestFilesPath.convert_test_values
         ]
-

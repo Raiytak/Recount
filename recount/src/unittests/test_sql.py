@@ -76,11 +76,12 @@ def test_sql_socket_manager(mocked_sql_socket):
 
 update_value = "hi"
 
-
+NoException = None
 requests_to_evaluate = [
     (
         (SqlKeyword.SELECT, TABLE_NAME, "*", None, USERNAME),
-        f"SELECT * FROM {TABLE_NAME} WHERE username='{USERNAME}';",
+        f"SELECT * FROM {TABLE_NAME.value} WHERE username='{USERNAME}';",
+        NoException,
     ),
     (
         (
@@ -90,11 +91,13 @@ requests_to_evaluate = [
             "value='expected'",
             USERNAME,
         ),
-        f"SELECT column_a, column_b, column_c FROM {TABLE_NAME} WHERE value='expected' AND username='{USERNAME}';",
+        f"SELECT column_a, column_b, column_c FROM {TABLE_NAME.value} WHERE value='expected' AND username='{USERNAME}';",
+        NoException,
     ),
     (
         (SqlKeyword.DELETE, TABLE_NAME, None, None, USERNAME),
-        f"DELETE FROM {TABLE_NAME} WHERE username='{USERNAME}';",
+        f"DELETE FROM {TABLE_NAME.value} WHERE username='{USERNAME}';",
+        NoException,
     ),
     (
         (
@@ -109,6 +112,7 @@ requests_to_evaluate = [
             f"value='{update_value}'",
         ),
         f"UPDATE expense SET value='{update_value}' WHERE id='1';",
+        NoException,
     ),
     (
         (
@@ -121,12 +125,14 @@ requests_to_evaluate = [
             "id",
             "5",
         ),
-        f"SELECT * FROM {TABLE_NAME} WHERE value='expected' AND username='{USERNAME}' GROUP BY username ORDER BY id LIMIT 5;",
+        f"SELECT * FROM {TABLE_NAME.value} WHERE value='expected' AND username='{USERNAME}' GROUP BY username ORDER BY id LIMIT 5;",
+        NoException,
     ),
     (
         (
             SqlKeyword.INSERT,
             TABLE_NAME,
+            None,
             None,
             None,
             None,
@@ -137,7 +143,8 @@ requests_to_evaluate = [
             ["col 1", "col 2", "col 3"],
             ["val 1", "val 2", "val 3"],
         ),
-        f"INSERT INTO {TABLE_NAME} (col 1, col 2, col 3) VALUES ('val 1', 'val 2', 'val 3');",
+        f"INSERT INTO {TABLE_NAME.value} (col 1, col 2, col 3) VALUES ('val 1', 'val 2', 'val 3');",
+        NoException,
     ),
     (
         (
@@ -150,17 +157,39 @@ requests_to_evaluate = [
             None,
             None,
             None,
+            None,
             (),
             ["val 1", "val 2", "val 3"],
         ),
-        f"INSERT INTO {TABLE_NAME} VALUES ('val 1', 'val 2', 'val 3');",
+        f"INSERT INTO {TABLE_NAME.value} VALUES ('val 1', 'val 2', 'val 3');",
+        AttributeError,
+    ),
+    (
+        (
+            SqlKeyword.INSERT,
+            TABLE_NAME,
+            None,
+            None,
+            None,
+            None,
+            None,
+            None,
+            None,
+            {"col 1": "val 1", "col 2": "val 2", "col 3": "val 3"},
+        ),
+        f"INSERT INTO {TABLE_NAME.value} (col 1, col 2, col 3) VALUES ('val 1', 'val 2', 'val 3');",
+        NoException,
     ),
 ]
 
 
 @pytest.mark.parametrize(
-    argnames=("request_input", "expected_request"), argvalues=requests_to_evaluate
+    argnames=("request_input", "expected_request", "expected_exception"),
+    argvalues=requests_to_evaluate,
 )
-def test_sql_request(request_input, expected_request):
-    assert str(SqlRequest(*request_input)) == expected_request
+def test_sql_request(request_input, expected_request, expected_exception):
+    try:
+        assert str(SqlRequest(*request_input)) == expected_request
+    except expected_exception:
+        pass
 

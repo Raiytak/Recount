@@ -5,9 +5,11 @@ Creation and management of the MySQL connections, requests and return the respon
 """
 
 import logging
+import pandas as pd
 from enum import Enum
 from typing import Union, List
 from threading import Lock
+from httpx import request
 import pymysql
 import weakref
 
@@ -19,6 +21,7 @@ class Table(Enum):
 
     EXPENSE = "expense"
     REIMBURSEMENT = "reimbursement"
+    INFORMATION_COLUMNS = "information_schema.columns"
 
 
 class SqlSocket:
@@ -102,6 +105,7 @@ class SqlKeyword(Enum):
     DELETE = "DELETE"
     UPDATE = "UPDATE"
     INSERT = "INSERT INTO"
+    TRUNCATE = "TRUNCATE TABLE"
 
     FROM = "FROM"
     WHERE = "WHERE"
@@ -117,7 +121,7 @@ class SqlRequest:
     def __init__(
         self,
         action: SqlKeyword,
-        table: str = None,
+        table: Table = None,
         column: Union[str, List[str]] = None,  # TODO: make the case list
         condition: str = None,
         username: str = None,
@@ -125,6 +129,7 @@ class SqlRequest:
         order: str = None,
         limit: str = None,
         change: str = None,
+        insert_dict_values: dict = None,
         insert_columns: Union[tuple, list] = (),
         insert_values: Union[tuple, list] = (),
         by_hand: str = None,
@@ -133,11 +138,16 @@ class SqlRequest:
         :arg by_hand: useful to specify by hand the request, except for 'action' and 'table'
         """
         self.action = action.value if type(action) is SqlKeyword else action
-        self.table_name = (
-            self.concatenateIfValueNotNone(table, SqlKeyword.FROM.value + " ")
-            if (not action == SqlKeyword.UPDATE) and (not action == SqlKeyword.INSERT)
-            else table
-        )
+        if action == SqlKeyword.INSERT:
+            self.table_name = table.value
+        else:
+            self.table_name = (
+                table
+                if (action == SqlKeyword.UPDATE) or (table is None)
+                else self.concatenateIfValueNotNone(
+                    table.value, SqlKeyword.FROM.value + " "
+                )
+            )
         self.column = (
             self.concatenateOrNone(*column, joint=", ")
             if type(column) == list
@@ -152,24 +162,50 @@ class SqlRequest:
         self.group = self.concatenateIfValueNotNone(group, SqlKeyword.GROUP.value + " ")
         self.change = self.concatenateIfValueNotNone(change, SqlKeyword.SET.value + " ")
         self.limit = self.concatenateIfValueNotNone(limit, SqlKeyword.LIMIT.value + " ")
-        self.insert_columns = self.concatenateIfValueNotNone(
-            self.concatenateOrNone(*insert_columns, joint=", "), "(", ")"
-        )
-        # TODO: add assert len(insert_columns) == len(insert_values)
-        #       compare insert_columns to SqlTable columns
-        insert_values = (
-            ["'" + str(value) + "'" for value in insert_values]
+        if len(insert_columns) != len(insert_values):
+            raise AttributeError(
+                "'insert_columns' and 'insert_values' have different length"
+            )
+        if insert_dict_values:
+            if insert_columns or insert_values:
+                raise AttributeError(
+                    "'insert_dict_values' can't be used with 'insert_columns' or 'insert_values'"
+                )
+            insert_columns = [key for key in insert_dict_values.keys()]
+            insert_values = [value for value in insert_dict_values.values()]
+
+        cleaned_insert_values = (
+            [
+                "'" + str(value) + "'"
+                for value in insert_values
+                if not (pd.isnull(value) or value == "nan")
+            ]
             if not insert_values is None
             else insert_values
         )
+
+        cleaned_insert_columns = (
+            [
+                column
+                for (column, value) in zip(insert_columns, insert_values)
+                if not (pd.isnull(value) or value == "nan")
+            ]
+            if not insert_columns is None
+            else insert_columns
+        )
+
+        assert len(cleaned_insert_columns) == len(cleaned_insert_values)
+        self.insert_columns = self.concatenateIfValueNotNone(
+            self.concatenateOrNone(*cleaned_insert_columns, joint=", "), "(", ")"
+        )
         self.insert_values = self.concatenateIfValueNotNone(
-            self.concatenateOrNone(*insert_values, joint=", "),
+            self.concatenateOrNone(*cleaned_insert_values, joint=", "),
             f"{SqlKeyword.VALUES.value} (",
             ")",
         )
         self.by_hand = by_hand
 
-    def __str__(self) -> str:  # TODO : replace & by tables, or not
+    def __str__(self) -> str:
         if self.action == SqlKeyword.SELECT.value:
             return self.createSelectRequest()
         elif self.action == SqlKeyword.UPDATE.value:
@@ -178,6 +214,8 @@ class SqlRequest:
             return self.createInsertRequest()
         elif self.action == SqlKeyword.DELETE.value:
             return self.createDeleteRequest()
+        elif self.action == SqlKeyword.TRUNCATE.value:
+            return self.createTruncateRequest()
         raise Exception
 
     @staticmethod
@@ -236,7 +274,6 @@ class SqlRequest:
         )
         return request
 
-    # TODO: add test
     def createInsertRequest(self):
         request = self.concatenate(
             self.action,
@@ -246,6 +283,10 @@ class SqlRequest:
             self.by_hand,
             end=";",
         )
+        return request
+
+    def createTruncateRequest(self):
+        request = self.concatenate(self.action, self.table_name, end=";",)
         return request
 
 
@@ -260,19 +301,9 @@ class SqlTable:
     def _execute(self, sql_request: SqlRequest, sql_socket: SqlSocket):
         # The encryption is taking too long, commented for now
         # encrypted_insertion = self.SqlEncryption.encryptInsertion(sql_request)
-
-        # logging.debug(sql_request)
-        # logging.debug(encrypted_insertion)
         request = str(sql_request)
-        try:
-            response = sql_socket.cursor.execute(request)
-        except pymysql.Error as err:
-            logging.exception(
-                f"Pymysql exception occured during request execution\nRequest : {request}\nError : \n{err}"
-            )
-            return ""
-        else:
-            return response
+        response = sql_socket.cursor.execute(request)
+        return response
 
     def select(self, sql_request: SqlRequest):
         with SqlSocketManager(self.db_config) as sql_socket:
@@ -281,17 +312,20 @@ class SqlTable:
 
     def insert(self, sql_request: SqlRequest):
         with SqlSocketManager(self.db_config) as sql_socket:
-            self._execute(sql_request, sql_socket)
             try:
+                self._execute(sql_request, sql_socket)
                 sql_socket.connection.commit()
             except Exception as exc:
-                logging.info(f"Exception during commit : '{exc}'")
+                print(f"Exception during commit : '{exc}'")
+                print(f"The request was the following:\n{sql_request}")
+                logging.warning("Trying a rollback ... ")
                 try:
-                    logging.warning("Trying a rollback ... ")
                     sql_socket.connection.rollback()
-                    logging.warning("Rollback done!")
-                except Exception as exc:
-                    logging.warning(f"Rollback failed : '{str(exc)}'")
+                except Exception as exc2:
+                    logging.warning("ROLLBACK FAILED!")
+                    raise exc2
+                logging.warning("Rollback done!")
+                raise exc
 
             response = sql_socket.cursor.fetchall()
             if response != ():
@@ -312,13 +346,12 @@ class SqlTable:
         request = SqlRequest(
             action=SqlKeyword.SELECT,
             column="column_name",
-            table="information_schema.columns",
-            condition=f"table_schema='{self.database_name}' AND table_name='{self.table_name}'",
+            table=Table.INFORMATION_COLUMNS,
+            condition=f"table_schema='{self.database_name}' AND table_name='{self.table_name.value}'",
             order="table_name, ordinal_position",
         )
         response = self.select(request)
         name_columns = [col[0] for col in response]
-        assert type(name_columns) == list  # TODO : Remove
         return name_columns
 
     def selectAll(self):
@@ -328,7 +361,7 @@ class SqlTable:
         return self.select(request)
 
     def dumpTable(self):
-        request = SqlRequest(action=SqlKeyword.DELETE, table=self.table_name)
+        request = SqlRequest(action=SqlKeyword.TRUNCATE, table=self.table_name)
         self.delete(request)
 
 
