@@ -1,15 +1,24 @@
 {
     "company": {
-        "company_x": {
-            "alimentary": 1
+        "company x": {
+            "ne": 5,
+            "c": {
+                "housing": {
+                    "ne": 5,
+                    "c": {}
+                }
+            }
         }
     },
     "description": {
-        "company_x": {
-            "alimentary": 1
+        "I bought it here": {
+            "ne": 5,
+            "c": {
+                "housing": {
+                    "ne": 5,
+                    "c": {}
+                }
+            }
         }
-    },
-    "number entries": {
-        "company_x": 1
     }
 }

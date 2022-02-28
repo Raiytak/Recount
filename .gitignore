@@ -32,6 +32,9 @@ recount/src/pyproject.toml
 # Ignoring virtualenv manually created
 *virtual*
 
+# Ignoring pytest cache
+**.pytest_cache
+
 # Ignoring files created by venv.
 # Those should only be created using :
 #       python -venv .
@@ -49,4 +52,3 @@ recount/.pytest_cache
 recount/src/logs/*.log
 recount/test.py
 recount/commands.py
-

@@ -13,9 +13,6 @@ import pandas as pd
 import numpy as np
 
 
-# TODO 9169: rework of intelligent fill, improve robustness and logic
-
-
 def fillBlanks(dataframe, user_files):
     if user_files.intelligent_fill != {}:
         fillBlanksUsingCompany(dataframe, user_files)
@@ -24,7 +21,7 @@ def fillBlanks(dataframe, user_files):
 
 def fillBlanksUsingCompany(dataframe, user_files):
     def fillRowUsingCompany(row):
-        if pd.notna(row["category"]):
+        if pd.isna(row["category"]):
             category = convertCompanyToCategory(
                 row["company"], user_files.intelligent_fill["company"]
             )
@@ -39,17 +36,26 @@ def convertCompanyToCategory(company, intelligent_company):
     best_category = np.nan
     if pd.notna(company):
         if company in intelligent_company.keys():
-            company_categories = intelligent_company[company]
-            if company_categories != {}:
-                best_category = max(company_categories, key=company_categories.get)
+            best_category = maxOfCategory("", intelligent_company[company])
     return best_category
 
 
-# TODO 1093 : Adapt intelligent fill update
+def maxOfCategory(category_chain, curr_cat):
+    if not curr_cat["c"]:
+        return category_chain
+    categories_entries = {key: curr_cat["c"][key]["ne"] for key in curr_cat["c"].keys()}
+    best_category = max(categories_entries, key=categories_entries.get)
+    category_chain += best_category
+    return maxOfCategory(category_chain, curr_cat["c"][best_category])
+
+
 # TODO: have some sort of coefficient that reduces the power of each user each time
 # they use / add a cat + theme
+# TODO: normalize to 1 the proportion
+# TODO: Initialyze the intelligent fill example
+# TODO: add unittest
 
-# TODO: TEST
+
 def updateUserIntelligentFill(dataframe, user_files) -> dict:
     category_filter = dataframe["category"].notna()
     with_category = dataframe[category_filter]
@@ -58,31 +64,31 @@ def updateUserIntelligentFill(dataframe, user_files) -> dict:
 
     for idx, row in with_category.iterrows():
         for column in ["company", "description"]:
-            addValueForKeyInDict(intelligent_fill, column, row[column], row["category"])
+            addCategoryForKeyInDict(
+                intelligent_fill[column], row[column], row["category"],
+            )
     user_files.updateIntelligentFill(intelligent_fill)
 
 
-# TODO: make it work
-def addValueForKeyInDict(intelligent_fill: dict, column, key, category):
+# TODO: make it work properly (issue on number entries)
+def addCategoryForKeyInDict(intel_col: dict, key, category):
+    def updateRecursivelyCategory(curr_intel, list_category):
+        curr_cat = list_category.pop(0)
+
+        if not curr_cat in curr_intel["c"].keys():
+            curr_intel["c"][curr_cat] = {"ne": 1, "c": {}}
+        else:
+            curr_intel["c"][curr_cat]["ne"] += 1
+        if list_category:
+            updateRecursivelyCategory(curr_intel["c"][curr_cat], list_category)
+
+    list_category = category.split(":")
     if pd.isna(key) or key == "nan":
         key = "_"
-    intel_col = intelligent_fill[column]
     if not key in intel_col.keys():
-        intel_col[key] = {}
-        intelligent_fill["number entries"][key] = 0
-    if intelligent_fill["number entries"][key] == 0:
-        intel_col[key][category] = 1
-        intelligent_fill["number entries"][key] = 1
-        return
-    last_tot = intelligent_fill["number entries"][key]
-    intelligent_fill["number entries"][key] += 1
-    tot = intelligent_fill["number entries"][key]
-    proportion = last_tot / tot
-    intel_col[key] = {k: val * proportion for k, val in intel_col[key].items()}
-    if not category in intel_col[key].keys():
-        intel_col[key][category] = proportion
-    else:
-        intel_col[key][category] += 1 - proportion
+        intel_col[key] = {"ne": 0, "c": {}}
+    intel_col[key]["ne"] += 1
+    updateRecursivelyCategory(intel_col[key], list_category)
 
     # def getListStopWords(self):
     #     en_stop_words = stop_words.get_stop_words("english")

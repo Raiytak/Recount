@@ -254,7 +254,7 @@ class UserFilesPath(FilePath):
 class UnittestFilesPath(FilePath):
     """Path to the files used by the unittests"""
 
-    root = FilePath.formPathUsing(APP_PATH, "unittests", "test_files")
+    root = FilePath.formPathUsing(APP_PATH, "tests", "test_files")
 
     @classproperty
     def folder(cls):

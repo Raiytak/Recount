@@ -12,9 +12,3 @@ def srcPath():
 
 
 sys.path.insert(0, srcPath())
-
-from src import *
-
-USERNAME = "hello"
-DB_CONFIG = {}
-TABLE_NAME = Table.EXPENSE
