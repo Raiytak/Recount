@@ -1,11 +1,11 @@
+from .__init__ import *
+
 import pandas
 
 import access
 from access.path_files import UserFilesPath
 import pipeline
 
-
-from .__init__ import *
 
 # Initialization
 _user_access = access.UserFilesAccess(USERNAME)
@@ -78,7 +78,7 @@ def test_update_files():
     assert not user_access.isDecryptedExcelFile(excel_test_path)
 
     user_access.removeFile(excel_test_path)
-    pipeline_user = pipeline.UpdatePipeline(USERNAME)
+    pipeline_user = pipeline.UpdateDatabase(USERNAME)
     dataframe = pipeline_user.getDataframeFromExcel()
 
     assert not user_path.pathExists(excel_test_path)

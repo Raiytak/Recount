@@ -9,96 +9,81 @@ When there is only a description on the row, the module looks at the existing co
 meaning that this is the most probable one.
 """
 
+import pandas as pd
 import numpy as np
 
 
 # TODO 9169: rework of intelligent fill, improve robustness and logic
 
 
-class IntelligentFill:
-    def __init__(self, intelligent_fill):
-        self.intelligent_fill = intelligent_fill
-
-    def fillBlanks(self, dataframe):
-        if self.intelligent_fill != {}:
-            self.fillBlanksUsingCompany(dataframe)
-
-    # TODO: Add only if category in user's authorized categories
-    def fillBlanksUsingCompany(self, dataframe):
-        def fillRowUsingEntreprise(row):
-            if row["Category"] == str(np.nan):
-                company = row["Company"]
-                category = self.convertCompanyToCategory(company)
-                row["Category"] = category
-            return row
-
-        dataframe = dataframe.apply(fillRowUsingEntreprise, axis=1)
-        return dataframe
-
-    def convertCompanyToCategory(self, company):
-        best_category = str(np.nan)
-        if company != str(np.nan):
-            categories = self.intelligent_fill["Company"]
-            if company in categories.keys():
-                if categories[company] != {}:
-                    best_category = max(categories, key=categories.get)
-        return best_category
+def fillBlanks(dataframe, user_files):
+    if user_files.intelligent_fill != {}:
+        fillBlanksUsingCompany(dataframe, user_files)
+        # fillBlanksUsingCompany(dataframe, intelligent_fill["Company"])
 
 
-# TODO: Refactor this function
+# TODO: Add only if category in user's authorized categories ?
+def fillBlanksUsingCompany(dataframe, user_files):
+    def fillRowUsingCompany(row):
+        if pd.notna(row["category"]):
+            category = convertCompanyToCategory(
+                row["company"], user_files.intelligent_fill["company"]
+            )
+            row["category"] = category
+        return row
+
+    cleaned_dataframe = dataframe.apply(fillRowUsingCompany, axis=1)
+    return cleaned_dataframe
+
+
+def convertCompanyToCategory(company, intelligent_company):
+    best_category = np.nan
+    if pd.notna(company):
+        if company in intelligent_company.keys():
+            company_categories = intelligent_company[company]
+            if company_categories != {}:
+                best_category = max(company_categories, key=company_categories.get)
+    return best_category
+
+
 # TODO 1093 : Adapt intelligent fill update
-# TODO: set the probability between 0 and 1, and count the number of occurence
-# TODO: have some sort of coefficient that reduces the power of each user each time they use / add a cat + theme
+# TODO: have some sort of coefficient that reduces the power of each user each time
+# they use / add a cat + theme
+
+# TODO: TEST
+def updateUserIntelligentFill(dataframe, user_files) -> dict:
+    category_filter = dataframe["category"].notna()
+    with_category = dataframe[category_filter]
+
+    intelligent_fill = user_files.intelligent_fill.copy()
+
+    for idx, row in with_category.iterrows():
+        for column in ["company", "description"]:
+            addValueForKeyInDict(intelligent_fill, column, row[column], row["category"])
+    user_files.updateIntelligentFill(intelligent_fill)
 
 
-class UpdateConversionJson:
-    def __init__(self):
-        self.AccessDescrToTheme = AccessDescrToTheme()
-        self.intelligent_fill = self.AccessDescrToTheme.getJsonDescrToTheme()
-
-    def updateConversionJsonUsingDataframe(self, dataframe):
-        list_c_d = ["Company", "Description"]
-        company = "Company"
-        for cat_or_theme in list_c_d:
-            data = dataframe.groupby(cat_or_theme)[company].value_counts()
-            list_index = list(data.index)
-            for index in list_index:
-                theme_or_subtheme = index[0]
-                entr_or_descr = index[1]
-                value = int(data[index])
-                self._updateConversionEntrepriseJson(
-                    entr_or_descr, theme_or_subtheme, value, cat_or_theme
-                )
-        self.AccessDescrToTheme.updateDescrConvJson(self.intelligent_fill)
-
-    def _updateConversionEntrepriseJson(self, company, c_t, value, type_output):
-        # type_output = "c_t" or "Theme"
-        if company != str(np.nan):
-            try:
-                self.intelligent_fill["Company"][company][type_output][c_t] += value
-            except KeyError:
-                try:
-                    self.intelligent_fill["Company"][company][type_output][c_t] = value
-                except KeyError:
-                    try:
-                        self.intelligent_fill["Company"][company][type_output] = {}
-                        self.intelligent_fill["Company"][company][type_output][
-                            c_t
-                        ] = value
-                    except KeyError:
-                        try:
-                            self.intelligent_fill["Company"][company] = {}
-                            self.intelligent_fill["Company"][company][type_output] = {}
-                            self.intelligent_fill["Company"][company][type_output][
-                                c_t
-                            ] = value
-                        except KeyError:
-                            self.intelligent_fill["Company"] = {}
-                            self.intelligent_fill["Company"][company] = {}
-                            self.intelligent_fill["Company"][company][type_output] = {}
-                            self.intelligent_fill["Company"][company][type_output][
-                                c_t
-                            ] = value
+# TODO: make it work
+def addValueForKeyInDict(intelligent_fill: dict, column, key, category):
+    if pd.isna(key) or key == "nan":
+        key = "_"
+    intel_col = intelligent_fill[column]
+    if not key in intel_col.keys():
+        intel_col[key] = {}
+        intelligent_fill["number entries"][key] = 0
+    if intelligent_fill["number entries"][key] == 0:
+        intel_col[key][category] = 1
+        intelligent_fill["number entries"][key] = 1
+        return
+    last_tot = intelligent_fill["number entries"][key]
+    intelligent_fill["number entries"][key] += 1
+    tot = intelligent_fill["number entries"][key]
+    proportion = last_tot / tot
+    intel_col[key] = {k: val * proportion for k, val in intel_col[key].items()}
+    if not category in intel_col[key].keys():
+        intel_col[key][category] = proportion
+    else:
+        intel_col[key][category] += 1 - proportion
 
     # def getListStopWords(self):
     #     en_stop_words = stop_words.get_stop_words("english")

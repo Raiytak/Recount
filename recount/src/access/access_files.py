@@ -8,7 +8,6 @@ The paths used are stored in the paths_docs module, and are used by the wrappers
 """ACHTUNG: To access user files, you should always do it using UserFilesAccess class !"""
 
 
-from importlib.resources import path
 import shutil
 import json
 import os
@@ -288,6 +287,10 @@ class UserFilesAccess(FileAccessor):
     @property
     def translations(self):
         return self.dataOfJson(self.user_files_path.translations)
+
+    @property
+    def equivalent_columns(self):
+        return self.dataOfJson(self.user_files_path.translations)["equivalent_columns"]
 
     def updateTranslations(self, data: dict):
         return self.writeJson(self.user_files_path.translations, data)

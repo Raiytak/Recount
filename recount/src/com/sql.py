@@ -9,11 +9,11 @@ import pandas as pd
 from enum import Enum
 from typing import Union, List
 from threading import Lock
-from httpx import request
 import pymysql
 import weakref
 
-from access.access_files import ConfigAccess, classproperty
+from recount_tools import classproperty
+from access import ConfigAccess
 
 
 class Table(Enum):

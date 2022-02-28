@@ -19,50 +19,20 @@ import abc
 from datetime import date
 from typing import Union, List
 
-
-class ClassPropertyDescriptor(object):
-    def __init__(self, fget, fset=None):
-        self.fget = fget
-        self.fset = fset
-
-    def __get__(self, obj, klass=None):
-        if klass is None:
-            klass = type(obj)
-        return self.fget.__get__(obj, klass)()
-
-    def __set__(self, obj, value):
-        if not self.fset:
-            raise AttributeError("can't set attribute")
-        type_ = type(obj)
-        return self.fset.__get__(obj, type_)(value)
-
-    def setter(self, func):
-        if not isinstance(func, (classmethod, staticmethod)):
-            func = classmethod(func)
-        self.fset = func
-        return self
-
-    def getter(self, func):
-        return func()
-
-
-def classproperty(func):
-    if not isinstance(func, (classmethod, staticmethod)):
-        func = classmethod(func)
-
-    return ClassPropertyDescriptor(func)
+from recount_tools import classproperty
 
 
 # ROOT PATH of the project detected using the path from which the application is launched
-def getAppPath():
+def appPath():
     root_path = os.path.abspath(__file__)
     app_path = Path(re.sub("(recount).*", "recount", root_path))
     return app_path
 
 
-APP_PATH = getAppPath()
-if APP_PATH not in sys.path:
-    sys.path = [APP_PATH] + sys.path
+APP_PATH = appPath()
+STR_APP_PATH = str(APP_PATH)
+if STR_APP_PATH not in sys.path:
+    sys.path.insert(0, STR_APP_PATH)
 
 
 class Folder(Enum):
@@ -283,7 +253,7 @@ class UserFilesPath(FilePath):
 class UnittestFilesPath(FilePath):
     """Path to the files used by the unittests"""
 
-    root = FilePath.formPathUsing(APP_PATH, Folder.SOURCE, "unittests", "test_files")
+    root = FilePath.formPathUsing(APP_PATH, "unittests", "test_files")
 
     @classproperty
     def folder(cls):

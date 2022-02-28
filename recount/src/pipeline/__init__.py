@@ -1,1 +1,1 @@
-from .pipeline import UpdatePipeline
+from .pipeline import UpdateDatabase

@@ -1,3 +1,5 @@
+from .__init__ import *
+
 from unittest.mock import Mock
 import pytest
 from threading import Thread
@@ -17,8 +19,6 @@ from com.sql import (
 # TODO:
 #   - assert all functions work
 #   - assert list requests work
-
-from .__init__ import *
 
 
 def test_sql_manager_singleton():

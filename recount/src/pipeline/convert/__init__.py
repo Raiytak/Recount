@@ -1,2 +1,2 @@
-# from .ld import DataframeToListOfDicts
+# from ld import DataframeToListOfDicts
 from .sql import *

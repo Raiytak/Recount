@@ -1,3 +1,5 @@
+# TODO: update and check file
+
 # Ignore the important stuff
 recount/src/config/*
 recount/src/.env
@@ -48,4 +50,6 @@ recount/.pytest_cache
 
 # Other ignores
 recount/src/logs/*.log
-recount/src/test.py
+recount/test.py
+recount/commands.py
+

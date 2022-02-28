@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """ 
                     ====     DESCRIPTION    ====
-Contains the logic used to update the excels and the SQL data.
+Contains the logic used to update the database and to convert SQL requests into 
 
 On the excel part:
     -expenses:      excel that contains the data given by the user
@@ -18,10 +18,10 @@ import access
 import pipeline.convert as convert
 import pipeline.cleaner as cleaner
 import pipeline.check as check
+from src.pipeline.cleaner.intelligent_fill import updateUserIntelligentFill
 
 
-# TODO: test
-class UpdatePipeline:
+class UpdateDatabase:
     def __init__(self, username: str, db_config=None):
         self.username = username
         if db_config is None:
@@ -34,9 +34,6 @@ class UpdatePipeline:
 
         self.user_files = access.UserFilesAccess(username=username)
         self.equivalent_columns = self.user_files.equivalent_columns
-        self.intelligent_fill = cleaner.IntelligentFill(
-            self.user_files.intelligent_fill
-        )
         self.cleaner_dataframe = cleaner.CleanerDataframe(self.equivalent_columns)
 
     def getDataframeFromExcel(self):
@@ -44,9 +41,10 @@ class UpdatePipeline:
         dataframe["username"] = self.username
         return dataframe
 
-    def updateTables(self):
+    def updateData(self):
         dataframe = self.getDataframeFromExcel()
         self.cleanDataframe(dataframe)
+        self.updateIntelligentFill(dataframe)
         self.updateExpenseTable(dataframe)
         self.updateReimbursementTable(dataframe)
 
@@ -63,10 +61,14 @@ class UpdatePipeline:
         self.cleaner_dataframe.normalizeDescription(dataframe)
         self.cleaner_dataframe.normalizeCompany(dataframe)
 
-        self.intelligent_fill.fillBlanks(dataframe)
-
         self.cleaner_dataframe.normalizeColumnsName(dataframe)
         self.cleaner_dataframe.removeUselessColumns(dataframe)
+
+        cleaner.fillBlanks(dataframe, self.user_files)
+
+    def updateIntelligentFill(self, dataframe):
+        logs.formatAndDisplay(f"@{self.username}: Update 'intelligent fill'")
+        updateUserIntelligentFill(dataframe, self.user_files)
 
     def updateExpenseTable(self, dataframe):
         logs.formatAndDisplay(
