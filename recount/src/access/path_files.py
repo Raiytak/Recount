@@ -23,13 +23,14 @@ from recount_tools import classproperty
 
 
 # ROOT PATH of the project detected using the path from which the application is launched
-def appPath():
+def rootPath():
     root_path = os.path.abspath(__file__)
-    app_path = Path(re.sub("(recount).*", "recount", root_path))
+    app_path = Path(re.sub("(recount).*", "", root_path))
     return app_path
 
 
-APP_PATH = appPath()
+ROOT_PATH = rootPath()
+APP_PATH = ROOT_PATH / "recount"
 STR_APP_PATH = str(APP_PATH)
 if STR_APP_PATH not in sys.path:
     sys.path.insert(0, STR_APP_PATH)
@@ -191,7 +192,7 @@ class UserFilesPath(FilePath):
                     manipulated by the application, then removed)
         If reaching users' file, 'root' should be the excel's user folder"""
 
-    root = FilePath.formPathUsing(APP_PATH, Folder.DATA, Folder.EXAMPLE)
+    root = FilePath.formPathUsing(APP_PATH, Folder.EXAMPLE)
 
     def __init__(self, username: str = None):
         if username is not None:
@@ -201,7 +202,7 @@ class UserFilesPath(FilePath):
     @property
     def user_folder(self):
         return FilePath.formPathUsing(
-            APP_PATH, Folder.DATA, Folder.USERS, self.username
+            ROOT_PATH, Folder.DATA, Folder.USERS, self.username
         )
 
     @property

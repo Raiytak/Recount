@@ -9,9 +9,7 @@ recount/src/.env
 database/init_**
 
 # Ignore the users's stuff
-# recount/data
-# Ignore old version, FOR NOW
-recount/src/*data*
+recount/data/users/*
 
 # Ignore the __pycache__ files created by python
 **__pycache__**
@@ -27,10 +25,9 @@ recount/src/pyproject.toml
 
 # Ignoring files created by pipenv.
 # Those should only be created using pipenv install -e .
-recount/Pipfile
-recount/Pipfile.lock
-recount/recount.egg-info
-recount/pyvenv.cfg
+**Pipfile
+**Pipfile.lock
+**pyvenv.cfg
 
 # Ignoring virtualenv manually created
 *virtual*

@@ -22,7 +22,6 @@ def fillBlanks(dataframe, user_files):
         # fillBlanksUsingCompany(dataframe, intelligent_fill["Company"])
 
 
-# TODO: Add only if category in user's authorized categories ?
 def fillBlanksUsingCompany(dataframe, user_files):
     def fillRowUsingCompany(row):
         if pd.notna(row["category"]):

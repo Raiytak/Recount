@@ -1,12 +1,11 @@
 from .__init__ import *
 
-from unittest.mock import Mock
 import pytest
 from threading import Thread
 from time import sleep, perf_counter
 from unittest.mock import patch
 
-from com.sql import (
+from src.com.sql import (
     Table,
     SqlManagerSingleton,
     SqlSocketManager,

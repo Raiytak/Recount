@@ -1,0 +1,16 @@
+{
+    "equivalent_columns": {
+        "ID": "ID",
+        "username": "username",
+        "ID_origin": "ID_origin",
+        "date": "Date",
+        "amount": "Amount",
+        "currency": "Currency",
+        "category": "Category",
+        "travel": "Travel",
+        "payment_method": "Payment Method",
+        "company": "Company",
+        "description": "Description",
+        "reimbursement": "Reimbursement"
+    }
+}

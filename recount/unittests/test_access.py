@@ -2,9 +2,9 @@ from .__init__ import *
 
 import pandas
 
-import access
-from access.path_files import UserFilesPath
-import pipeline
+import src.access as access
+from src.access.path_files import UserFilesPath
+import src.pipeline
 
 
 # Initialization

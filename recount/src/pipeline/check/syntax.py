@@ -12,6 +12,7 @@ import access
 AUTHORIZED_CATEGORIES = access.UserFilesAccess.categories
 
 
+# TODO: Add only if category in user's authorized categories
 # TODO : Improve readability and usefulness of this function
 # TODO: make this function work
 def checkConformity(self, dataframe):

@@ -3,10 +3,9 @@ from .__init__ import *
 import pytest
 import json
 
-from access.access_files import UnittestFilesAccess
-import pipeline
-import pipeline.convert as convert
-from com.sql import UserSqlTable, Table
+from src.access.access_files import UnittestFilesAccess
+import src.pipeline.convert as convert
+from src.com.sql import UserSqlTable, Table
 
 
 user_table = UserSqlTable(USERNAME, TABLE_NAME)
