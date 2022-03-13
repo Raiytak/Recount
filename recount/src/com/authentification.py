@@ -4,7 +4,7 @@
 Gestion of the users' identification. 
 """
 
-# TODO: create a vue for the connexion
+# TODO: create a vue for the connection
 
 from dash_auth.auth import Auth
 import flask, base64, hashlib

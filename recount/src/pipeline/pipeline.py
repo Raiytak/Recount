@@ -11,6 +11,8 @@ On the MySQL part:
     -reimbursement:     table containing the reimbursement rows
 """
 
+from typing import List
+
 import logs
 import com
 import access
@@ -18,11 +20,12 @@ import access
 import pipeline.convert as convert
 import pipeline.cleaner as cleaner
 import pipeline.check as check
-from src.pipeline.cleaner.intelligent_fill import updateUserIntelligentFill
+from pipeline.convert.date import convertPeriodToDate
+from pipeline.cleaner.intelligent_fill import updateUserIntelligentFill
 
 
-class UpdateDatabase:
-    def __init__(self, username: str, db_config=None):
+class Pipeline:
+    def __init__(self, username: str, db_config=None, *args, **kwargs):
         self.username = username
         if db_config is None:
             db_config = access.ConfigAccess.database_config
@@ -34,6 +37,11 @@ class UpdateDatabase:
 
         self.user_files = access.UserFilesAccess(username=username)
         self.equivalent_columns = self.user_files.equivalent_columns
+
+
+class DataPipeline(Pipeline):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
         self.cleaner_dataframe = cleaner.CleanerDataframe(self.equivalent_columns)
 
     def getDataframeFromExcel(self):
@@ -104,3 +112,50 @@ class UpdateDatabase:
             f"@{self.username}: Truncate table '{wrapperTable.table_name}' for user '{self.username}'"
         )
         wrapperTable.dumpTable()
+
+
+class GraphPipeline(Pipeline):
+    # TODO
+    # def mergeReimbursementAndExpense(self):
+    #     pass
+
+    def getDataByColumn(self, dataframe, column="category") -> List[dict]:
+        data = convert.convertDataframeToGraphDataForEachUniqValueInColumn(
+            dataframe, column
+        )
+        return data
+
+    def getDataByDateDeltaAndColumn(self, dataframe, column="category") -> List[dict]:
+        data = convert.converDataframeToDataGroupedByDateDeltaAndColumn(
+            dataframe, column
+        )
+        return data
+
+    def getSumDataByColumn(self, dataframe, column="category") -> List[dict]:
+        data = convert.convertDataframeToSumDataForEachUniqValueInColumn(
+            dataframe, column
+        )
+        return data
+
+    def getDataframeForPeriod(self, start_date: str, end_date: str):
+        """The dates should be in format '%Y-%m-%d'"""
+        dataframe = convert.convertDateToDataframe(
+            start_date, end_date, self.expense_table
+        )
+        return dataframe
+
+    @staticmethod
+    def selectMainCategory(category):
+        if type(category) != str:
+            return category
+        splitted_categories = category.split(":")
+        main_cat = splitted_categories[0]
+        return main_cat
+
+    @staticmethod
+    def selectSecondCategory(category):
+        splitted_categories = category.split(":")
+        if len(splitted_categories) > 1:
+            return splitted_categories[1]
+        return category
+

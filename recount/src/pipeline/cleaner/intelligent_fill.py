@@ -21,11 +21,11 @@ def fillBlanks(dataframe, user_files):
 
 def fillBlanksUsingCompany(dataframe, user_files):
     def fillRowUsingCompany(row):
-        if pd.isna(row["category"]):
-            category = convertCompanyToCategory(
-                row["company"], user_files.intelligent_fill["company"]
-            )
-            row["category"] = category
+        # if pd.isna(row["category"]):
+        #     category = convertCompanyToCategory(
+        #         row["company"], user_files.intelligent_fill["company"]
+        #     )
+        #     row["category"] = category
         return row
 
     cleaned_dataframe = dataframe.apply(fillRowUsingCompany, axis=1)

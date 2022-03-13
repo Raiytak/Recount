@@ -1,10 +1,10 @@
-import dash_html_components as html
-import dash_core_components as dcc
+from dash import dcc, html
+
 
 from recount_tools import classproperty
 
 
-class Links:
+class RecountLinks:
     @classproperty
     def home(cls):
         button = html.Button("Home", className="nav-button")

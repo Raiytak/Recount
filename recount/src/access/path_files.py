@@ -289,7 +289,7 @@ class UnittestFilesPath(FilePath):
 
     # TODO
     @classproperty
-    def convert_test_values(cls):
+    def convert_df_to_sql_test_values(cls):
         """Returns the paired input output files for the tests of convert"""
         input_files = [
             path
@@ -299,7 +299,7 @@ class UnittestFilesPath(FilePath):
         output_files = [
             path
             for path in cls.root.iterdir()
-            if path.is_file() and ("convert_output" in path.stem)
+            if path.is_file() and ("convert_df_to_sql_output" in path.stem)
         ]
 
         paired_test_files = []

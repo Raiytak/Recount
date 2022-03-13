@@ -1,33 +1,27 @@
-import dash_html_components as html
+from dash import html
+
 
 from .abstract_vue import AbstractVue
-from .components import links
-
-from recount_tools import classproperty
 
 
 class Home(AbstractVue):
-    @classproperty
-    def vue(cls):
-        return cls.welcomePage
+    @property
+    def vue(self):
+        return self.welcomePage
 
-    @classproperty
+    @property
     def welcomePage(self):
         title = html.H1(
             "Recount",
-            style={
-                "margin-bottom": "-1rem",
-                "font-size": "8rem",
-                "font-weight": "bold",
-            },
+            style={"marginBottom": "-1rem", "fontSize": "8rem", "fontWeight": "bold",},
         )
         subtext_title = html.Strong(
-            "Gonna check dat budget!", style={"font-size": "3rem"}
+            "Gonna check dat budget!", style={"fontSize": "3rem"}
         )
-        upper_welcome = html.Div([title, subtext_title], style={"text-align": "center"})
+        upper_welcome = html.Div([title, subtext_title], style={"textAlign": "center"})
 
         welcome = html.H2(
-            [html.Br(), "Welcome"], style={"font-size": "6rem", "font-weight": "bold"}
+            [html.Br(), "Welcome"], style={"fontSize": "6rem", "fontWeight": "bold"}
         )
         paraf1 = html.P(
             [
@@ -74,7 +68,7 @@ class Home(AbstractVue):
 
         list_parafs = [paraf1, paraf2, paraf3, paraf4, paraf5, paraf6, paraf7]
         for i in range(len(list_parafs)):
-            list_parafs[i].style = {"font-size": "xx-large"}
+            list_parafs[i].style = {"fontSize": "xx-large"}
         parafs = html.Div(list_parafs)
 
         return html.Div([upper_welcome, welcome, parafs])

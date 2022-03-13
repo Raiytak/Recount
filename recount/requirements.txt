@@ -15,6 +15,8 @@ dash-auth == 1.4.1
 dash-core-components == 1.17.1
 dash-html-components == 1.1.4
 dash-table == 4.12.0
+dash_extensions == 0.0.71
+
 plotly==5.1.0
 
 flask == 2.0.1

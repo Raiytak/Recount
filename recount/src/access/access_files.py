@@ -392,8 +392,8 @@ class UnittestFilesAccess(FileAccessor):
         ]
 
     @classproperty
-    def convert_test_values(cls):
+    def convert_df_to_sql_test_values(cls):
         return [
             (pandas.read_excel(input_file), cls.dataOf(output_file).split("\n"))
-            for input_file, output_file in UnittestFilesPath.convert_test_values
+            for input_file, output_file in UnittestFilesPath.convert_df_to_sql_test_values
         ]

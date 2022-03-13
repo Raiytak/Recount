@@ -7,18 +7,19 @@ Handles the web instanciation and logic.
 
 import flask
 
+from dash import callback, html, dcc
 import dash
 from com.authentification import EncryptedAuth
 from dash.dependencies import Input, Output
 
 import logs
-import pipeline
 from website import *
 from access import ConfigAccess
-
-# SSL_CONTEXT = myAccessConfig.getSSLContext()
+from logs import formatAndDisplay
 
 from recount_tools import getUsername
+
+# SSL_CONTEXT = myAccessConfig.getSSLContext()
 
 # Dash Application
 class AppDash:
@@ -33,13 +34,13 @@ class AppDash:
             __name__,
             external_stylesheets=external_stylesheets,
             suppress_callback_exceptions=True,
-            server=flask.Flask(__name__),
+            # server=flask.Flask(__name__),
         )
         self.addAuthentification()
 
-        # self.vueIndex = vue_index.AppDash(self.app)
-        # self.vueHome = vue_home.AppDash(self.app)
-        # self.vueDashboardHome = vue_dashboard_home.AppDash(self.app)
+        self.index_page = IndexPage(self.app)
+        self.home_page = HomePage(self.app)
+        self.dashboard_home_page = DashboardHomePage(self.app)
         # self.vueTest = vue_test.AppDash(self.app)
 
         # self.app.css.append_css({"external_url": "static/main.css"})
@@ -49,19 +50,18 @@ class AppDash:
 
     # You can add a vue by inserting the desirated vue and path here
     def setCallback(self):
-        @self.app.callback(Output("page-content", "children"), Input("url", "pathname"))
+        @callback(Output("page-content", "children"), Input("url", "pathname"))
         def display_page(pathname):
             username = getUsername()
-            user_pipeline = pipeline.UpdateDatabase(
-                username, ConfigAccess.database_config
-            )
             dash.callback_context.response.set_cookie("username", username)
             if pathname == "/":
                 return None
             elif pathname == "/home":
-                return HomePage.vue
+                return self.home_page.vue
+            elif pathname == "/dashhome":
+                return self.dashboard_home_page.vue
             # elif pathname == "/dashhome":
-            #     user_pipeline.updateData()
+            #     user_pipeline.DataPipeline()
             #     return self.vueDashboardHome.setThisVue()
             # elif pathname == "/reset":
             #     update_data.removeAllDataForUser(username)
@@ -72,7 +72,7 @@ class AppDash:
                 return "404 Page not found."
 
     def setDefaultPage(self):
-        self.setVue(IndexPage.vue)
+        self.setVue(self.index_page.vue)
         self.setCallback()
 
     def run(self, debug=True, ssl_context=None, *args, **kwargs):
@@ -91,3 +91,21 @@ def createDashApp():
     dash_app.setDefaultPage()
     logs.formatAndDisplay("Application created!", "-#", logs.Position.CENTER)
     return dash_app
+
+    # def testDiv(self):
+    #     page_1_layout = html.Div(
+    #         [
+    #             html.H1("Page 1"),
+    #             dcc.Dropdown(["LA", "NYC", "MTL"], "LA", id="page-1-dropdown"),
+    #             html.Div(id="page-1-content"),
+    #             html.Br(),
+    #             dcc.Link("Go to Page 2", href="/page-2"),
+    #             html.Br(),
+    #             dcc.Link("Go back to home", href="/"),
+    #         ]
+    #     )
+    #     return page_1_layout
+
+    # @property
+    # def output_test(self):
+    #     return Output("page-1-content", "children")

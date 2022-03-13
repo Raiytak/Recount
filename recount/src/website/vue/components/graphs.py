@@ -1,91 +1,48 @@
-import dash_html_components as html
-import dash_core_components as dcc
-from dash.dependencies import Output, State
-from wrapper_dash.reusable_components.reusable_styles import *
+from dash import dcc, html
+from dash.dependencies import Output
+
+from .css_style import *
 
 
-class ReusableGraphs:
+class RecountGraphs:
     def __init__(self, name_vue):
         self.name_vue = name_vue
 
-        self.scatter_type = "scatter-graph-all"
-        self.pie_chart_type = "pie-chart-category"
-        self.mean_bar_type = "mean-bar"
-        self.food_bar_type = "food-bar"
+        self.scatter_type = "-scatter-graph"
+        self.pie_chart_type = "-pie-chart-category"
+        self.mean_bar_type = "-mean-bar"
+        self.food_bar_type = "-food-bar"
 
         self.scatter_id = self.name_vue + self.scatter_type
         self.pie_chart_id = self.name_vue + self.pie_chart_type
         self.mean_bar_id = self.name_vue + self.mean_bar_type
         self.food_bar_id = self.name_vue + self.food_bar_type
 
-    def getScatterGraphDiv(self):
-        scatter_graph = dcc.Graph(
-            id=self.scatter_id,
-            config={"edits": {"axisTitleText": True, "titleText": True}},
+    def defaultGraphVue(self, graph_id):
+        graph = dcc.Graph(
+            id=graph_id, config={"edits": {"axisTitleText": True, "titleText": True}},
         )
-        return scatter_graph
+        return graph
 
-    def getPieChartGraphDiv(self):
-        pie_chart_graph = dcc.Graph(
-            id=self.pie_chart_id,
-            config={"edits": {"axisTitleText": True, "titleText": True}},
-        )
-        return pie_chart_graph
+    def defaultGraphCallback(self, graph_id):
+        return Output(graph_id, component_property="figure")
 
-    def getMeanBarGraphDiv(self):
-        mean_bar_graph = dcc.Graph(
-            id=self.mean_bar_id,
-            config={"edits": {"axisTitleText": True, "titleText": True}},
-        )
-        return mean_bar_graph
+    def dashboardHomeDiv(self):
+        scatter_graph = self.defaultGraphVue(self.scatter_id)
+        pie_chart_graph = self.defaultGraphVue(self.pie_chart_id)
+        upper_graphs = html.Div([scatter_graph, pie_chart_graph], style=spaceAround)
 
-    def getFoodBarGraphDiv(self):
-        food_bar_graph = dcc.Graph(
-            id=self.food_bar_id,
-            config={"edits": {"axisTitleText": True, "titleText": True}},
-        )
-        return food_bar_graph
-
-    def getDashboardHomeDiv(self):
-        scatter_graph = self.getScatterGraphDiv()
-        pie_chart_graph = self.getPieChartGraphDiv()
-        upper_graphs = html.Div(
-            [scatter_graph, pie_chart_graph], style=styleSpaceAround()
-        )
-
-        mean_bar_graph = self.getMeanBarGraphDiv()
-        food_bar_graph = self.getFoodBarGraphDiv()
-        bottom_graphs = html.Div(
-            [mean_bar_graph, food_bar_graph], style=styleSpaceAround()
-        )
+        mean_bar_graph = self.defaultGraphVue(self.mean_bar_id)
+        food_bar_graph = self.defaultGraphVue(self.food_bar_id)
+        bottom_graphs = html.Div([mean_bar_graph, food_bar_graph], style=spaceAround)
 
         dashboard_div = html.Div([upper_graphs, bottom_graphs])
         return dashboard_div
 
-    def getDashboardHomeTypeGraphs(self):
-        list_type_divs = []
-        list_type_divs.append(self.scatter_type)
-        list_type_divs.append(self.pie_chart_type)
-        list_type_divs.append(self.mean_bar_type)
-        list_type_divs.append(self.food_bar_type)
-        return list_type_divs
-
-    def getScatterGraphCallback(self):
-        return Output(component_id=self.scatter_id, component_property="figure")
-
-    def getPieChartGraphCallback(self):
-        return Output(component_id=self.pie_chart_id, component_property="figure")
-
-    def getMeanBarGraphCallback(self):
-        return Output(component_id=self.mean_bar_id, component_property="figure")
-
-    def getFoodBarGraphCallback(self):
-        return Output(component_id=self.food_bar_id, component_property="figure")
-
-    def getlDashboardHomeCallbacks(self):
-        callbacks = []
-        callbacks.append(self.getScatterGraphCallback())
-        callbacks.append(self.getPieChartGraphCallback())
-        callbacks.append(self.getMeanBarGraphCallback())
-        callbacks.append(self.getFoodBarGraphCallback())
-        return callbacks
+    def dashboardHomeCallbacks(self):
+        return {
+            "scatter": self.defaultGraphCallback(self.scatter_id),
+            "pie": self.defaultGraphCallback(self.pie_chart_id),
+            "mean": self.defaultGraphCallback(self.mean_bar_id),
+            "bar": self.defaultGraphCallback(self.food_bar_id),
+        }

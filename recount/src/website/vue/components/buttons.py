@@ -30,7 +30,7 @@ import pandas as pd
 #         output_div = dcc.Input(
 #             id=self.unique_button_msg_div + name_button,
 #             value="Update done",
-#             style=self.ReusableStyles.styleStandardPlainTextHidden(),
+#             style=self.ReusableStyles.standardPlainTextHidden(),
 #             persistence=True,
 #         )
 #         return output_div
@@ -47,7 +47,7 @@ import pandas as pd
 #             id=self.update_text_id,
 #             value="SUBMIT NOTEBOOK",
 #             disabled=True,
-#             style=self.ReusableStyles.styleStandardButtonText(),
+#             style=self.ReusableStyles.standardButtonText(),
 #             className="text-button",
 #             persistence=True,
 #         )
@@ -91,7 +91,7 @@ import pandas as pd
 
 #     def getEditButtonsAndColumnsTextDiv(self):
 #         id_text_div = self.edit_button_text
-#         style = self.ReusableStyles.styleStandardPlainText()
+#         style = self.ReusableStyles.standardPlainText()
 #         style["text-align"] = "left"
 #         style["padding"] = "2px"
 #         text_div = dcc.Input(
@@ -115,7 +115,7 @@ import pandas as pd
 #         output_div = dcc.Input(
 #             id=self.update_msg_div,
 #             value="Update done",
-#             style=self.ReusableStyles.styleStandardPlainTextHidden(),
+#             style=self.ReusableStyles.standardPlainTextHidden(),
 #             persistence=True,
 #         )
 #         return output_div
@@ -135,7 +135,7 @@ import pandas as pd
 #             id=self.update_text_id,
 #             value="SUBMIT NOTEBOOK",
 #             disabled=True,
-#             style=self.ReusableStyles.styleStandardButtonText(),
+#             style=self.ReusableStyles.standardButtonText(),
 #             className="text-button",
 #             persistence=True,
 #         )
@@ -153,7 +153,7 @@ import pandas as pd
 #         output_div = dcc.Input(
 #             id=self.import_excel_msg_div,
 #             value="Import done",
-#             style=self.ReusableStyles.styleStandardPlainTextHidden(),
+#             style=self.ReusableStyles.standardPlainTextHidden(),
 #             persistence=True,
 #         )
 #         return output_div
@@ -173,7 +173,7 @@ import pandas as pd
 #             id=excel_text_id,
 #             value="IMPORT EXCEL",
 #             disabled=True,
-#             style=self.ReusableStyles.styleStandardButtonText(),
+#             style=self.ReusableStyles.standardButtonText(),
 #             className="text-button",
 #             persistence=True,
 #         )

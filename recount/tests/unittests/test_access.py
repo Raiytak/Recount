@@ -4,12 +4,10 @@ import pandas
 
 import src.access as access
 from src.access.path_files import UserFilesPath
-import src.pipeline
 
 
 # Initialization
-_user_access = access.UserFilesAccess(USERNAME)
-_user_access.removeUserFolder()
+USER_ACCESS.removeUserFolder()
 
 
 def test_instanciate_user_folder():
@@ -28,7 +26,7 @@ def test_instanciate_user_folder():
 
 
 def test_initialize_excel():
-    _user_access.removeUserFolder()
+    USER_ACCESS.removeUserFolder()
     user_path = UserFilesPath(USERNAME)
     user_access = access.UserFilesAccess(USERNAME)
 
@@ -78,8 +76,8 @@ def test_update_files():
     assert not user_access.isDecryptedExcelFile(excel_test_path)
 
     user_access.removeFile(excel_test_path)
-    pipeline_user = pipeline.UpdateDatabase(USERNAME)
-    dataframe = pipeline_user.getDataframeFromExcel()
+    user_pipeline = pipeline.DataPipeline(USERNAME)
+    dataframe = user_pipeline.getDataframeFromExcel()
 
     assert not user_path.pathExists(excel_test_path)
     user_access.saveExcel(dataframe, name=excel_test_name, to_encode=False)
