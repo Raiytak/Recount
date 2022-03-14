@@ -1,6 +1,6 @@
 # Comptes
 [![Raiytak - recount](https://img.shields.io/static/v1?label=Raiytak&message=recount&color=blueviolet&logo=github)](https://github.com/Raiytak/Recount "Go to GitHub repo")
-[![GitHub tag](https://img.shields.io/github/tag/Raiytak/recount?include_prereleases=&sort=semver&color=blue)](https://github.com/Raiytak/Recount/tree/v0.1)
+[![GitHub tag](https://img.shields.io/github/v/tag/Raiytak/Recount?include_prereleases=&sort=semver&color=blue)](https://github.com/Raiytak/Recount/tree/v0.1)
 [![License](https://img.shields.io/badge/License-MIT-brightgreen)](#license)
 
 Display your expenses on interactive dashboards!
