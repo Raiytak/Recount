@@ -19,7 +19,7 @@ https://user-images.githubusercontent.com/52044172/158196182-bd84b827-b002-4b7b-
 
 ## Install necessary tools
 python => 3.8 necessary (see https://www.python.org/downloads/) \
-A mysql db is needed by the application. See https://dev.mysql.com/doc/mysql-installation-excerpt/5.7/en/ for installation (a docker should be released for that aspect soon). \
+A mysql db is needed by the application. See https://dev.mysql.com/doc/mysql-installation-excerpt/5.7/en/ for installation (a docker should be released for that aspect soon).
 
 ## MySQL Configuration
 Upload the `init.sql` file present in [database](https://github.com/Raiytak/Recount/blob/master/database/init.sql) into mysql:
