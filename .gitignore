@@ -1,5 +1,4 @@
-# Ignore the important stuff
-recount/src/config/*
+# Ignore important stuff
 recount/src/.env
 **.pem
 
@@ -15,9 +14,7 @@ recount/data/users/*
 
 # Ignoring files created by setuptools and other tools used
 # to create packages.
-recount/src/build
 recount/src/dist
-**recount.egg-info**
 recount/src/MANIFEST
 recount/src/pyproject.toml
 
@@ -27,7 +24,8 @@ recount/src/pyproject.toml
 **Pipfile.lock
 **pyvenv.cfg
 **build
-**recount_tools.egg-info
+**recount.egg-info**
+**recount_tools.egg-info**
 
 # Ignoring virtualenv manually created
 *virtual*
@@ -49,6 +47,6 @@ recount/include
 recount/.pytest_cache
 
 # Other ignores
-recount/src/logs/*.log
+**.log
 recount/test.py
 recount/commands.py
