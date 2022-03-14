@@ -161,7 +161,7 @@ class ConfigPath(FilePath):
 class LogPath(FilePath):
     """Path to the logs of the application"""
 
-    root = FilePath.formPathUsing(APP_PATH, Folder.SOURCE, Folder.LOGS)
+    root = FilePath.formPathUsing(ROOT_PATH, Folder.LOGS)
 
     @classproperty
     def application(cls):

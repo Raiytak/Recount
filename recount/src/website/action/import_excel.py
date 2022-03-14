@@ -13,8 +13,8 @@ import base64
 
 # import pandas as pd
 
-from src.logs import formatAndDisplay
-from src.access.access_files import UserFilesAccess
+import logs
+from access.access_files import UserFilesAccess
 
 
 def saveImportedFile(username, file_imported):
@@ -23,12 +23,12 @@ def saveImportedFile(username, file_imported):
         user_file = UserFilesAccess(username)
 
         # print(file_imported[100]) TODO: ?
-        formatAndDisplay(f"{username}: Importing file ...")
+        logs.formatAndDisplay(f"{username}: Importing file ...")
         content_type, buffer_content = decodeImportedFile(file_imported)
         file_data = buffer_content.read()
         checkIsXlsxFile(content_type)
         user_file.saveExcel(file_data)
-        formatAndDisplay(f"{username}: File imported")
+        logs.formatAndDisplay(f"{username}: File imported")
 
 
 def decodeImportedFile(file_imported):

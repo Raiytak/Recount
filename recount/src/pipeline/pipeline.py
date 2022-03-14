@@ -20,7 +20,6 @@ import access
 import pipeline.convert as convert
 import pipeline.cleaner as cleaner
 import pipeline.check as check
-from pipeline.convert.date import convertPeriodToDate
 from pipeline.cleaner.intelligent_fill import updateUserIntelligentFill
 
 
@@ -102,6 +101,7 @@ class DataPipeline(Pipeline):
         dataframe.rename(columns={"reimbursement": "ID_origin"}, inplace=True)
         df = dataframe[self.reimbursement_table.columns_name]
         expense_df = df[is_expense]
+        expense_df["amount"] = expense_df["amount"].apply(abs)
         list_requests = convert.translateDataframeIntoInsertRequests(
             expense_df, self.reimbursement_table
         )
@@ -115,9 +115,32 @@ class DataPipeline(Pipeline):
 
 
 class GraphPipeline(Pipeline):
-    # TODO
-    # def mergeReimbursementAndExpense(self):
-    #     pass
+    def getExpenseRepaidForPeriod(self, start_date: str, end_date: str):
+        expense_df = self.getExpenseDataframeForPeriod(start_date, end_date)
+        reimbursement_df = self.getReimbursementDataframe()
+        return self.mergeExpenseAndReimbursement(expense_df, reimbursement_df)
+
+    def getExpenseDataframeForPeriod(self, start_date: str, end_date: str):
+        """The dates should be in format '%Y-%m-%d'"""
+        dataframe = convert.convertDateToDataframe(
+            start_date, end_date, self.expense_table
+        )
+        return dataframe
+
+    def getReimbursementDataframe(self):
+        dataframe = convert.translateSelectResponseToDataframe(
+            self.reimbursement_table.selectAll(), self.reimbursement_table
+        )
+        return dataframe
+
+    def mergeExpenseAndReimbursement(self, expense_df, reimbursement_df):
+        for idx, row in reimbursement_df.iterrows():
+            id = row["ID_origin"]
+            reimbursement = row["amount"]
+            if id in expense_df.index:
+                expense_df.loc[id, "amount"] -= reimbursement
+        merged_df = expense_df[expense_df["amount"] > 0.1]
+        return merged_df
 
     def getDataByColumn(self, dataframe, column="category") -> List[dict]:
         data = convert.convertDataframeToGraphDataForEachUniqValueInColumn(
@@ -136,13 +159,6 @@ class GraphPipeline(Pipeline):
             dataframe, column
         )
         return data
-
-    def getDataframeForPeriod(self, start_date: str, end_date: str):
-        """The dates should be in format '%Y-%m-%d'"""
-        dataframe = convert.convertDateToDataframe(
-            start_date, end_date, self.expense_table
-        )
-        return dataframe
 
     @staticmethod
     def selectMainCategory(category):

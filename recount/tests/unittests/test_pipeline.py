@@ -1,9 +1,6 @@
-from .__init__ import *
+from .defaults import *
 
-import pytest
-import json
-
-from src.access.access_files import UnittestFilesAccess
+from access.access_files import UnittestFilesAccess
 
 
 @pytest.mark.parametrize(("df", "expected"), UnittestFilesAccess.pipeline_test_values)
@@ -24,9 +21,9 @@ def test_pipeline_process(df, expected):
 #     USER_DATA_PIPELINE = pipeline.GraphPipeline(USERNAME)
 #     dataframe = USER_DATA_PIPELINE.getDataframeForDate()
 #     breakpoint()
-# for request, exp in zip(requests, expected):
-#     assert str(request) == exp
-# Use to update the test file
-# with open(expected, "w") as file:
-#     text = "\n".join([str(req) for req in requests])
-#     file.write(text)
+#     for request, exp in zip(requests, expected):
+#         assert str(request) == exp
+#     # Use to update the test file
+#     with open(expected, "w") as file:
+#         text = "\n".join([str(req) for req in requests])
+#         file.write(text)

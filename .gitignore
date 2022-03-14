@@ -1,5 +1,3 @@
-# TODO: update and check file
-
 # Ignore the important stuff
 recount/src/config/*
 recount/src/.env
@@ -28,6 +26,8 @@ recount/src/pyproject.toml
 **Pipfile
 **Pipfile.lock
 **pyvenv.cfg
+**build
+**recount_tools.egg-info
 
 # Ignoring virtualenv manually created
 *virtual*

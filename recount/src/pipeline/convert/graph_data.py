@@ -15,8 +15,7 @@ def convertDataframeToGraphDataForEachUniqValueInColumn(
 ) -> list:
     df = dataframe
     unique_theme = [val for val in df[column_name].unique() if val is not None]
-    unique_theme.sort()
-    list_dict_expenses = [
+    expenses = [
         dict(
             x=df[df[column_name] == i]["date"].values,
             y=df[df[column_name] == i]["amount"].values,
@@ -25,8 +24,7 @@ def convertDataframeToGraphDataForEachUniqValueInColumn(
         )
         for i in unique_theme
     ]
-    # list_dict_expenses.sort(key=sortByName)
-    return list_dict_expenses
+    return expenses
 
 
 def convertDataframeToSumDataForEachUniqValueInColumn(
@@ -35,7 +33,6 @@ def convertDataframeToSumDataForEachUniqValueInColumn(
     df = dataframe
     dict_expenses = {"values": [], "names": [], "labels": []}
     unique_theme = [val for val in df[column_name].unique() if val is not None]
-    unique_theme.sort()
     for i in unique_theme:
         dict_expenses["values"].append(np.sum(df[df[column_name] == i]["amount"]))
         dict_expenses["names"].append(i)
@@ -46,7 +43,7 @@ def convertDataframeToSumDataForEachUniqValueInColumn(
 def converDataframeToDataGroupedByDateDeltaAndColumn(
     dataframe, column_name: str, period: str = "week"
 ):
-    dict_returned = {}
+    dict_expenses = {}
     dates = dataframe["date"]
     max_date = dates.max()
     curr_date = dates.min()
@@ -55,7 +52,7 @@ def converDataframeToDataGroupedByDateDeltaAndColumn(
         next_date = dateDelta(curr_date, period)
         data = dataframe[(dates < next_date) & (dates >= curr_date)]
         unique_theme = [val for val in data[column_name].unique() if val is not None]
-        dict_expenses = {
+        expense = {
             i: dict(
                 x=[curr_date],
                 y=[np.sum(data[data[column_name] == i]["amount"])],
@@ -63,10 +60,9 @@ def converDataframeToDataGroupedByDateDeltaAndColumn(
             )
             for i in unique_theme
         }
-        updateDictWithLists(dict_returned, dict_expenses)
+        updateDictWithLists(dict_expenses, expense)
         curr_date = next_date
-    expenses = list(dict_returned.values())
-    expenses.sort(key=sortByName, reverse=True)
+    expenses = list(dict_expenses.values())
     return expenses
 
 
@@ -79,7 +75,3 @@ def updateDictWithLists(dictA, dictB):
                 if type(subvalue) == list:
                     dictA[key][subkey] += subvalue
     return dictA
-
-
-def sortByName(dict_named):
-    return dict_named["name"]

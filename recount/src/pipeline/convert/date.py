@@ -17,8 +17,9 @@ def convertDateToDataframe(
     start_date: str, end_date: str, user_table: UserSqlTable,
 ):
     request = convertDateToRequestSql(start_date, end_date, user_table)
-    reponse = user_table.select(request)
-    dataframe = translateSelectResponseToDataframe(reponse, user_table)
+    response = user_table.select(request)
+    dataframe = translateSelectResponseToDataframe(response, user_table)
+    dataframe = dataframe.set_index("ID")
     return dataframe
 
 
@@ -85,15 +86,3 @@ def translateSelectResponseToDataframe(response_sql, user_table):
 
 def shapeDatetimeToSimpleDate(my_datetime):
     return my_datetime.strftime("%Y-%m-%d")
-
-
-# TODO: understand why this function, if still useful
-# def translateSqlToDataframe(
-#     response, user_table: UserSqlTable,
-# ):
-#     dataframe = translateSelectResponseToDataframe(response, user_table)
-#     if dataframe.empty == False:
-#         return dataframe
-#     else:
-#         dataframe = ResponseSqlToDataframe.getDataframeWithEmptyValues(user_table)
-#         return dataframe

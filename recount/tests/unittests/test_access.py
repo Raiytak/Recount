@@ -1,9 +1,7 @@
-from .__init__ import *
+from .defaults import *
 
-import pandas
-
-import src.access as access
-from src.access.path_files import UserFilesPath
+import access as access
+from access.path_files import UserFilesPath
 
 
 # Initialization

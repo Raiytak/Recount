@@ -7,7 +7,7 @@ Handles the web instanciation and logic.
 
 import flask
 
-from dash import callback, html, dcc
+from dash import callback
 import dash
 from com.authentification import EncryptedAuth
 from dash.dependencies import Input, Output
@@ -15,7 +15,6 @@ from dash.dependencies import Input, Output
 import logs
 from website import *
 from access import ConfigAccess
-from logs import formatAndDisplay
 
 from recount_tools import getUsername
 
@@ -91,21 +90,3 @@ def createDashApp():
     dash_app.setDefaultPage()
     logs.formatAndDisplay("Application created!", "-#", logs.Position.CENTER)
     return dash_app
-
-    # def testDiv(self):
-    #     page_1_layout = html.Div(
-    #         [
-    #             html.H1("Page 1"),
-    #             dcc.Dropdown(["LA", "NYC", "MTL"], "LA", id="page-1-dropdown"),
-    #             html.Div(id="page-1-content"),
-    #             html.Br(),
-    #             dcc.Link("Go to Page 2", href="/page-2"),
-    #             html.Br(),
-    #             dcc.Link("Go back to home", href="/"),
-    #         ]
-    #     )
-    #     return page_1_layout
-
-    # @property
-    # def output_test(self):
-    #     return Output("page-1-content", "children")

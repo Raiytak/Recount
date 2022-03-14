@@ -1,10 +1,7 @@
-from .__init__ import *
+from .defaults import *
 
-import pytest
-import json
-
-from src.access.access_files import UnittestFilesAccess
-import src.pipeline.convert as convert
+from access.access_files import UnittestFilesAccess
+import pipeline.convert as convert
 
 
 @pytest.mark.parametrize(
@@ -21,7 +18,6 @@ def test_translate_df_to_sql_requests(df, expected):
     #     file.write(text)
 
 
-# TODO: Add magic mock in __init__ file to mock sql
 @pytest.mark.parametrize(
     ("start_date", "end_date", "expected"),
     [
@@ -29,64 +25,61 @@ def test_translate_df_to_sql_requests(df, expected):
             "2019-09-02",
             "2019-09-03",
             {
-                "ID": {"0": 60, "1": 61},
-                "username": {"0": "hello", "1": "hello"},
-                "date": {"0": 1567468800000, "1": 1567468800000},
-                "amount": {"0": 7.0, "1": 57.57},
-                "category": {"0": "leasure:pub", "1": "alimentary:food"},
-                "travel": {"0": None, "1": None},
-                "company": {"0": "pub universitaire", "1": "metro"},
-                "description": {"0": "soiree", "1": "nourriture"},
-                "payment_method": {"0": "card", "1": "card"},
-            },
-        ],
-        [
-            "2019-09-02",
-            "2019-09-02",
-            {
-                "ID": {},
-                "username": {},
-                "date": {},
-                "amount": {},
-                "category": {},
-                "travel": {},
-                "company": {},
-                "description": {},
-                "payment_method": {},
+                "username": {"60": "hello", "61": "hello"},
+                "date": {"60": 1567468800000, "61": 1567468800000},
+                "amount": {"60": 7.0, "61": 57.57},
+                "category": {"60": "leasure:pub", "61": "alimentary:food"},
+                "travel": {"60": None, "61": None},
+                "company": {"60": "pub universitaire", "61": "metro"},
+                "description": {"60": "soiree", "61": "nourriture"},
+                "payment_method": {"60": "card", "61": "card"},
             },
         ],
     ],
 )
 def test_convert_date_to_df(start_date, end_date, expected):
-    df = convert.convertDateToDataframe(start_date, end_date, USER_TABLE)
-    df_json = df.to_json()
-    cleaned_json = json.loads(df_json)
-    assert cleaned_json == expected
+    with patch("src.com.sql.UserSqlTable.select") as fake_select:
+        fake_select.side_effect = defaultSelectExpenseResponses
+        df = convert.convertDateToDataframe(start_date, end_date, USER_TABLE)
+        df_json = df.to_json()
+        cleaned_json = json.loads(df_json)
+        assert cleaned_json == expected
 
 
-@pytest.mark.parametrize(("start_date", "end_date",), [["2019-09-02", "2019-09-05"]])
+@pytest.mark.parametrize(("start_date", "end_date",), [["2019-09-02", "2019-09-03"]])
 def test_convert_df_to_expense_uniq_value_in_column(start_date, end_date):
-    df = convert.convertDateToDataframe(start_date, end_date, USER_TABLE)
-    response = convertDataframeToGraphDataForEachUniqValueInColumn(df, "category")
-    expected_keys = {"x", "y", "text", "name"}
-    response_col = response[0]
-    assert response_col.keys() >= expected_keys
-    assert all(
-        [
-            len(value) == len(response_col["x"])
-            for key, value in response_col.items()
-            if key != "name"
-        ]
-    )
+    with patch("src.com.sql.UserSqlTable.select") as fake_select:
+        fake_select.side_effect = defaultSelectExpenseResponses
+        df = convert.convertDateToDataframe(start_date, end_date, USER_TABLE)
+        response = convert.convertDataframeToGraphDataForEachUniqValueInColumn(
+            df, "category"
+        )
+        expected_keys = {"x", "y", "text", "name"}
+        response_col = response[0]
+        assert response_col.keys() >= expected_keys
+        assert all(
+            [
+                len(value) == len(response_col["x"])
+                for key, value in response_col.items()
+                if key != "name"
+            ]
+        )
 
 
-@pytest.mark.parametrize(("start_date", "end_date",), [["2019-09-02", "2019-09-05"]])
-def test_convert_df_to_expense_uniq_value_in_column(start_date, end_date):
-    df = convert.convertDateToDataframe(start_date, end_date, USER_TABLE)
-    response = convertDataframeToSumDataForEachUniqValueInColumn(df, "category")
-    expected_keys = {"values", "names", "labels"}
-    response_col = response[0]
-    assert response_col.keys() >= expected_keys
-    assert all(
-        [len(value) == len(response_col["values"]) for value in response_col.values()]
-    )
+@pytest.mark.parametrize(("start_date", "end_date",), [["2019-09-02", "2019-09-03"]])
+def test_convert_df_to_sum_expense_uniq_value_in_column(start_date, end_date):
+    with patch("src.com.sql.UserSqlTable.select") as fake_select:
+        fake_select.side_effect = defaultSelectExpenseResponses
+        df = convert.convertDateToDataframe(start_date, end_date, USER_TABLE)
+        response = convert.convertDataframeToSumDataForEachUniqValueInColumn(
+            df, "category"
+        )
+        expected_keys = {"values", "names", "labels"}
+        response_col = response
+        assert response_col.keys() >= expected_keys
+        assert all(
+            [
+                len(value) == len(response_col["values"])
+                for value in response_col.values()
+            ]
+        )
