@@ -3,7 +3,8 @@
 [![GitHub tag](https://img.shields.io/github/v/tag/Raiytak/Recount?include_prereleases=&sort=semver&color=blue)](https://github.com/Raiytak/Recount/tree/v0.1)
 [![License](https://img.shields.io/badge/License-MIT-brightgreen)](#license)
 
-Display your expenses on interactive dashboards!
+## Display your expenses on interactive dashboards!
+
 
 ![Screenshot from 2022-03-14 15-22-52](https://user-images.githubusercontent.com/52044172/158192160-43978b88-1006-40e4-8e1f-f11e18360bf8.png) 
 
