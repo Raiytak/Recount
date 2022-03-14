@@ -31,12 +31,6 @@ from src.app import createDashApp
 pipenv run python recount"""
 
 parser = argparse.ArgumentParser()
-# parser.add_argument(
-#     "-p",
-#     "--path",
-#     help="Path to the json containing the information on the birthdays' person name and date",
-#     type=str,
-# )
 parser.add_argument(
     "--log-level",
     help=f"Set the log level of the application. Available: {' ,'.join([filter.name for filter in logs.Filter])}",
