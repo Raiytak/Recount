@@ -7,7 +7,7 @@ def appPath():
     if ".gitignore" not in [file_path.stem for file_path in root_path.iterdir()]:
         if "__main__" not in [file_path.stem for file_path in root_path.iterdir()]:
             raise FileNotFoundError(
-                "Recount can only be launched where the .git folder is present or inside recount folder"
+                "Recount can only be launched where the .git folder is present or inside the recount folder"
             )
         else:
             app_path = root_path

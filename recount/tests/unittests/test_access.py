@@ -10,17 +10,17 @@ USER_ACCESS.removeUserFolder()
 
 def test_instanciate_user_folder():
     user_path = UserFilesPath(USERNAME)
-    assert not user_path.pathExists(user_path.user_folder)
+    assert not user_path.user_folder.exists()
     user_access = access.UserFilesAccess(USERNAME)
-    assert user_path.pathExists(user_path.user_folder)
-    assert user_path.pathExists(user_path.excel)
+    assert user_path.user_folder.exists()
+    assert user_path.excel.exists()
     assert not user_access.isDecryptedExcelFile(user_path.excel)
-    assert user_path.pathExists(user_path.categories)
-    assert user_path.pathExists(user_path.intelligent_fill)
-    assert user_path.pathExists(user_path.translations)
+    assert user_path.categories.exists()
+    assert user_path.intelligent_fill.exists()
+    assert user_path.translations.exists()
 
     user_access.removeUserFolder()
-    assert not user_path.pathExists(user_path.user_folder)
+    assert not user_path.user_folder.exists()
 
 
 def test_initialize_excel():
@@ -62,23 +62,21 @@ def test_update_files():
     assert updated_translations == translations
 
     # Excel part
-    excel_test_name = "test"
-    excel_test_path = user_path.formPathUsing(
-        user_path.user_folder, excel_test_name + ".xlsx"
-    )
+    excel_test_name = "test.xlsx"
+    excel_test_path = user_path.user_folder / excel_test_name
 
-    assert not user_path.pathExists(excel_test_path)
+    assert not excel_test_path.exists()
     excel = user_access.excel()
     user_access.saveExcel(excel, name=excel_test_name)
-    assert user_path.pathExists(excel_test_path)
+    assert excel_test_path.exists()
     assert not user_access.isDecryptedExcelFile(excel_test_path)
 
     user_access.removeFile(excel_test_path)
     user_pipeline = pipeline.DataPipeline(USERNAME)
     dataframe = user_pipeline.getDataframeFromExcel()
 
-    assert not user_path.pathExists(excel_test_path)
+    assert not excel_test_path.exists()
     user_access.saveExcel(dataframe, name=excel_test_name, to_encode=False)
-    assert user_path.pathExists(excel_test_path)
+    assert excel_test_path.exists()
     assert user_access.isDecryptedExcelFile(excel_test_path)
 

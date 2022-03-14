@@ -9,31 +9,29 @@ class directly.
 """ACHTUNG: To access user files, you should always do it using UserFilesAccess class !"""
 
 
-from argparse import ArgumentError
-import os
-import sys
-import re
 from pathlib import Path
 from enum import Enum
 import abc
 from datetime import date
-from typing import Union, List
 
 from recount_tools import classproperty
 
 
-# ROOT PATH of the project detected using the path from which the application is launched
 def rootPath():
-    root_path = os.path.abspath(__file__)
-    app_path = Path(re.sub("(recount).*", "", root_path))
-    return app_path
+    root_path = Path().resolve()
+    if "recount" not in [file_path.stem for file_path in root_path.iterdir()]:
+        if "src" not in [file_path.stem for file_path in root_path.iterdir()]:
+            raise FileNotFoundError(
+                "Recount can only be launched where the .git folder is present or inside recount folder"
+            )
+        else:
+            root_path = root_path.parent
+    return root_path
 
 
 ROOT_PATH = rootPath()
 APP_PATH = ROOT_PATH / "recount"
 STR_APP_PATH = str(APP_PATH)
-if STR_APP_PATH not in sys.path:
-    sys.path.insert(0, STR_APP_PATH)
 
 
 class Folder(Enum):
@@ -42,13 +40,14 @@ class Folder(Enum):
 
     CONFIG = "config"
     USERS = "users"
-    GLOBAL = "global"
     EXAMPLE = "examples"
 
-    EXCELS = "excels"
-    VUES = "vues"
     LOGS = "logs"
 
+    TEST = "tests"
+
+    # GLOBAL = "global"
+    # VUES = "vues"
     # CATEGORIES = "categories"
     # INTELLIGENT_FILL = "intelligent_fill"
     # STANDARD_BUTTONS = "standard_buttons"
@@ -64,26 +63,6 @@ class FilePath:
     def root(self):
         """Root of the folder containing the desired files"""
 
-    @staticmethod
-    def pathExists(*folders_and_file: List[Union[str, Folder, Path]]):
-        file_path = FilePath.formPathUsing(*folders_and_file)
-        bool_exists = os.path.exists(file_path)
-        return bool_exists
-
-    @staticmethod
-    def formPathUsing(*folders_and_file: List[Union[str, Folder, Path]]) -> Path:
-        if None in folders_and_file:
-            raise ArgumentError(
-                f"None has been passed as argument in '{folders_and_file}'"
-            )
-        complete_path = folders_and_file[0]
-        for name in folders_and_file[1:]:
-            if type(name) is Folder:
-                name = name.value
-            if name != ():
-                complete_path = complete_path / name
-        return complete_path
-
 
 class ConfigPath(FilePath):
     """Path to the configs containing all the secrets of the application :
@@ -91,19 +70,22 @@ class ConfigPath(FilePath):
         -users name and password
         -server certificates"""
 
-    root = FilePath.formPathUsing(APP_PATH, Folder.CONFIG)
+    root = APP_PATH / Folder.CONFIG.value
 
     @classproperty
     def application(cls):
-        return cls.formPathUsing(cls.root, "app_configs.json")
+        application_path = cls.root / "app_configs.json"
+        if application_path.exists():
+            return application_path
+        return cls.root / "default_configs.json"
 
     @classproperty
     def users(cls):
-        return cls.formPathUsing(cls.root, "users.json")
+        return cls.root / "users.json"
 
     @classproperty
     def currencies(cls):
-        return cls.formPathUsing(cls.root, "currencies.json")
+        return cls.root / "currencies.json"
 
     @classproperty
     def currencies_rates_filenames(cls):
@@ -119,7 +101,7 @@ class ConfigPath(FilePath):
             filename = cls.today_currencies_rates_filename
         else:
             filename = filenames[0]
-        return cls.formPathUsing(cls.root, filename)
+        return cls.root / filename
 
     @classproperty
     def today_currencies_rates_filename(cls):
@@ -127,15 +109,15 @@ class ConfigPath(FilePath):
 
     @classproperty
     def excel_key(cls):
-        return cls.formPathUsing(cls.root, "keys", "excel.key")
+        return cls.root / "keys" / "excel.key"
 
     @classproperty
     def sql_ey(cls):
-        return cls.formPathUsing(cls.root, "keys", "data_sql.key")
+        return cls.root / "keys" / "data_sql.key"
 
     # @classproperty
     # def certificate(cls):  # TODO : Add certificates
-    #     return cls.formPathUsing(cls.root, "keys", "other-csr.pem")
+    #     return cls.root / "keys" / "other-csr.pem"
     #     path_exists, path_created = cls.pathExists(filename="other-csr.pem")
     #     if path_exists:
     #         return path_created
@@ -161,19 +143,19 @@ class ConfigPath(FilePath):
 class LogPath(FilePath):
     """Path to the logs of the application"""
 
-    root = FilePath.formPathUsing(ROOT_PATH, Folder.LOGS)
+    root = ROOT_PATH / Folder.LOGS.value
 
     @classproperty
     def application(cls):
-        return cls.formPathUsing(cls.root, "application.log")
+        return cls.root / "application.log"
 
     @classproperty
     def db_com(cls):
-        return cls.formPathUsing(cls.root, "db_com.log")
+        return cls.root / "db_com.log"
 
     @classproperty
     def error(cls):
-        return cls.formPathUsing(cls.root, "error.log")
+        return cls.root / "error.log"
 
     @classproperty
     def logs_path(cls):
@@ -192,7 +174,7 @@ class UserFilesPath(FilePath):
                     manipulated by the application, then removed)
         If reaching users' file, 'root' should be the excel's user folder"""
 
-    root = FilePath.formPathUsing(APP_PATH, Folder.EXAMPLE)
+    root = APP_PATH / Folder.EXAMPLE.value
 
     def __init__(self, username: str = None):
         if username is not None:
@@ -201,41 +183,39 @@ class UserFilesPath(FilePath):
 
     @property
     def user_folder(self):
-        return FilePath.formPathUsing(
-            ROOT_PATH, Folder.DATA, Folder.USERS, self.username
-        )
+        return ROOT_PATH / Folder.DATA.value / Folder.USERS.value / self.username
 
     @property
     def excel(self):
-        return self.formPathUsing(self.root, "expenses.xlsx")
+        return self.root / "expenses.xlsx"
 
     @property
     def categories(self):
-        return self.formPathUsing(self.root, "categories.json")
+        return self.root / "categories.json"
 
     @property
     def intelligent_fill(self):
-        return self.formPathUsing(self.root, "intelligent_fill.json")
+        return self.root / "intelligent_fill.json"
 
     @property
     def translations(self):
-        return self.formPathUsing(self.root, "user_translations.json")
+        return self.root / "user_translations.json"
 
     @classproperty
     def example_excel(cls):
-        return cls.formPathUsing(cls.root, "example_expenses_en.xlsx")
+        return cls.root / "example_expenses_en.xlsx"
 
     @classproperty
     def example_categories(cls):
-        return cls.formPathUsing(cls.root, "example_categories.json")
+        return cls.root / "example_categories.json"
 
     @classproperty
     def example_intelligent_fill(cls):
-        return cls.formPathUsing(cls.root, "example_intelligent_fill.json")
+        return cls.root / "example_intelligent_fill.json"
 
     @classproperty
     def example_translations(cls):
-        return cls.formPathUsing(cls.root, "example_translations.json")
+        return cls.root / "example_translations.json"
 
 
 #     def getNotebookConfigPath(self):
@@ -254,7 +234,7 @@ class UserFilesPath(FilePath):
 class UnittestFilesPath(FilePath):
     """Path to the files used by the unittests"""
 
-    root = FilePath.formPathUsing(APP_PATH, "tests", "test_files")
+    root = APP_PATH / Folder.TEST.value / "test_files"
 
     @classproperty
     def folder(cls):

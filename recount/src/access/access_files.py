@@ -63,7 +63,7 @@ def isExchangeRatesFileUpToDate():
 def updateCurrenciesRates():
     # Delete the older file
     for filename in ConfigPath.currencies_rates_filenames:
-        ConfigAccess.removeFile(ConfigPath.formPathUsing(ConfigPath.root, filename))
+        ConfigAccess.removeFile(ConfigPath.root / filename)
     # Import the currencies rates up to date
     urllib.request.urlretrieve(ECB_URL, ConfigPath.currencies_rates)
 
@@ -104,7 +104,7 @@ class FileAccessor:
 
     @staticmethod
     def removeFile(file_path):
-        if FilePath.pathExists(file_path):
+        if file_path.exists():
             os.remove(file_path)
 
 
@@ -179,20 +179,20 @@ class UserFilesAccess(FileAccessor):
             self.initializeUserFolders()
 
     def initializeUserFolders(self):
-        if not FilePath.pathExists(self.user_files_path.user_folder):
+        if not self.user_files_path.user_folder.exists():
             self.createUserFolder()
-        if not FilePath.pathExists(self.user_files_path.excel):
+        if not self.user_files_path.excel.exists():
             self.copyAndEncryptExampleExcel()
-        if not FilePath.pathExists(self.user_files_path.categories):
+        if not self.user_files_path.categories.exists():
             shutil.copy(
                 UserFilesPath.example_categories, self.user_files_path.categories
             )
-        if not FilePath.pathExists(self.user_files_path.intelligent_fill):
+        if not self.user_files_path.intelligent_fill.exists():
             shutil.copy(
                 UserFilesPath.example_intelligent_fill,
                 self.user_files_path.intelligent_fill,
             )
-        if not FilePath.pathExists(self.user_files_path.translations):
+        if not self.user_files_path.translations.exists():
             shutil.copy(
                 UserFilesPath.example_translations, self.user_files_path.translations,
             )
@@ -201,14 +201,14 @@ class UserFilesAccess(FileAccessor):
         os.mkdir(self.user_files_path.user_folder)
 
     def removeUserFolder(self):
-        if FilePath.pathExists(self.user_files_path.user_folder):
+        if self.user_files_path.user_folder.exists():
             shutil.rmtree(self.user_files_path.user_folder, ignore_errors=False)
 
     def excel(self, excel_path: Path = None):
         """If no path is provided, gets the 'expenses.xlsx' of the selected
         user, or the example one if no user is given"""
         if excel_path is None:
-            if self.user_files_path.pathExists(self.user_files_path.excel):
+            if self.user_files_path.excel.exists():
                 excel_path = self.user_files_path.excel
             else:
                 excel_path = self.user_files_path.example_excel
@@ -239,7 +239,7 @@ class UserFilesAccess(FileAccessor):
     ):
         """
         Save the excel into the user's data folder.
-        name: Used to name the excel, 'expenses' by default
+        name: Used to name the excel, 'expenses.xlsx' by default
         """
 
         def convertDataframeToBytes(dataframe):
@@ -252,9 +252,7 @@ class UserFilesAccess(FileAccessor):
             return file_data
 
         if name is not None:
-            file_path = FilePath.formPathUsing(
-                self.user_files_path.user_folder, name + ".xlsx"
-            )
+            file_path = self.user_files_path.user_folder / name
         else:
             file_path = self.user_files_path.excel
 
