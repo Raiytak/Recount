@@ -5,16 +5,38 @@
 
 ## Display your expenses on interactive dashboards!
 
-
 ![Screenshot from 2022-03-14 15-22-52](https://user-images.githubusercontent.com/52044172/158192160-43978b88-1006-40e4-8e1f-f11e18360bf8.png) 
 
 
 # Presentation
-The application uses python3, MySQL and dash. It should have an online version soon, open only for selected people ;) \
+The application should have an online version soon, open only for selected people ;) \
 But you can also make it run on your personal laptop!
+
 
 https://user-images.githubusercontent.com/52044172/158196182-bd84b827-b002-4b7b-82ec-3476df44510c.mp4
 
+
+
+# Languages and tools
+<div>
+  <a href="https://www.python.org/">
+    <img src="https://github.com/devicons/devicon/blob/master/icons/python/python-original.svg" title="Python" alt="Python" width="40" height="40"/>
+  <a/>&nbsp;
+  <a href="https://dash.plotly.com/">
+    <img src="https://images.plot.ly/logo/new-branding/plotly-logomark.png" title="Dash" alt="Dash" width="40" height="40"/>
+  <a/>&nbsp;
+  <a href="https://reactjs.org/">
+    <img src="https://github.com/devicons/devicon/blob/master/icons/react/react-original-wordmark.svg" title="React" alt="React" width="40"/>
+  <a/>&nbsp;
+  <a href="https://www.mysql.com/">
+    <img src="https://github.com/devicons/devicon/blob/master/icons/mysql/mysql-original-wordmark.svg" title="MySQL"  alt="MySQL" width="50" height="50"/>
+  <a/>&nbsp;
+  <a href="https://git-scm.com/">
+    <img src="https://github.com/devicons/devicon/blob/master/icons/git/git-original.svg" title="Git" alt="Git" width="40" height="40"/>
+  <a/>&nbsp;  
+  <img src="https://github.com/devicons/devicon/blob/master/icons/css3/css3-plain-wordmark.svg"  title="CSS3" alt="CSS" width="40" height="40"/>&nbsp;
+  <img src="https://github.com/devicons/devicon/blob/master/icons/html5/html5-original.svg" title="HTML5" alt="HTML" width="40"/>
+</div>
 
 # Installation
 
