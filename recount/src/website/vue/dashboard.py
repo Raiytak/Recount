@@ -13,30 +13,18 @@ class DashboardHome(AbstractVue):
         self.recount_outputs = RecountOutputs(self.page_name)
         self.recount_graphs = RecountGraphs(self.page_name)
 
+        self.reset_dial = "reset-data"
+
     @property
     def vue(self):
-        conf_dial = self.recount_outputs.confirmDialogue()
+        conf_dial = self.recount_outputs.confirmDialogueDiv(
+            self.reset_dial, message="Are you sure you want to reset your data?"
+        )
 
         upper_div = self.recount_inputs.dashboardInputDiv()
         dashboard_div = self.recount_graphs.dashboardHomeDiv()
         dashboard = html.Div([upper_div, dashboard_div])
 
-        hidden_vue = self.recount_outputs.hiddenDiv()
-
-        total_vue = html.Div([dashboard, hidden_vue, conf_dial])
+        total_vue = html.Div([dashboard, conf_dial])
 
         return total_vue
-
-    @property
-    def output_callbacks(self):
-        return self.recount_graphs.dashboardHomeCallbacks()
-
-    @property
-    def input_callbacks(self):
-        rec_in = self.recount_inputs
-        return {
-            "date": rec_in.dateCallback(),
-            "period": rec_in.periodCallback(),
-            "import": rec_in.importExcelCallback(),
-            "reset": rec_in.resetUserDataCallback(),
-        }

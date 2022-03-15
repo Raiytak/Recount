@@ -1,4 +1,4 @@
-from dash import dcc, html
+from dash import dcc, Output
 
 
 # from dash.dependencies import Input, Output, State
@@ -8,24 +8,30 @@ from dateutil.relativedelta import *
 
 
 class RecountOutputs:
-    def __init__(self, name_vue):
+    def __init__(self, name_vue: str):
         self.name_vue = name_vue
         self.h1_div_div = name_vue + "-h1-div"
         self.h2_div_div = name_vue + "-h2-div"
         self.h3_div_div = name_vue + "-h3-div"
         self.h4_div_div = name_vue + "-h4-div"
         self.hidden_div = name_vue + "-hidden-div"
-        self.conf_dial = name_vue + "-confirm-dialog"
+        self.conf_dial = name_vue + "-confirm-dialog-"
+        # TODO: same reset_output for Output and Input, do a link between them
+        self.reset_output = name_vue + "-reset-output"
 
-    def confirmDialogue(self):
-        return dcc.ConfirmDialog(
-            id=self.conf_dial, message="Are you sure you want to reset your data?"
-        )
+    def confirmDialogueDiv(self, name: str, message: str):
+        return dcc.ConfirmDialog(id=self.conf_dial + name, message=message)
 
-    def hiddenDiv(self):
-        id_div = self.hidden_div
-        hidden_div = html.Div(id=id_div, style=hidden)
-        return hidden_div
+    def confirmDialogueOutput(self, name: str):
+        return Output(self.conf_dial + name, "displayed")
+
+    def resetUserDataOutputCallback(self):
+        return Output(self.reset_output, "children")
+
+    # def hiddenDiv(self, name_div: str):
+    #     id_div = self.hidden_div + name_div
+    #     hidden_div = html.Div(id=id_div, style=hidden)
+    #     return hidden_div
 
 
 # class UniqueReusableSingleOutputs:

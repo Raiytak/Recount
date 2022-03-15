@@ -13,7 +13,7 @@ On the MySQL part:
 
 from typing import List
 
-import logs
+import logging
 import com
 import access
 
@@ -74,13 +74,11 @@ class DataPipeline(Pipeline):
         cleaner.fillBlanks(dataframe, self.user_files)
 
     def updateIntelligentFill(self, dataframe):
-        logs.formatAndDisplay(f"@{self.username}: Update 'intelligent fill'")
+        logging.info("Update 'intelligent fill'")
         updateUserIntelligentFill(dataframe, self.user_files)
 
     def updateExpenseTable(self, dataframe):
-        logs.formatAndDisplay(
-            f"@{self.username}: Update '{self.expense_table.table_name}'"
-        )
+        logging.info("Update '{self.expense_table.table_name}'")
         self.dumpUserOfTable(self.expense_table)
 
         is_expense = dataframe["reimbursement"].isna()
@@ -90,28 +88,35 @@ class DataPipeline(Pipeline):
             expense_df, self.expense_table
         )
         self.expense_table.insertAllReqs(list_requests)
+        logging.info("Update '{self.expense_table.table_name}' done!")
 
     def updateReimbursementTable(self, dataframe):
-        logs.formatAndDisplay(
-            f"@{self.username}: Update '{self.reimbursement_table.table_name}'"
-        )
+        logging.info("Update '{self.reimbursement_table.table_name}'")
         self.dumpUserOfTable(self.reimbursement_table)
 
         is_expense = dataframe["reimbursement"].notna()
         dataframe.rename(columns={"reimbursement": "ID_origin"}, inplace=True)
         df = dataframe[self.reimbursement_table.columns_name]
         expense_df = df[is_expense]
-        expense_df["amount"] = expense_df["amount"].apply(abs)
+        # TODO: set abs
+        # float_amounts = expense_df["amount"].astype(float).copy()
+        # expense_df.update(float_amounts.abs().copy())
         list_requests = convert.translateDataframeIntoInsertRequests(
             expense_df, self.reimbursement_table
         )
         self.reimbursement_table.insertAllReqs(list_requests)
+        logging.info("Update '{self.reimbursement_table.table_name}' done!")
 
     def dumpUserOfTable(self, wrapperTable: com.UserSqlTable):
-        logs.formatAndDisplay(
-            f"@{self.username}: Truncate table '{wrapperTable.table_name}' for user '{self.username}'"
+        logging.info(
+            f"Truncate table '{wrapperTable.table_name}' for user '{self.username}'"
         )
-        wrapperTable.dumpTable()
+        wrapperTable.truncateTableOfUser()
+
+    def dumpUserOfAllTables(self):
+        logging.info(f"Truncate ALL tables for user '{self.username}'")
+        self.dumpUserOfTable(self.expense_table)
+        self.dumpUserOfTable(self.reimbursement_table)
 
 
 class GraphPipeline(Pipeline):

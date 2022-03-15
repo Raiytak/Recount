@@ -90,7 +90,7 @@ class ConfigPath(FilePath):
     @classproperty
     def currencies_rates_filenames(cls):
         filenames = [
-            filename for filename in os.listdir(cls.root) if filename.startswith("ecb_")
+            filename for filename in cls.root.iterdir() if filename.startswith("ecb_")
         ]
         return filenames
 

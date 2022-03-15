@@ -58,12 +58,13 @@ def dateDelta(curr_date: datetime.datetime, period: str) -> datetime.datetime:
     """Returns the current date with the desired period added to it"""
     if period == "week":
         next_date = curr_date + relativedelta(weeks=1)
+    # The substraction of one day prevents the graphs from taking an extra day
     elif period == "month":
-        next_date = curr_date + relativedelta(months=1)  # - relativedelta(days=1)
+        next_date = curr_date + relativedelta(months=1) - relativedelta(days=1)
     elif period == "semestre":
-        next_date = curr_date + relativedelta(months=4)  # - relativedelta(days=1)
+        next_date = curr_date + relativedelta(months=4) - relativedelta(days=1)
     elif period == "annual":
-        next_date = curr_date + relativedelta(years=1)  # - relativedelta(days=1)
+        next_date = curr_date + relativedelta(years=1) - relativedelta(days=1)
     else:
         raise AttributeError(
             "Period not accepted : \nonly 'week', 'month', 'semestre'  and 'year' are authorized"

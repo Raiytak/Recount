@@ -3,9 +3,6 @@ import abc
 from .vue import index, home, dashboard
 from .action.dashboard import DashboardMixin
 
-# TODO: def __init__ here, define name vue, call super.
-# The vue name should be transfered to both action and vue!
-
 
 class Page:
     def __init__(self, app, page_name=None, *args, **kwargs):

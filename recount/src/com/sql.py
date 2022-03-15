@@ -97,7 +97,10 @@ class SqlSocketManager(SqlManagerSingleton):
         return self.sql_socket
 
     def __exit__(self, exc_type, exc_val, exc_tb):
-        self.lock.release()
+        try:
+            self.lock.release()
+        except RuntimeError():
+            pass
 
 
 class SqlKeyword(Enum):
@@ -360,7 +363,7 @@ class SqlTable:
         )
         return self.select(request)
 
-    def dumpTable(self):
+    def truncateTable(self):
         request = SqlRequest(action=SqlKeyword.TRUNCATE, table=self.table_name)
         self.delete(request)
 
@@ -379,7 +382,7 @@ class UserSqlTable(SqlTable):
         )
         return self.select(request)
 
-    def dumpTable(self):
+    def truncateTableOfUser(self):
         request = SqlRequest(
             action=SqlKeyword.DELETE, table=self.table_name, username=self.username
         )
@@ -396,7 +399,12 @@ class UserSqlTable(SqlTable):
 
     def insertAllReqs(self, list_request_sql):
         for req_sql in list_request_sql:
-            self.insert(req_sql)
+            try:
+                self.insert(req_sql)
+            except pymysql.err.IntegrityError:
+                pass
+                # TODO: if ID exists, update / remove then insert
+                # self.update
 
     # def selectListRowId(self, list_ids):
     #     return [self.selectRowId(id)[0] for id in list_ids]

@@ -17,6 +17,7 @@ def appPath():
 
 
 app_path = appPath()
-src_path = app_path / "src"
 sys.path.insert(0, str(app_path))
+
+src_path = app_path / "src"
 sys.path.insert(0, str(src_path))

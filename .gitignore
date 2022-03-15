@@ -1,12 +1,8 @@
 # Ignore important stuff
 recount/src/.env
-**.pem
 
 # Ignore the database other files
 database/init_**
-
-# Ignore the users's stuff
-recount/data/users/*
 
 # Ignore the __pycache__ files created by python
 **__pycache__**
@@ -34,19 +30,13 @@ recount/src/pyproject.toml
 **.pytest_cache
 
 # Ignoring files created by venv.
-# Those should only be created using :
-#       python -venv .
-#       source bin/activate
-#       pip install -e .
 recount/bin
 recount/etc
 recount/share
 recount/lib
 recount/lib64
 recount/include
-recount/.pytest_cache
 
 # Other ignores
-**.log
-recount/test.py
+**.pem
 recount/commands.py

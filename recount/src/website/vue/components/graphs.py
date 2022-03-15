@@ -40,9 +40,9 @@ class RecountGraphs:
         return dashboard_div
 
     def dashboardHomeCallbacks(self):
-        return {
-            "scatter": self.defaultGraphCallback(self.scatter_id),
-            "pie": self.defaultGraphCallback(self.pie_chart_id),
-            "mean": self.defaultGraphCallback(self.mean_bar_id),
-            "bar": self.defaultGraphCallback(self.food_bar_id),
-        }
+        return [
+            self.defaultGraphCallback(self.scatter_id),
+            self.defaultGraphCallback(self.pie_chart_id),
+            self.defaultGraphCallback(self.mean_bar_id),
+            self.defaultGraphCallback(self.food_bar_id),
+        ]

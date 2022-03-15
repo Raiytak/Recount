@@ -1,6 +1,5 @@
 from dash_extensions import Download
-from dash import dcc, html
-from dash.dependencies import Input  # , Output, State
+from dash import dcc, html, Input, Output
 
 
 import datetime
@@ -16,7 +15,11 @@ class RecountInputs:
         self.date_div_date_id = name_vue + "-input-date"
         self.import_excel_id = name_vue + "-import-excel"
         self.submit_id = name_vue + "-submit-button"
-        self.reset_user = name_vue + "-reset-user"
+
+        self.reset_button = name_vue + "-reset-button"
+        self.reset_output = name_vue + "-reset-output"
+        self.conf_dial = name_vue + "-confirm-dialog-"
+
         self.export_excel = name_vue + "-export-excel"
         self.export_excel_button = name_vue + "-export-excel-button"
 
@@ -80,12 +83,13 @@ class RecountInputs:
 
     def resetUserData(self):
         reset_button = html.Button(
-            id=self.reset_user, children="Reset My Data", n_clicks=0
+            id=self.reset_button, children="Reset My Data", n_clicks=0
         )
-        return reset_button
+        reset_output = html.Div(id=self.reset_output)
+        return html.Div(children=[reset_button, reset_output], style=flexColumn)
 
-    def resetUserDataCallback(self):
-        return Input(self.reset_user, "n_clicks")
+    def resetUserDataButtonCallback(self):
+        return Input(self.reset_button, "n_clicks")
 
     def importExcelButton(self):
         excel_input = dcc.Upload(
@@ -108,6 +112,9 @@ class RecountInputs:
             ]
         )
         return reset_button
+
+    def confirmDialogueInput(self, name: str):
+        return Input(self.conf_dial + name, "submit_n_clicks")
 
 
 # class UniqueReusableSingleInputs:

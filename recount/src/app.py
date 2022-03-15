@@ -15,6 +15,7 @@ from dash.dependencies import Input, Output
 import logs
 from website import *
 from access import ConfigAccess
+from pipeline import DataPipeline
 
 from recount_tools import getUsername
 
@@ -58,6 +59,9 @@ class AppDash:
             elif pathname == "/home":
                 return self.home_page.vue
             elif pathname == "/dashhome":
+                data_pipeline = DataPipeline(username)
+                data_pipeline.dumpUserOfAllTables()
+                data_pipeline.updateData()
                 return self.dashboard_home_page.vue
             # elif pathname == "/dashhome":
             #     user_pipeline.DataPipeline()
