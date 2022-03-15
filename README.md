@@ -63,7 +63,7 @@ The user should match the description of the one defined in [default_configs.jso
 git clone https://github.com/Raiytak/Recount.git
 cd Recount
 pip install recount/
-python -m birthday_calendar
+python -m recount
 ```
 
 
