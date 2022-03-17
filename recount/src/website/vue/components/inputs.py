@@ -1,4 +1,4 @@
-from dash_extensions import Download
+import logging
 from dash import dcc, html, Input, Output
 
 
@@ -18,7 +18,7 @@ class RecountInputs:
 
         self.reset_button = name_vue + "-reset-button"
         self.reset_output = name_vue + "-reset-output"
-        self.conf_dial = name_vue + "-confirm-dialog-"
+        self.conf_dial = name_vue + "-confirm-dialog"
 
         self.export_excel = name_vue + "-export-excel"
         self.export_excel_button = name_vue + "-export-excel-button"
@@ -82,11 +82,13 @@ class RecountInputs:
         return Input(self.date_div_date_id, "date")
 
     def resetUserData(self):
-        reset_button = html.Button(
-            id=self.reset_button, children="Reset My Data", n_clicks=0
+        return html.Div(
+            children=[
+                html.Button(id=self.reset_button, children="Reset My Data", n_clicks=0),
+                html.Div(id=self.reset_output),
+            ],
+            style=flexColumn,
         )
-        reset_output = html.Div(id=self.reset_output)
-        return html.Div(children=[reset_button, reset_output], style=flexColumn)
 
     def resetUserDataButtonCallback(self):
         return Input(self.reset_button, "n_clicks")
@@ -105,16 +107,22 @@ class RecountInputs:
         return callback
 
     def exportExcelButton(self):
-        reset_button = html.Div(
+        export_button = html.Div(
             [
-                html.Button("Download Excel", id=self.export_excel_button),
-                Download(id=self.export_excel),
+                html.Button("Download Excel", id=self.export_excel_button, n_clicks=0),
+                dcc.Download(id=self.export_excel),
             ]
         )
-        return reset_button
+        return export_button
 
-    def confirmDialogueInput(self, name: str):
-        return Input(self.conf_dial + name, "submit_n_clicks")
+    def exportExcelButtonCallback(self):
+        logging.info(
+            "setting exportExcelButtonCallback: {}".format(self.export_excel_button)
+        )
+        return Input(self.export_excel_button, "n_clicks")
+
+    def confirmDialogueInput(self):
+        return Input(self.conf_dial, "n_clicks")
 
 
 # class UniqueReusableSingleInputs:

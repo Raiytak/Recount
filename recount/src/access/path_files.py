@@ -194,10 +194,6 @@ class UserFilesPath(FilePath):
         return self.root / "categories.json"
 
     @property
-    def intelligent_fill(self):
-        return self.root / "intelligent_fill.json"
-
-    @property
     def translations(self):
         return self.root / "user_translations.json"
 
@@ -208,10 +204,6 @@ class UserFilesPath(FilePath):
     @classproperty
     def example_categories(cls):
         return cls.root / "example_categories.json"
-
-    @classproperty
-    def example_intelligent_fill(cls):
-        return cls.root / "example_intelligent_fill.json"
 
     @classproperty
     def example_translations(cls):

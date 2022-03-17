@@ -51,7 +51,6 @@ class DataPipeline(Pipeline):
     def updateData(self):
         dataframe = self.getDataframeFromExcel()
         self.cleanDataframe(dataframe)
-        self.updateIntelligentFill(dataframe)
         self.updateExpenseTable(dataframe)
         self.updateReimbursementTable(dataframe)
 
@@ -71,7 +70,7 @@ class DataPipeline(Pipeline):
         self.cleaner_dataframe.normalizeColumnsName(dataframe)
         self.cleaner_dataframe.removeUselessColumns(dataframe)
 
-        cleaner.fillBlanks(dataframe, self.user_files)
+        # cleaner.fillBlanks(dataframe, self.user_files)
 
     def updateIntelligentFill(self, dataframe):
         logging.info("Update 'intelligent fill'")

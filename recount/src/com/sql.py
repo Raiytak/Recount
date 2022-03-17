@@ -97,10 +97,7 @@ class SqlSocketManager(SqlManagerSingleton):
         return self.sql_socket
 
     def __exit__(self, exc_type, exc_val, exc_tb):
-        try:
-            self.lock.release()
-        except RuntimeError():
-            pass
+        self.lock.release()
 
 
 class SqlKeyword(Enum):

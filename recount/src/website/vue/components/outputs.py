@@ -1,4 +1,5 @@
-from dash import dcc, Output
+import logging
+from dash import dcc, html, Output
 
 
 # from dash.dependencies import Input, Output, State
@@ -11,22 +12,34 @@ class RecountOutputs:
     def __init__(self, name_vue: str):
         self.name_vue = name_vue
         self.h1_div_div = name_vue + "-h1-div"
+        self.test = "test"
         self.h2_div_div = name_vue + "-h2-div"
         self.h3_div_div = name_vue + "-h3-div"
         self.h4_div_div = name_vue + "-h4-div"
         self.hidden_div = name_vue + "-hidden-div"
-        self.conf_dial = name_vue + "-confirm-dialog-"
-        # TODO: same reset_output for Output and Input, do a link between them
+        self.conf_dial = name_vue + "-confirm-dialog"
+        # TODO: same values for Output and Input, do a link between them
         self.reset_output = name_vue + "-reset-output"
+        self.export_excel = name_vue + "-export-excel"
 
-    def confirmDialogueDiv(self, name: str, message: str):
-        return dcc.ConfirmDialog(id=self.conf_dial + name, message=message)
+    def testDiv(self):
+        return html.Div(id=self.test)
 
-    def confirmDialogueOutput(self, name: str):
-        return Output(self.conf_dial + name, "displayed")
+    def testCallback(self):
+        return Output(self.test, "children")
+
+    def confirmDialogueDiv(self: str, message: str):
+        return dcc.ConfirmDialog(id=self.conf_dial, message=message)
+
+    def confirmDialogueCallback(self):
+        return Output(self.conf_dial, "displayed")
 
     def resetUserDataOutputCallback(self):
         return Output(self.reset_output, "children")
+
+    def downloadExcelCallback(self):
+        logging.info("setting exportExcelButtonCallback: {}".format(self.export_excel))
+        return Output(self.export_excel, "data")
 
     # def hiddenDiv(self, name_div: str):
     #     id_div = self.hidden_div + name_div

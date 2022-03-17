@@ -1,4 +1,4 @@
-from dash import callback
+from dash import callback, dcc, Output, Input
 import logging
 
 from recount_tools import getUsername, getIdButtonClicked
@@ -24,13 +24,13 @@ class DashboardMixin(AbstractAction):
                 selected_date, selected_period, imported_excel, conf_submited
             )
 
-        @callback(*self.osi_reset_button_pressed)
-        def reset_button_pressed(nclicks):
-            return self.reset_button_pressed(nclicks)
+        @callback(*self.osi_reset_button_pressed, prevent_initial_call=True)
+        def reset_button_pressed(reset_nclicks):
+            return self.reset_button_pressed(reset_nclicks)
 
-        # @callback(*self.osi_confirm_reset)
-        # def confirm_reset(conf_submited):
-        #     return self.confirm_reset(conf_submited)
+        @callback(*self.osi_export_button_pressed, prevent_initial_call=True)
+        def export_button_pressed(export_nclicks):
+            return self.export_button_pressed(export_nclicks)
 
     @staticmethod
     def updateGraph(selected_date, selected_period, imported_excel, conf_submited):
@@ -97,65 +97,40 @@ class DashboardMixin(AbstractAction):
             rec_in.dateCallback(),
             rec_in.periodCallback(),
             rec_in.importExcelCallback(),
-            self.recount_inputs.confirmDialogueInput(self.reset_dial),
+            self.recount_inputs.confirmDialogueInput(),
         )
         return (outputs, inputs)
 
     @staticmethod
-    def reset_button_pressed(nclicks):
-        if nclicks:
+    def reset_button_pressed(reset_nclicks):
+        if reset_nclicks:
             return True
         return False
 
     @property
     def osi_reset_button_pressed(self):
         return (
-            self.recount_outputs.confirmDialogueOutput(self.reset_dial),
+            self.recount_outputs.confirmDialogueCallback(),
             self.recount_inputs.resetUserDataButtonCallback(),
         )
 
-        # @staticmethod
-        # def confirm_reset(conf_submited):
-        #     if conf_submited:
-        #         username = getUsername()
-        #         data_pipeline = DataPipeline(username)
-        #         data_pipeline.user_files.removeUserFolder()
-        #         data_pipeline.dumpUserOfAllTables()
-        #         return "Your data has been reset.\nYou can refresh the page!"
+    @staticmethod
+    def export_button_pressed(export_nclicks):
+        username = getUsername()
+        user_data = DataPipeline(username)
+        df = user_data.getDataframeFromExcel()
+        return dcc.send_data_frame(
+            df.to_excel, "recount_excel.xlsx", sheet_name="Sheet_name_1"
+        )
 
-        # @property
-        # def osi_confirm_reset(self):
-        #     return (
-        #         self.recount_outputs.resetUserDataOutputCallback(),
-        #         self.recount_inputs.confirmDialogueInput(self.reset_dial),
-        #     )
-
-        # def export_or_reset_data(reset_nclicks, export_nclicks):
-        #     id_component_called = getIdButtonClicked()
-        #     if "reset" in id_component_called:
-        #         return True  # , None
-        # elif "export" in id_component_called:
-        #     username = getUsername()
-        #     myAccessUserFiles = AccessUserFiles(username)
-        #     path_excel = myAccessUserFiles.AccessExcel.ExcelPaths.rawExcelPath()
-        #     myExcelToDataframe = ExcelToDataframe(username)
-        #     df_excel = myExcelToDataframe.getDataframeOf(path_excel)
-
-        #     def delete_df_unnamed_col(df):
-        #         for col in df.columns:
-        #             if "Unnamed" in col:
-        #                 del df[col]
-
-        #     delete_df_unnamed_col(df_excel)
-        #     excel_exported = dcc.send_data_frame(
-        #         df_excel.to_excel, "recount_excel.xlsx", sheet_name="Sheet_name_1"
-        #     )
-        #     return False, excel_exported
-        #     # return False, None
-        return False  # , None
+    @property
+    def osi_export_button_pressed(self):
+        return (
+            self.recount_outputs.downloadExcelCallback(),
+            self.recount_inputs.exportExcelButtonCallback(),
+        )
 
     @staticmethod
     def updateDataForUser(username):
         update_data = DataPipeline(username)
         update_data.updateData()
-

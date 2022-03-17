@@ -187,11 +187,6 @@ class UserFilesAccess(FileAccessor):
             shutil.copy(
                 UserFilesPath.example_categories, self.user_files_path.categories
             )
-        if not self.user_files_path.intelligent_fill.exists():
-            shutil.copy(
-                UserFilesPath.example_intelligent_fill,
-                self.user_files_path.intelligent_fill,
-            )
         if not self.user_files_path.translations.exists():
             shutil.copy(
                 UserFilesPath.example_translations, self.user_files_path.translations,

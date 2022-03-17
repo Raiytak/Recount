@@ -9,6 +9,7 @@ When there is only a description on the row, the module looks at the existing co
 meaning that this is the most probable one.
 """
 
+# TODO: REWORK: USE A GRAPH-DATABASE TO REGISTER THE CATEGORIES INFORMATION
 import pandas as pd
 import numpy as np
 

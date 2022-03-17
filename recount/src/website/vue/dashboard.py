@@ -13,12 +13,10 @@ class DashboardHome(AbstractVue):
         self.recount_outputs = RecountOutputs(self.page_name)
         self.recount_graphs = RecountGraphs(self.page_name)
 
-        self.reset_dial = "reset-data"
-
     @property
     def vue(self):
         conf_dial = self.recount_outputs.confirmDialogueDiv(
-            self.reset_dial, message="Are you sure you want to reset your data?"
+            message="Are you sure you want to reset your data?"
         )
 
         upper_div = self.recount_inputs.dashboardInputDiv()
