@@ -1,7 +1,8 @@
 from dash import html
 
-
 from .abstract_vue import AbstractVue
+
+__all__ = ["Home"]
 
 
 class Home(AbstractVue):

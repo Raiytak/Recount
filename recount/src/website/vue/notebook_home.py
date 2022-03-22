@@ -4,10 +4,10 @@ from .abstract_vue import AbstractVue
 
 from .components import *
 
-__all__ = ["DashboardHomeVue"]
+__all__ = ["NotebookHomeVue"]
 
 
-class DashboardHomeVue(AbstractVue):
+class NotebookHomeVue(AbstractVue):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 

@@ -1,7 +1,7 @@
 import abc
 
-from .vue import dashboard_home, index, home
-from .action.dashboard_home import DashboardHomeMixin
+from .vue import *
+from .action import *
 
 
 class Page:
@@ -20,13 +20,17 @@ class Page:
         """Name of the vue"""
 
 
-class IndexPage(index.Index, Page):
+class IndexPage(Index, Page):
     page_name = "index-page"
 
 
-class HomePage(home.Home, Page):
+class HomePage(Home, Page):
     page_name = "home-page"
 
 
-class DashboardHomePage(DashboardHomeMixin, dashboard_home.DashboardHomeVue, Page):
+class DashboardHomePage(DashboardHomeMixin, DashboardHomeVue, Page):
+    page_name = "dashboard-home-page"
+
+
+class NotebookHomePage(NotebookHomeMixin, NotebookHomeVue, Page):
     page_name = "dashboard-home-page"

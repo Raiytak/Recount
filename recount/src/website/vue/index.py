@@ -3,6 +3,8 @@ from dash import dcc, html
 from .abstract_vue import AbstractVue
 from .components import link
 
+__all__ = ["Index"]
+
 
 class Index(AbstractVue):
     @property

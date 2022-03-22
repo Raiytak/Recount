@@ -10,6 +10,8 @@ from .abstract_mixin import AbstractAction
 import website.vue.graphs as graphs
 from pipeline.convert import convertPeriodToDate, shapeDatetimeToSimpleDate
 
+__all__ = ["DashboardHomeMixin"]
+
 
 class DashboardHomeMixin(AbstractAction):
     def setCallbacks(self):
