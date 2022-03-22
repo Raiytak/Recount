@@ -11,7 +11,7 @@ import website.vue.graphs as graphs
 from pipeline.convert import convertPeriodToDate, shapeDatetimeToSimpleDate
 
 
-class DashboardMixin(AbstractAction):
+class DashboardHomeMixin(AbstractAction):
     def setCallbacks(self):
         @callback(*self.osi_update_data, prevent_initial_call=True)
         def update_data(*args):
@@ -33,10 +33,10 @@ class DashboardMixin(AbstractAction):
     @property
     def osi_update_graphs(self):
         return (
-            self.recount_graphs.dashboardHomeCallbacks(),
-            Input(self.recount_graphs.date_div_date_id, "date"),
-            Input(self.recount_graphs.date_div_period_id, "value"),
-            Input(self.recount_graphs.update_graph_button, "n_clicks"),
+            self.dashboard_home.dashboardHomeCallbacks(),
+            Input(self.dashboard_home.date_div_date_id, "date"),
+            Input(self.dashboard_home.date_div_period_id, "value"),
+            Input(self.dashboard_home.update_graph_button, "n_clicks"),
         )
 
     @staticmethod
@@ -79,8 +79,8 @@ class DashboardMixin(AbstractAction):
     @property
     def osi_reset_button_pressed(self):
         return (
-            Output(self.recount_graphs.conf_dial, "displayed"),
-            Input(self.recount_graphs.reset_button, "n_clicks"),
+            Output(self.dashboard_home.conf_dial, "displayed"),
+            Input(self.dashboard_home.reset_button, "n_clicks"),
         )
 
     @staticmethod
@@ -93,11 +93,11 @@ class DashboardMixin(AbstractAction):
     @property
     def osi_update_data(self):
         return (
-            Output(self.recount_graphs.update_graph_button, "n_clicks"),
-            Input(self.recount_graphs.update_data_button, "n_clicks"),
-            Input(self.recount_graphs.import_excel, "contents"),
-            Input(self.recount_graphs.conf_dial, "submit_n_clicks"),
-            State(self.recount_graphs.update_graph_button, "n_clicks"),
+            Output(self.dashboard_home.update_graph_button, "n_clicks"),
+            Input(self.dashboard_home.update_data_button, "n_clicks"),
+            Input(self.dashboard_home.import_excel, "contents"),
+            Input(self.dashboard_home.conf_dial, "submit_n_clicks"),
+            State(self.dashboard_home.update_graph_button, "n_clicks"),
         )
 
     @staticmethod
@@ -128,8 +128,8 @@ class DashboardMixin(AbstractAction):
     @property
     def osi_export_button_pressed(self):
         return (
-            Output(self.recount_graphs.export_excel, "data"),
-            Input(self.recount_graphs.export_excel_button, "n_clicks"),
+            Output(self.dashboard_home.export_excel, "data"),
+            Input(self.dashboard_home.export_excel_button, "n_clicks"),
         )
 
     @staticmethod

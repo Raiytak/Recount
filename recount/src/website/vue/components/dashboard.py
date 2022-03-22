@@ -1,11 +1,11 @@
 from dash import dcc, html
 from dash.dependencies import Output, Input
 
-from .component import RecountComponents
+from .graph import RecountGraphs
 from .css_style import *
 
 
-class RecountGraphs(RecountComponents):
+class DashboardHome(RecountGraphs):
     def graphDataOutputCallback(self):
         return Output(self.graph_data, "data")
 
