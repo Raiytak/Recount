@@ -40,3 +40,4 @@ recount/include
 # Other ignores
 **.pem
 recount/commands.py
+**.bat

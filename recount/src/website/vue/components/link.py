@@ -1,6 +1,7 @@
 from dash import dcc, html
 
 
+from .css_style import *
 from recount_tools import classproperty
 
 
@@ -8,25 +9,25 @@ class RecountLinks:
     @classproperty
     def home(cls):
         button = html.Button("Home", className="nav-button")
-        home_page = dcc.Link(button, className="nav-link", href="/home")
+        home_page = dcc.Link(button, href="/home")
         return home_page
 
     @classproperty
     def dashboardHome(cls):
         button = html.Button("Dashboard", className="nav-button")
-        dashhome = dcc.Link(button, className="nav-link", href="/dashhome")
+        dashhome = dcc.Link(button, href="/dashhome")
         return dashhome
 
     @classproperty
-    def notebook(cls):
+    def notebookHome(cls):
         button = html.Button("Notebook", className="nav-button")
-        notebook = (dcc.Link(button, className="nav-link", href="/excel"),)
+        notebook = dcc.Link(button, href="/notebook")
         return notebook
 
     @classproperty
     def categories(cls):
         button = html.Button("Categories", className="nav-button")
-        categories = dcc.Link(button, className="nav-link", href="/categories")
+        categories = dcc.Link(button, href="/categories")
         return categories
 
 

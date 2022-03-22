@@ -28,9 +28,9 @@ class DashboardHomeMixin(AbstractAction):
         def reset_button_pressed(reset_nclicks):
             return self.reset_button_pressed(reset_nclicks)
 
-        @callback(*self.osi_export_button_pressed, prevent_initial_call=True)
-        def export_button_pressed(*args):
-            return self.export_button_pressed(*args)
+        @callback(*self.osi_download_button_pressed, prevent_initial_call=True)
+        def download_button_pressed(*args):
+            return self.download_button_pressed(*args)
 
     @property
     def osi_update_graphs(self):
@@ -89,13 +89,12 @@ class DashboardHomeMixin(AbstractAction):
             return True
         return False
 
-    # Input(self.recount_inputs.import_excel, "contents"),
     @property
     def osi_update_data(self):
         return (
             Output(self.dashboard_home.update_graph_button, "n_clicks"),
             Input(self.dashboard_home.update_data_button, "n_clicks"),
-            Input(self.dashboard_home.import_excel, "contents"),
+            Input(self.dashboard_home.upload_excel, "contents"),
             Input(self.dashboard_home.conf_dial, "submit_n_clicks"),
             State(self.dashboard_home.update_graph_button, "n_clicks"),
         )
@@ -126,14 +125,14 @@ class DashboardHomeMixin(AbstractAction):
         return graph_button_status + 1
 
     @property
-    def osi_export_button_pressed(self):
+    def osi_download_button_pressed(self):
         return (
-            Output(self.dashboard_home.export_excel, "data"),
-            Input(self.dashboard_home.export_excel_button, "n_clicks"),
+            Output(self.dashboard_home.download_excel, "data"),
+            Input(self.dashboard_home.download_excel_button, "n_clicks"),
         )
 
     @staticmethod
-    def export_button_pressed(export_nclicks):
+    def download_button_pressed(export_nclicks):
         username = getUsername()
         user_data = DataPipeline(username)
         df = user_data.getDataframeFromExcel()

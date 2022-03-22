@@ -43,3 +43,6 @@ spaceBetween = {"display": "flex", "justifyContent": "space-between"}
 spaceAround = {"display": "flex", "justifyContent": "space-around"}
 
 hidden = {"display": "none"}
+
+buttonMargin = {"margin": "5px"}
+

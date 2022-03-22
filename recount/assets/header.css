@@ -1,0 +1,24 @@
+/* .header-link {
+    text-decoration: none;
+    height: 65px;
+    width: auto;
+}
+
+.header-button {
+    margin: 10px;
+    font-size: 13px;
+    width: 150px;
+} */
+
+.nav-button {
+    margin: 5px;
+}
+.nav-links {
+    margin: 10px;
+    margin-bottom: 20px;
+}
+
+.upload-download-reset{
+    display: flex;
+    flex-direction: column;
+}

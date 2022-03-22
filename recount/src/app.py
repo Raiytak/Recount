@@ -14,7 +14,7 @@ from dash.dependencies import Input, Output
 
 import logs
 from website import *
-from access import ConfigAccess
+from access import ConfigAccess, AssetPath
 from pipeline import DataPipeline
 
 from recount_tools import getUsername
@@ -34,6 +34,7 @@ class AppDash:
             __name__,
             external_stylesheets=external_stylesheets,
             suppress_callback_exceptions=True,
+            assets_folder=str(AssetPath.root)
             # server=flask.Flask(__name__),
         )
         self.addAuthentification()
@@ -41,6 +42,7 @@ class AppDash:
         self.index_page = IndexPage(self.app)
         self.home_page = HomePage(self.app)
         self.dashboard_home_page = DashboardHomePage(self.app)
+        self.notebook_home_page = NotebookHomePage(self.app)
         # self.vueTest = vue_test.AppDash(self.app)
 
         # self.app.css.append_css({"external_url": "static/main.css"})
@@ -60,9 +62,8 @@ class AppDash:
                 return self.home_page.vue
             elif pathname == "/dashhome":
                 return self.dashboard_home_page.vue
-            # elif pathname == "/dashhome":
-            #     user_pipeline.DataPipeline()
-            #     return self.vueDashboardHome.setThisVue()
+            elif pathname == "/notebook":
+                return self.notebook_home_page.vue
             # elif pathname == "/reset":
             #     update_data.removeAllDataForUser(username)
             #     return "All data has been reseted :)"

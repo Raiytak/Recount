@@ -33,4 +33,4 @@ class DashboardHomePage(DashboardHomeMixin, DashboardHomeVue, Page):
 
 
 class NotebookHomePage(NotebookHomeMixin, NotebookHomeVue, Page):
-    page_name = "dashboard-home-page"
+    page_name = "notebook-home-page"

@@ -1,11 +1,18 @@
 from dash import dcc, html
 from dash.dependencies import Output, Input
 
-from .component import RecountComponents
+from .component import RecountDefaultDivs
 from .css_style import *
 
 
-class DashboardHome(RecountComponents):
+class DashboardHome(RecountDefaultDivs):
+    def __init__(self, *arg, **kwargs):
+        super().__init__(*arg, **kwargs)
+        self.scatter_id = self.name_vue + "-scatter-graph"
+        self.pie_chart_id = self.name_vue + "-pie-chart-category"
+        self.mean_bar_id = self.name_vue + "-mean-bar"
+        self.food_bar_id = self.name_vue + "-food-bar"
+
     def graphDataOutputCallback(self):
         return Output(self.graph_data, "data")
 

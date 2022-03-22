@@ -1,13 +1,29 @@
-import dash_html_components as html
-import dash_core_components as dcc
-from dash.dependencies import Input, Output, State
+from dash import html, dcc
+
+__all__ = ["DefaultButtons"]
 
 
-import wrapper_dash.reusable_components.reusable_inputs as reusable_inputs
-import wrapper_dash.reusable_components.reusable_outputs as reusable_outputs
-import wrapper_dash.reusable_components.reusable_styles as reusable_styles
+class DefaultButtons:
+    reset_button = "reset-button"
+    import_excel = "import-excel"
+    export_excel = "export-excel"
+    export_excel_button = "export-excel-button"
 
-import pandas as pd
+    def uploadDownloadResetDiv(self):
+        reset_button = self.buttonDiv(self.reset_button, "Reset My Data")
+        import_excel = dcc.Upload(
+            id=self.import_excel, children=html.Div("Upload my Excel"), multiple=False,
+        )
+        export_button = html.Div(
+            [
+                html.Button("Download Excel", id=self.export_excel_button, n_clicks=0),
+                dcc.Download(id=self.export_excel),
+            ]
+        )
+        return html.Div(
+            children=[import_excel, export_button, reset_button],
+            className="upload-download-reset",
+        )
 
 
 # class UniqueReusableSingleStandardButtons:

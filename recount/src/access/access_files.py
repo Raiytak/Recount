@@ -208,6 +208,10 @@ class UserFilesAccess(FileAccessor):
                 UserFilesPath.example_translations, self.user_files_path.translations,
             )
 
+    @classproperty
+    def shortExample(cls):
+        return cls.dataOfBinary(UserFilesPath.example_short_excel)
+
     def createUserFolder(self):
         os.mkdir(self.user_files_path.user_folder)
 
@@ -317,16 +321,19 @@ class UserFilesAccess(FileAccessor):
     def translations(self):
         return self.dataOfJson(self.user_files_path.translations)
 
-    @property
-    def equivalent_columns(self):
-        return self.dataOfJson(self.user_files_path.translations)["equivalent_columns"]
-
     def updateTranslations(self, data: dict):
         return self.writeJson(self.user_files_path.translations, data)
 
     @property
     def equivalent_columns(self):
         return self.translations["equivalent_columns"]
+
+    @classproperty
+    def equivalent_columns_keys(cls):
+        equivalent_columns = cls.dataOfJson(UserFilesPath.example_translations)[
+            "equivalent_columns"
+        ]
+        return [key for key in equivalent_columns.keys()]
 
 
 # TODO: handle concurrency on writing root convert company in category

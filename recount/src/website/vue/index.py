@@ -1,5 +1,6 @@
 from dash import dcc, html
 
+from .components.css_style import *
 from .abstract_vue import AbstractVue
 from .components import link
 
@@ -11,14 +12,18 @@ class Index(AbstractVue):
     def vue(self):
         # represents the browser address bar and doesn't render anything
         url = dcc.Location(id="url", refresh=False)
-        page_content = html.Div(id="page-content")
-        links_div = html.Nav(
-            children=[url, link.RecountLinks.home, link.RecountLinks.dashboardHome],
-            style={
-                "display": "flex",
-                "justifyContent": "spaceBetween",
-                "height": "100px",
-            },
+        logo_div = html.Div(id="logo")
+        links_div = html.Div(
+            children=[
+                url,
+                link.RecountLinks.home,
+                link.RecountLinks.dashboardHome,
+                link.RecountLinks.notebookHome,
+            ],
+            className="nav-links",
         )
-        whole_page = html.Div(children=[links_div, page_content])
+        tools = html.Div(id="tools")
+        nav_div = html.Nav(children=[logo_div, links_div, tools], style=spaceBetween)
+        page_content = html.Div(id="page-content")
+        whole_page = html.Div(children=[nav_div, page_content])
         return whole_page

@@ -41,6 +41,7 @@ class Folder(Enum):
     CONFIG = "config"
     USERS = "users"
     EXAMPLE = "examples"
+    ASSETS = "assets"
 
     LOGS = "logs"
 
@@ -62,6 +63,12 @@ class FilePath:
     @abc.abstractmethod
     def root(self):
         """Root of the folder containing the desired files"""
+
+
+class AssetPath(FilePath):
+    """Path to the folder containing the CSS rules and assets of the app"""
+
+    root = APP_PATH / Folder.ASSETS.value
 
 
 class ConfigPath(FilePath):
@@ -200,6 +207,10 @@ class UserFilesPath(FilePath):
     @classproperty
     def example_excel(cls):
         return cls.root / "example_expenses_en.xlsx"
+
+    @classproperty
+    def example_short_excel(cls):
+        return cls.root / "example_short_expenses_en.xlsx"
 
     @classproperty
     def example_categories(cls):

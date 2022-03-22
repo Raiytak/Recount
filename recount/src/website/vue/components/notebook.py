@@ -1,66 +1,75 @@
-from dash import dcc, html, Output
-import dash_table
+import pandas
+from dash import dash_table, html, dcc
 
-from .component import RecountComponents
+from src.pipeline.convert import shapeDatetimeToSimpleDate
+from src.access.access_files import UserFilesAccess
+from .component import RecountDefaultDivs
 from .css_style import *
 
 __all__ = ["RecountNotebook"]
 
 
-class RecountNotebook(RecountComponents):
-    def graphDataOutputCallback(self):
-        return Output(self.graph_data, "data")
+class RecountNotebook(RecountDefaultDivs):
+    def __init__(self, *arg, **kwargs):
+        super().__init__(*arg, **kwargs)
+        self.notebook = self.name_vue + "-notebook-home"
+        self.add_row_button = self.name_vue + "-add-row-button"
 
-    def getDashNotebookDivFromDataframe(self, dataframe):
-        columns_name = self.getColumnsNameFromConfig()
-        notebook_excel_div = dash_table.DataTable(
-            id=self.notebook_name,
+    def addRowButton(self):
+        add_row = html.Button(id=self.add_row_button, children="Add Row")
+        return html.Div([add_row])
+
+    def notebookHome(self):
+        example = UserFilesAccess.shortExample
+        example_data = pandas.read_excel(example)
+
+        # TODO: better date
+        # def date_or_pass(value):
+        #     return shapeDatetimeToSimpleDate(value) if pandas.notna(value) else value
+
+        # example_data_date = example_data["Date"].apply(date_or_pass)
+        import_export_reset_div = self.uploadDownloadResetDiv()
+        upper_div = html.Div([html.Div(), import_export_reset_div], style=spaceBetween,)
+        notebook_div = dash_table.DataTable(
+            id=self.notebook,
             columns=[
                 {
-                    "name": columns_name[i],
-                    "id": i,
+                    "name": column,
+                    "id": column,
                     "editable": False,
                     "hideable": True,
                     "renamable": True,
                 }
-                if i == "ID"
+                if column == "ID"
                 else {
-                    "name": columns_name[i],
-                    "id": i,
+                    "name": column,
+                    "id": column,
                     "type": "numeric",
                     "hideable": True,
                     "renamable": True,
                 }
-                if (i == "Expense Euros" or i == "Expense Dollars")
+                if (column == "Amount" or column == "Reimbursement")
                 else {
-                    "name": columns_name[i],
-                    "id": i,
-                    "type": "text",
-                    "hideable": True,
-                    "renamable": True,
-                }
-                if (i == "Description" or i == "Category" or i == "Trip")
-                else {
-                    "name": columns_name[i],
-                    "id": i,
+                    "name": column,
+                    "id": column,
                     "type": "datetime",
                     "hideable": True,
                     "renamable": True,
                 }
-                if i == "Date"
+                if column == "Date"
                 else {
-                    "name": columns_name[i],
-                    "id": i,
+                    "name": column,
+                    "id": column,
                     "hideable": True,
                     "renamable": True,
                 }
-                for i in dataframe.columns
+                for column in example_data.columns
             ],
-            data=self.getNotebookData(),
+            data=example_data.to_dict("records"),
             editable=True,
             row_deletable=True,
             export_columns="all",
             export_format="xlsx",
             export_headers="display",
         )
-        return notebook_excel_div
+        return html.Div([upper_div, notebook_div])
