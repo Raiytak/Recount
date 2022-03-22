@@ -1,8 +1,10 @@
-from dash import dcc, html
-from dash.dependencies import Output, Input
+from dash import dcc, html, Output
+import dash_table
 
 from .component import RecountComponents
 from .css_style import *
+
+__all__ = ["RecountNotebook"]
 
 
 class RecountNotebook(RecountComponents):

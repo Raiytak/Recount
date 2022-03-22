@@ -7,7 +7,7 @@ from pipeline.pipeline import DataPipeline, GraphPipeline
 
 from .abstract_mixin import AbstractAction
 
-import website.vue.graphs as graphs
+from .graphs import *
 from pipeline.convert import convertPeriodToDate, shapeDatetimeToSimpleDate
 
 __all__ = ["DashboardHomeMixin"]
@@ -56,17 +56,15 @@ class DashboardHomeMixin(AbstractAction):
         )
 
         list_dict_of_expenses = graph_pipeline.getDataByColumn(main_category_df)
-        scatter_graph = graphs.scatterGraph(
-            list_dict_of_expenses, [selected_date, end_date]
-        )
+        scatter_graph = scatterGraph(list_dict_of_expenses, [selected_date, end_date])
 
         list_dict_of_sum_expenses = graph_pipeline.getSumDataByColumn(main_category_df)
-        pie_graph = graphs.pieGraph(list_dict_of_sum_expenses)
+        pie_graph = pieGraph(list_dict_of_sum_expenses)
 
         expenses_by_period = graph_pipeline.getDataByDateDeltaAndColumn(
             main_category_df
         )
-        mean_graph = graphs.meanGraph(expenses_by_period)
+        mean_graph = meanGraph(expenses_by_period)
 
         # TODO: improve stability by defining default categories, imposed categories ?
         food_dataframe = dataframe[main_category_df["category"] == "alimentary"].copy()
@@ -74,7 +72,7 @@ class DashboardHomeMixin(AbstractAction):
             func=graph_pipeline.selectSecondCategory
         )
         food_by_period = graph_pipeline.getDataByDateDeltaAndColumn(food_dataframe)
-        food_graph = graphs.meanGraph(food_by_period)
+        food_graph = meanGraph(food_by_period)
 
         return scatter_graph, pie_graph, mean_graph, food_graph
 
