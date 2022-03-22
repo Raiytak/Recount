@@ -14,7 +14,7 @@ On the MySQL part:
 from typing import List
 
 import logging
-import com
+import db
 import access
 
 import pipeline.convert as convert
@@ -27,11 +27,11 @@ class Pipeline:
     def __init__(self, username: str, db_config=None, *args, **kwargs):
         self.username = username
         if db_config is None:
-            db_config = access.ConfigAccess.database_config
+            db_config = access.ConfigAccess.database_config_sql
 
-        self.expense_table = com.UserSqlTable(username, com.Table.EXPENSE, db_config)
-        self.reimbursement_table = com.UserSqlTable(
-            username, com.Table.REIMBURSEMENT, db_config
+        self.expense_table = db.UserSqlTable(username, db.Table.EXPENSE, db_config)
+        self.reimbursement_table = db.UserSqlTable(
+            username, db.Table.REIMBURSEMENT, db_config
         )
 
         self.user_files = access.UserFilesAccess(username=username)
@@ -106,7 +106,7 @@ class DataPipeline(Pipeline):
         self.reimbursement_table.insertAllReqs(list_requests)
         logging.info("Update '{self.reimbursement_table.table_name}' done!")
 
-    def dumpUserOfTable(self, wrapperTable: com.UserSqlTable):
+    def dumpUserOfTable(self, wrapperTable: db.UserSqlTable):
         logging.info(
             f"Truncate table '{wrapperTable.table_name}' for user '{self.username}'"
         )
@@ -152,13 +152,15 @@ class GraphPipeline(Pipeline):
         )
         return data
 
-    def getDataByDateDeltaAndColumn(self, dataframe, column="category") -> List[dict]:
+    @staticmethod
+    def getDataByDateDeltaAndColumn(dataframe, column="category") -> List[dict]:
         data = convert.converDataframeToDataGroupedByDateDeltaAndColumn(
             dataframe, column
         )
         return data
 
-    def getSumDataByColumn(self, dataframe, column="category") -> List[dict]:
+    @staticmethod
+    def getSumDataByColumn(dataframe, column="category") -> List[dict]:
         data = convert.convertDataframeToSumDataForEachUniqValueInColumn(
             dataframe, column
         )

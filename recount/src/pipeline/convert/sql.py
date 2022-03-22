@@ -6,7 +6,7 @@ Convert dataframe to request SQL.
 
 from typing import List
 
-from com import SqlKeyword, SqlRequest
+from db import SqlKeyword, SqlRequest
 
 
 def translateDataframeIntoInsertRequests(dataframe, table) -> List[SqlRequest]:

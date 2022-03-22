@@ -1,73 +1,12 @@
-from threading import Thread
-from time import sleep, perf_counter
-
 from .defaults import *
 
-from com.sql import (
+from db.sql import (
     Table,
-    SqlManagerSingleton,
-    SqlSocketManager,
     SqlKeyword,
     SqlRequest,
     SqlTable,
     UserSqlTable,
 )
-
-# TODO: Mock sql connections
-
-
-def test_sql_manager_singleton():
-    # Assertions not working as we create an Sql connection in the __init__ file
-    # assert SqlManagerSingleton.instance_alread_exists(DB_CONFIG) == False
-    # assert sum(1 for x in SqlManagerSingleton.instances) == 0
-    manager_a = SqlManagerSingleton(DB_CONFIG)
-    manager_b = SqlManagerSingleton(DB_CONFIG)
-    assert manager_a == manager_b
-    assert manager_a.db_config == DB_CONFIG
-    assert sum(1 for x in manager_a.instances) == 1
-
-    db_config_b = "hi"
-    manager_c = SqlManagerSingleton(db_config_b)
-    assert manager_a != manager_c
-    assert sum(1 for x in manager_a.instances) == 2
-
-    assert SqlManagerSingleton.instance_alread_exists(DB_CONFIG)
-    assert SqlManagerSingleton.get_instance_named(DB_CONFIG) == manager_a
-    assert SqlManagerSingleton.get_instance_named(db_config_b) == manager_c
-
-
-@patch("com.sql.SqlSocket")
-def test_sql_socket_manager(mocked_sql_socket):
-    NUMBER_THREADS = 10
-    SLEEP_TIME = 0.01
-
-    def performFakeSqlRequests(socket_manager, sleep_time):
-        with socket_manager:
-            sleep(sleep_time)
-
-    socket_managers = [SqlSocketManager(DB_CONFIG) for i in range(NUMBER_THREADS)]
-    # Create two new threads
-    threads = [
-        Thread(
-            target=performFakeSqlRequests,
-            kwargs={"socket_manager": manager, "sleep_time": SLEEP_TIME},
-        )
-        for manager in socket_managers
-    ]
-
-    start_time = perf_counter()
-    # Start the threads
-    for thread in threads:
-        thread.start()
-    # Wait for the threads to complete
-    for thread in threads:
-        thread.join()
-
-    end_time = perf_counter()
-    time_delta = end_time - start_time
-    sleep_delta = NUMBER_THREADS * SLEEP_TIME
-
-    assert (time_delta > sleep_delta) and (time_delta <= sleep_delta + 0.1)
 
 
 update_value = "hi"

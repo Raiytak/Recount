@@ -1,4 +1,3 @@
-from .inputs import RecountInputs
-from .outputs import RecountOutputs
-from .links import RecountLinks
-from .graphs import RecountGraphs
+from .component import RecountComponents
+from .link import RecountLinks
+from .graph import RecountGraphs

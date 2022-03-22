@@ -9,7 +9,7 @@ import flask
 
 from dash import callback
 import dash
-from com.authentification import EncryptedAuth
+from db.authentification import EncryptedAuth
 from dash.dependencies import Input, Output
 
 import logs
@@ -59,9 +59,6 @@ class AppDash:
             elif pathname == "/home":
                 return self.home_page.vue
             elif pathname == "/dashhome":
-                data_pipeline = DataPipeline(username)
-                data_pipeline.dumpUserOfAllTables()
-                data_pipeline.updateData()
                 return self.dashboard_home_page.vue
             # elif pathname == "/dashhome":
             #     user_pipeline.DataPipeline()

@@ -4,6 +4,7 @@
 Gestion of the users' identification. 
 """
 
+# TODO: move into vues
 # TODO: create a vue for the connection
 
 from dash_auth.auth import Auth

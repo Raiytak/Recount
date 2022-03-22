@@ -8,11 +8,8 @@ import logging
 import pandas as pd
 from enum import Enum
 from typing import Union, List
-from threading import Lock
 import pymysql
-import weakref
 
-from recount_tools import classproperty
 from access import ConfigAccess
 
 
@@ -32,72 +29,23 @@ class SqlSocket:
 
     def createSocket(self, db_config):
         if db_config is None:
-            db_config = ConfigAccess.database_config
+            db_config = ConfigAccess.database_config_sql
         new_socket = pymysql.connect(
             host=db_config["host"],
             user=db_config["user"],
             passwd=db_config["password"],
+            port=db_config["port"],
             db=db_config["db"],
             ssl={"fake_flag_to_enable_tls": True},
         )
         return new_socket, new_socket.cursor()
 
-
-class SqlManagerSingleton:
-    """If a manager already exists for the provided
-    db_config, returns it.
-    Else instanciate a new manager for the db_config."""
-
-    _instances = set()
-
-    def __new__(cls, db_config=None):
-        if cls.instance_alread_exists(db_config):
-            return cls.get_instance_named(db_config)
-        return super(SqlManagerSingleton, cls).__new__(cls)
-
-    def __init__(self, db_config):
-        self.db_config = db_config
-        self._instances.add(weakref.ref(self))
-
-    @classproperty
-    def instances(cls):
-        dead = set()
-        for ref in cls._instances:
-            obj = ref()
-            if obj is not None:
-                yield obj
-            else:
-                dead.add(ref)
-        cls._instances -= dead
-
-    @classmethod
-    def instance_alread_exists(cls, db_config):
-        return any(db_config == instance.db_config for instance in cls.instances)
-
-    @classmethod
-    def get_instance_named(cls, db_config):
-        return next(
-            instance for instance in cls.instances if db_config == instance.db_config
-        )
-
-
-class SqlSocketManager(SqlManagerSingleton):
-    """Create and manage a connection to MySQL database."""
-
-    # TODO : add test socket, restore socket, function to access socket
-
-    def __init__(self, db_config=None):
-        super().__init__(db_config)
-        self.sql_socket = SqlSocket()
-        self.lock = Lock()
-        self._instances.add(weakref.ref(self))
-
-    def __enter__(self) -> SqlSocket:
-        self.lock.acquire()
-        return self.sql_socket
+    def __enter__(self):
+        return self
 
     def __exit__(self, exc_type, exc_val, exc_tb):
-        self.lock.release()
+        self.connection.close()
+        del self
 
 
 class SqlKeyword(Enum):
@@ -117,7 +65,6 @@ class SqlKeyword(Enum):
 
 
 class SqlRequest:
-    # TODO: work the clean and is empty properties
     def __init__(
         self,
         action: SqlKeyword,
@@ -306,12 +253,12 @@ class SqlTable:
         return response
 
     def select(self, sql_request: SqlRequest):
-        with SqlSocketManager(self.db_config) as sql_socket:
+        with SqlSocket(self.db_config) as sql_socket:
             self._execute(sql_request, sql_socket)
             return sql_socket.cursor.fetchall()
 
     def insert(self, sql_request: SqlRequest):
-        with SqlSocketManager(self.db_config) as sql_socket:
+        with SqlSocket(self.db_config) as sql_socket:
             try:
                 self._execute(sql_request, sql_socket)
                 sql_socket.connection.commit()
@@ -332,7 +279,7 @@ class SqlTable:
                 return ValueError(f"SQL insertion error : '{response}'")
 
     def delete(self, sql_request: SqlRequest):
-        with SqlSocketManager(self.db_config) as sql_socket:
+        with SqlSocket(self.db_config) as sql_socket:
             self._execute(sql_request, sql_socket)
 
     @property
@@ -402,13 +349,6 @@ class UserSqlTable(SqlTable):
                 pass
                 # TODO: if ID exists, update / remove then insert
                 # self.update
-
-    # def selectListRowId(self, list_ids):
-    #     return [self.selectRowId(id)[0] for id in list_ids]
-
-    # def deleteListRowsId(self, list_rows_id):
-    #     for row_id in list_rows_id:
-    #         self.deleteRowId(row_id)
 
 
 # import re

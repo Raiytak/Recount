@@ -1,7 +1,7 @@
 from dash import dcc, html
 
 from .abstract_vue import AbstractVue
-from .components import links
+from .components import link
 
 
 class Index(AbstractVue):
@@ -11,7 +11,7 @@ class Index(AbstractVue):
         url = dcc.Location(id="url", refresh=False)
         page_content = html.Div(id="page-content")
         links_div = html.Nav(
-            children=[url, links.RecountLinks.home, links.RecountLinks.dashboardHome],
+            children=[url, link.RecountLinks.home, link.RecountLinks.dashboardHome],
             style={
                 "display": "flex",
                 "justifyContent": "spaceBetween",

@@ -9,20 +9,20 @@ class DashboardHome(AbstractVue):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        self.recount_inputs = RecountInputs(self.page_name)
-        self.recount_outputs = RecountOutputs(self.page_name)
         self.recount_graphs = RecountGraphs(self.page_name)
 
     @property
     def vue(self):
-        conf_dial = self.recount_outputs.confirmDialogueDiv(
+        conf_dial = self.recount_graphs.confirmDialogueDiv(
             message="Are you sure you want to reset your data?"
         )
 
-        upper_div = self.recount_inputs.dashboardInputDiv()
-        dashboard_div = self.recount_graphs.dashboardHomeDiv()
+        upper_div = self.recount_graphs.dashboardInputDiv()
+        dashboard_div = self.recount_graphs.dashboardHome()
         dashboard = html.Div([upper_div, dashboard_div])
 
-        total_vue = html.Div([dashboard, conf_dial])
+        test_div = self.recount_graphs.testDiv()
+
+        total_vue = html.Div([test_div, dashboard, conf_dial])
 
         return total_vue

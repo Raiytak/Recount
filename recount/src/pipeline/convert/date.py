@@ -10,7 +10,7 @@ import datetime
 from dateutil.relativedelta import relativedelta
 import pandas as pd
 
-from com.sql import UserSqlTable, SqlRequest, SqlKeyword
+from db.sql import UserSqlTable, SqlRequest, SqlKeyword
 
 
 def convertDateToDataframe(

@@ -12,6 +12,7 @@ import shutil
 import json
 import os
 import io
+import base64
 from typing import Union
 import pandas
 import urllib.request
@@ -116,10 +117,17 @@ class ConfigAccess(FileAccessor):
         PRODUCTION = "production"
 
     @classproperty
-    def database_config(cls):
+    def database_config_sql(cls):
         stage = os.getenv("RECOUNT_STAGE")
         app_configs = cls.app_configs
         db_configs = app_configs[stage]["mysql"]
+        return db_configs
+
+    @classproperty
+    def database_config_key_val(cls):
+        stage = os.getenv("RECOUNT_STAGE")
+        app_configs = cls.app_configs
+        db_configs = app_configs[stage]["redis"]
         return db_configs
 
     @classproperty
@@ -176,11 +184,19 @@ class UserFilesAccess(FileAccessor):
             self.user_files_path = UserFilesPath
         else:
             self.user_files_path = UserFilesPath(username)
-            self.initializeUserFolders()
+            self.initializeUserFolder()
+            if self.isEmpty:
+                self.useExamples()
 
-    def initializeUserFolders(self):
+    def initializeUserFolder(self):
         if not self.user_files_path.user_folder.exists():
             self.createUserFolder()
+
+    @property
+    def isEmpty(self):
+        return [file for file in self.user_files_path.user_folder.iterdir()] == []
+
+    def useExamples(self):
         if not self.user_files_path.excel.exists():
             self.copyAndEncryptExampleExcel()
         if not self.user_files_path.categories.exists():
@@ -262,6 +278,26 @@ class UserFilesAccess(FileAccessor):
 
     def removeExcel(self):
         self.removeFile(self.user_files_path.excel)
+
+    def saveImportedFile(self, file_imported):
+        content_type_encoded, content_string_encoded = file_imported.split(",")
+        content_type, content_decoded = self.getTypeAndDecodeImportedFile(
+            content_type_encoded, content_string_encoded
+        )
+        file_data = content_decoded.read()
+        if content_type != "xlsx":
+            raise TypeError("The file imported is not a '.xlsx' file")
+        self.saveExcel(file_data)
+
+    @staticmethod
+    def getTypeAndDecodeImportedFile(content_type_encoded, content_string_encoded):
+        content_string_base64 = base64.b64decode(content_string_encoded)
+        if ("xml" in content_type_encoded) or ("xls" in content_type_encoded):
+            content_decoded = io.BytesIO(content_string_base64)
+            content_type = "xlsx"
+        else:
+            content_type = content_type_encoded
+        return content_type, content_decoded
 
     @property
     def intelligent_fill(self):
