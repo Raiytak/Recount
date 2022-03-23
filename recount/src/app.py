@@ -15,7 +15,7 @@ from dash.dependencies import Input, Output
 import logs
 from website import *
 from access import ConfigAccess, AssetPath
-from pipeline import DataPipeline
+from pipeline import UserDataPipeline
 
 from recount_tools import getUsername
 

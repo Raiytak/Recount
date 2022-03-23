@@ -1,7 +1,7 @@
 from dash import dcc, html
 from dash.dependencies import Output, Input
 
-from .component import RecountDefaultDivs
+from .component import RecountDefaultDivs, DefaultButtons
 from .css_style import *
 
 __all__ = ["DashboardHome"]
@@ -10,6 +10,8 @@ __all__ = ["DashboardHome"]
 class DashboardHome(RecountDefaultDivs):
     def __init__(self, *arg, **kwargs):
         super().__init__(*arg, **kwargs)
+        self.update_graph_button = self.name_vue + "-update-graph-button"
+        self.dashboard = self.name_vue + "-dashboard"
         self.scatter_id = self.name_vue + "-scatter-graph"
         self.pie_chart_id = self.name_vue + "-pie-chart-category"
         self.mean_bar_id = self.name_vue + "-mean-bar"
@@ -36,7 +38,9 @@ class DashboardHome(RecountDefaultDivs):
         food_bar_graph = self.defaultGraph(self.food_bar_id)
         bottom_graphs = html.Div([mean_bar_graph, food_bar_graph], style=spaceAround)
 
-        dashboard_div = html.Div([upper_graphs, bottom_graphs])
+        dashboard_div = html.Div(
+            id=self.dashboard, children=[upper_graphs, bottom_graphs]
+        )
         return dashboard_div
 
     def dashboardHomeCallbacks(self):
@@ -46,3 +50,22 @@ class DashboardHome(RecountDefaultDivs):
             Output(self.mean_bar_id, component_property="figure"),
             Output(self.food_bar_id, component_property="figure"),
         ]
+
+    def dashboardInputDiv(self):
+        date_period_div = self.datePeriodDiv()
+        refresh_graph_button = html.Button(
+            id=self.update_graph_button, children="Refresh Graph", n_clicks=0,
+        )
+        refresh_data_button = html.Button(
+            id=self.update_data_button, children="Refresh Data", n_clicks=0,
+        )
+
+        import_export_reset_div = DefaultButtons.uploadDownloadResetDiv()
+        refresh_div = html.Div(
+            children=[refresh_graph_button, refresh_data_button], style=flexColumn
+        )
+        buttons_div = html.Div(
+            children=[refresh_div, import_export_reset_div], style=flex
+        )
+        all_divs = html.Div(children=[date_period_div, buttons_div], style=spaceBetween)
+        return all_divs

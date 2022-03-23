@@ -1,9 +1,10 @@
+from tkinter.tix import DisplayStyle
 import pandas
 from dash import dash_table, html, dcc
 
 from src.pipeline.convert import shapeDatetimeToSimpleDate
 from src.access.access_files import UserFilesAccess
-from .component import RecountDefaultDivs
+from .component import RecountDefaultDivs, DefaultButtons
 from .css_style import *
 
 __all__ = ["RecountNotebook"]
@@ -12,7 +13,9 @@ __all__ = ["RecountNotebook"]
 class RecountNotebook(RecountDefaultDivs):
     def __init__(self, *arg, **kwargs):
         super().__init__(*arg, **kwargs)
-        self.notebook = self.name_vue + "-notebook-home"
+        self.update_notebook_button = self.name_vue + "-update-notebook-button"
+        self.notebook = self.name_vue + "-notebook"
+        self.notebook_div = self.name_vue + "-notebook-div"
         self.add_row_button = self.name_vue + "-add-row-button"
 
     def addRowButton(self):
@@ -20,17 +23,11 @@ class RecountNotebook(RecountDefaultDivs):
         return html.Div([add_row])
 
     def notebookHome(self):
+        # TODO: better first call
         example = UserFilesAccess.shortExample
         example_data = pandas.read_excel(example)
 
-        # TODO: better date
-        # def date_or_pass(value):
-        #     return shapeDatetimeToSimpleDate(value) if pandas.notna(value) else value
-
-        # example_data_date = example_data["Date"].apply(date_or_pass)
-        import_export_reset_div = self.uploadDownloadResetDiv()
-        upper_div = html.Div([html.Div(), import_export_reset_div], style=spaceBetween,)
-        notebook_div = dash_table.DataTable(
+        notebook = dash_table.DataTable(
             id=self.notebook,
             columns=[
                 {
@@ -65,11 +62,25 @@ class RecountNotebook(RecountDefaultDivs):
                 }
                 for column in example_data.columns
             ],
-            data=example_data.to_dict("records"),
             editable=True,
             row_deletable=True,
             export_columns="all",
             export_format="xlsx",
             export_headers="display",
         )
-        return html.Div([upper_div, notebook_div])
+        notebook_div = html.Div(
+            id=self.notebook_div, children=notebook, style={"display": "none"},
+        )
+        return notebook_div
+
+    def dashboardInputDiv(self):
+        refresh_data_button = html.Button(
+            id=self.update_notebook_button, children="Refresh Notebook", n_clicks=0,
+        )
+
+        import_export_reset_div = DefaultButtons.uploadDownloadResetDiv()
+        refresh_div = html.Div(children=[refresh_data_button], style=flexColumn)
+        buttons_div = html.Div(
+            children=[refresh_div, import_export_reset_div], style=flex
+        )
+        return buttons_div

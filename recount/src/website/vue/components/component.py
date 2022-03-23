@@ -76,8 +76,6 @@ class RecountComponents:
 
         # BUTTON
         self.submit_id = name_vue + "-submit-button"
-        self.update_data_button = name_vue + "-update-data-button"
-        self.update_graph_button = name_vue + "-update-graph-button"
 
     def datePeriodDiv(self):
         period_input = self.periodDiv()
@@ -123,7 +121,8 @@ class RecountDefaultDivs(RecountComponents, DefaultButtons):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.location_id = self.name_vue + "-default-url"
-        self.test = "test"
+
+        self.update_data_button = self.name_vue + "-update-data-button"
 
     def datePeriodDiv(self):
         period_input = self.periodDiv()
@@ -132,22 +131,3 @@ class RecountDefaultDivs(RecountComponents, DefaultButtons):
             children=[date_input, period_input], style=spaceBetween
         )
         return date_input_div
-
-    def dashboardInputDiv(self):
-        date_period_div = self.datePeriodDiv()
-        refresh_graph_button = html.Button(
-            id=self.update_graph_button, children="Refresh Graph", n_clicks=0
-        )
-        refresh_data_button = html.Button(
-            id=self.update_data_button, children="Refresh Data", n_clicks=0
-        )
-
-        import_export_reset_div = DefaultButtons.uploadDownloadResetDiv()
-        refresh_div = html.Div(
-            children=[refresh_graph_button, refresh_data_button], style=flexColumn
-        )
-        buttons_div = html.Div(
-            children=[refresh_div, import_export_reset_div], style=flex
-        )
-        all_divs = html.Div(children=[date_period_div, buttons_div], style=spaceBetween)
-        return all_divs

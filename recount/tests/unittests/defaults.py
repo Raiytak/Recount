@@ -16,8 +16,8 @@ TABLE_NAME = Table.EXPENSE
 USER_ACCESS = UserFilesAccess(USERNAME)
 USER_TABLE = UserSqlTable(USERNAME, TABLE_NAME)
 
-USER_DATA_PIPELINE = pipeline.DataPipeline(USERNAME)
-USER_GRAPH_PIPELINE = pipeline.GraphPipeline(USERNAME)
+USER_DATA_PIPELINE = pipeline.UserDataPipeline(USERNAME)
+USER_GRAPH_PIPELINE = pipeline.UserGraphPipeline(USERNAME)
 
 
 def defaultSelectExpenseResponses(request):

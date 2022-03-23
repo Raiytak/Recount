@@ -72,7 +72,7 @@ def test_update_files():
     assert not user_access.isDecryptedExcelFile(excel_test_path)
 
     user_access.removeFile(excel_test_path)
-    user_pipeline = pipeline.DataPipeline(USERNAME)
+    user_pipeline = pipeline.UserDataPipeline(USERNAME)
     dataframe = user_pipeline.getDataframeFromExcel()
 
     assert not excel_test_path.exists()

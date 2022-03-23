@@ -18,7 +18,7 @@ def test_pipeline_process(df, expected):
 #     ("start_date", "end_date", "expected"), ["2019-09-02", "2019-09-03", None]
 # )
 # def test_translate_df_to_sql_requests(start_date, end_date, expected):
-#     USER_DATA_PIPELINE = pipeline.GraphPipeline(USERNAME)
+#     USER_DATA_PIPELINE = pipeline.UserGraphPipeline(USERNAME)
 #     dataframe = USER_DATA_PIPELINE.getDataframeForDate()
 #     breakpoint()
 #     for request, exp in zip(requests, expected):

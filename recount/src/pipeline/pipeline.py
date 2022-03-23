@@ -38,7 +38,7 @@ class Pipeline:
         self.equivalent_columns = self.user_files.equivalent_columns
 
 
-class DataPipeline(Pipeline):
+class UserDataPipeline(Pipeline):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.cleaner_dataframe = cleaner.CleanerDataframe(self.equivalent_columns)
@@ -73,11 +73,13 @@ class DataPipeline(Pipeline):
         # cleaner.fillBlanks(dataframe, self.user_files)
 
     def updateIntelligentFill(self, dataframe):
-        logging.info("Update 'intelligent fill'")
+        logging.info("@{}: Update 'intelligent fill'".format(self.username))
         updateUserIntelligentFill(dataframe, self.user_files)
 
     def updateExpenseTable(self, dataframe):
-        logging.info("Update '{self.expense_table.table_name}'")
+        logging.info(
+            "@{}: Update '{}'".format(self.username, self.expense_table.table_name)
+        )
         self.dumpUserOfTable(self.expense_table)
 
         is_expense = dataframe["reimbursement"].isna()
@@ -87,10 +89,18 @@ class DataPipeline(Pipeline):
             expense_df, self.expense_table
         )
         self.expense_table.insertAllReqs(list_requests)
-        logging.info("Update '{self.expense_table.table_name}' done!")
+        logging.info(
+            "@{}: Update '{}' done!".format(
+                self.username, self.expense_table.table_name
+            )
+        )
 
     def updateReimbursementTable(self, dataframe):
-        logging.info("Update '{self.reimbursement_table.table_name}'")
+        logging.info(
+            "@{}: Update '{}'".format(
+                self.username, self.reimbursement_table.table_name
+            )
+        )
         self.dumpUserOfTable(self.reimbursement_table)
 
         is_expense = dataframe["reimbursement"].notna()
@@ -104,21 +114,25 @@ class DataPipeline(Pipeline):
             expense_df, self.reimbursement_table
         )
         self.reimbursement_table.insertAllReqs(list_requests)
-        logging.info("Update '{self.reimbursement_table.table_name}' done!")
+        logging.info(
+            "@{}: Update '{}' done!".format(
+                self.username, self.reimbursement_table.table_name
+            )
+        )
 
     def dumpUserOfTable(self, wrapperTable: db.UserSqlTable):
         logging.info(
-            f"Truncate table '{wrapperTable.table_name}' for user '{self.username}'"
+            "@{}: Truncate table '{}'".format(self.username, wrapperTable.table_name)
         )
         wrapperTable.truncateTableOfUser()
 
     def dumpUserOfAllTables(self):
-        logging.info(f"Truncate ALL tables for user '{self.username}'")
+        logging.info("@{}: Truncate ALL tables".format(self.username))
         self.dumpUserOfTable(self.expense_table)
         self.dumpUserOfTable(self.reimbursement_table)
 
 
-class GraphPipeline(Pipeline):
+class UserGraphPipeline(Pipeline):
     def getExpenseRepaidForPeriod(self, start_date: str, end_date: str):
         expense_df = self.getExpenseDataframeForPeriod(start_date, end_date)
         reimbursement_df = self.getReimbursementDataframe()

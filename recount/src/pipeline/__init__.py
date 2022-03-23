@@ -1,1 +1,1 @@
-from .pipeline import DataPipeline, GraphPipeline
+from .pipeline import UserDataPipeline, UserGraphPipeline

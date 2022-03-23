@@ -236,7 +236,10 @@ class UserFilesAccess(FileAccessor):
         return data
 
     def dataframe(self, excel_path: Path = None):
-        return pandas.read_excel(self.excel(excel_path))
+        df = pandas.read_excel(self.excel(excel_path))
+        df.dropna(how="all", inplace=True)
+        df.reset_index(drop=True, inplace=True)
+        return df
 
     @staticmethod
     def isDecryptedExcelFile(excel_path):
@@ -283,25 +286,21 @@ class UserFilesAccess(FileAccessor):
     def removeExcel(self):
         self.removeFile(self.user_files_path.excel)
 
-    def saveImportedFile(self, file_imported):
-        content_type_encoded, content_string_encoded = file_imported.split(",")
-        content_type, content_decoded = self.getTypeAndDecodeImportedFile(
-            content_type_encoded, content_string_encoded
-        )
+    def saveUploadedFile(self, file_uploaded):
+        content_type_encoded, content_string_encoded = file_uploaded.split(",")
+        content_decoded = self.getTypeAndDecodeUploadedFile(content_string_encoded)
         file_data = content_decoded.read()
-        if content_type != "xlsx":
-            raise TypeError("The file imported is not a '.xlsx' file")
         self.saveExcel(file_data)
 
     @staticmethod
-    def getTypeAndDecodeImportedFile(content_type_encoded, content_string_encoded):
+    def getTypeAndDecodeUploadedFile(content_string_encoded):
+        # if any(["xml" in content_type_encoded) or ("xls" in content_type_encoded) :
+        #     content_decoded = io.BytesIO(content_string_base64)
+        # else:
+        #     raise TypeError("Uploaded file is expected to be created from openxml or excel")
         content_string_base64 = base64.b64decode(content_string_encoded)
-        if ("xml" in content_type_encoded) or ("xls" in content_type_encoded):
-            content_decoded = io.BytesIO(content_string_base64)
-            content_type = "xlsx"
-        else:
-            content_type = content_type_encoded
-        return content_type, content_decoded
+        content_decoded = io.BytesIO(content_string_base64)
+        return content_decoded
 
     @property
     def intelligent_fill(self):

@@ -2,6 +2,7 @@ from dash import html
 
 from .abstract_vue import AbstractVue
 
+from .components.css_style import *
 from .components import *
 
 __all__ = ["DashboardHomeVue"]

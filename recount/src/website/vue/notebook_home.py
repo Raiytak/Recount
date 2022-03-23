@@ -3,6 +3,7 @@ from dash import html
 from .abstract_vue import AbstractVue
 
 from .components import *
+from .components.css_style import *
 
 __all__ = ["NotebookHomeVue"]
 
@@ -15,7 +16,10 @@ class NotebookHomeVue(AbstractVue):
 
     @property
     def vue(self):
+        upper_div = html.Div(
+            [html.Div(), self.notebook_home.dashboardInputDiv()], style=spaceBetween
+        )
         notebook_home = self.notebook_home.notebookHome()
         add_row = self.notebook_home.addRowButton()
 
-        return html.Div([notebook_home, add_row])
+        return html.Div([upper_div, notebook_home, add_row])
