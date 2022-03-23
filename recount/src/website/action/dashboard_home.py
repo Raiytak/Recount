@@ -79,7 +79,7 @@ class DashboardHomeMixin(AbstractAction):
     @property
     def osi_reset_button_pressed(self):
         return (
-            Output(self.dashboard_home.conf_dial, "displayed"),
+            Output(self.dashboard_home.confirm_reset_dialogue, "displayed"),
             Input(self.dashboard_home.reset_button, "n_clicks"),
         )
 
@@ -95,7 +95,7 @@ class DashboardHomeMixin(AbstractAction):
             Output(self.dashboard_home.update_graph_button, "n_clicks"),
             Input(self.dashboard_home.update_data_button, "n_clicks"),
             Input(self.dashboard_home.upload_excel, "contents"),
-            Input(self.dashboard_home.conf_dial, "submit_n_clicks"),
+            Input(self.dashboard_home.confirm_reset_dialogue, "submit_n_clicks"),
             State(self.dashboard_home.update_graph_button, "n_clicks"),
         )
 
@@ -107,13 +107,13 @@ class DashboardHomeMixin(AbstractAction):
         username = getUsername()
         user_data = DataPipeline(username)
 
-        if "import-excel" in button_clicked:
+        if "upload-excel" in button_clicked:
             if imported_excel != None:
                 logging.info(f"{username}: Importing file ...")
                 user_data.user_files.saveImportedFile(imported_excel)
                 logging.info(f"{username}: File imported!")
 
-        elif "confirm-dialog" in button_clicked:
+        elif "confirm-reset-dialog" in button_clicked:
             logging.info("Reseting data of '{}' ...".format(username))
             user_data.user_files.removeUserFolder()
             user_data.dumpUserOfAllTables()

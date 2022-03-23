@@ -8,6 +8,7 @@ __all__ = ["RecountComponents", "DefaultButtons", "RecountDefaultDivs"]
 
 class DefaultButtons:
     reset_button = "reset-button"
+    confirm_reset_dialogue = "confirm-reset-dialog"
     upload_excel = "upload-excel"
     download_excel = "export-excel"
     download_excel_button = "export-excel-button"
@@ -18,10 +19,13 @@ class DefaultButtons:
         reset_button = html.Button(
             id=cls.reset_button, children="Reset My Data", n_clicks=0
         )
+        confirm_reset = cls.confirmResetDialogueDiv(
+            message="Are you sure you want to reset your data?"
+        )
         upload_excel = cls.uploadButton()
         export_button = cls.downloadButton()
         return html.Div(
-            children=[upload_excel, export_button, reset_button],
+            children=[confirm_reset, upload_excel, export_button, reset_button],
             className="upload-download-reset",
         )
 
@@ -34,16 +38,18 @@ class DefaultButtons:
         return upload_div
 
     @classmethod
-    def downloadButton(self):
+    def downloadButton(cls):
         download_div = html.Div(
             [
-                html.Button(
-                    "Download Excel", id=self.download_excel_button, n_clicks=0
-                ),
-                dcc.Download(id=self.download_excel),
+                html.Button("Download Excel", id=cls.download_excel_button, n_clicks=0),
+                dcc.Download(id=cls.download_excel),
             ]
         )
         return download_div
+
+    @classmethod
+    def confirmResetDialogueDiv(cls: str, message: str):
+        return dcc.ConfirmDialog(id=cls.confirm_reset_dialogue, message=message)
 
 
 class RecountComponents:

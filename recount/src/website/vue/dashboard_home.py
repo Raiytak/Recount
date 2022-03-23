@@ -15,16 +15,12 @@ class DashboardHomeVue(AbstractVue):
 
     @property
     def vue(self):
-        conf_dial = self.dashboard_home.confirmDialogueDiv(
-            message="Are you sure you want to reset your data?"
-        )
-
         upper_div = self.dashboard_home.dashboardInputDiv()
         dashboard_div = self.dashboard_home.dashboardHome()
         dashboard = html.Div([upper_div, dashboard_div])
 
         test_div = self.dashboard_home.testDiv()
 
-        total_vue = html.Div([test_div, dashboard, conf_dial])
+        total_vue = html.Div([test_div, dashboard])
 
         return total_vue

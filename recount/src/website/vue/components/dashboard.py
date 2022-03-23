@@ -4,6 +4,8 @@ from dash.dependencies import Output, Input
 from .component import RecountDefaultDivs
 from .css_style import *
 
+__all__ = ["DashboardHome"]
+
 
 class DashboardHome(RecountDefaultDivs):
     def __init__(self, *arg, **kwargs):

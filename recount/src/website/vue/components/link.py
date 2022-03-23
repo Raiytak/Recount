@@ -4,6 +4,8 @@ from dash import dcc, html
 from .css_style import *
 from recount_tools import classproperty
 
+__all__ = ["RecountLinks"]
+
 
 class RecountLinks:
     @classproperty
