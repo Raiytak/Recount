@@ -48,3 +48,9 @@ app/.pytest_cache
 # Other ignores
 app/code/logs/*.log
 app/code/test.py
+
+
+# New to class
+app/data/
+app/src/config
+app/src/logs
