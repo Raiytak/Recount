@@ -11,6 +11,8 @@ class DashboardHome(RecountDefaultDivs):
     def __init__(self, *arg, **kwargs):
         super().__init__(*arg, **kwargs)
         self.update_graph_button = self.name_vue + "-update-graph-button"
+        self.update_data_button = self.name_vue + "-update-data-button"
+
         self.dashboard = self.name_vue + "-dashboard"
         self.scatter_id = self.name_vue + "-scatter-graph"
         self.pie_chart_id = self.name_vue + "-pie-chart-category"

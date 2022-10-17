@@ -15,7 +15,6 @@ from dash.dependencies import Input, Output
 import logs
 from website import *
 from access import ConfigAccess, AssetPath
-from pipeline import UserDataPipeline
 
 from recount_tools import getUsername
 
@@ -41,11 +40,10 @@ class AppDash:
 
         self.index_page = IndexPage(self.app)
         self.home_page = HomePage(self.app)
+        self.category_home_page = CategoryHomePage(self.app)
         self.dashboard_home_page = DashboardHomePage(self.app)
         self.notebook_home_page = NotebookHomePage(self.app)
         # self.vueTest = vue_test.AppDash(self.app)
-
-        # self.app.css.append_css({"external_url": "static/main.css"})
 
     def setVue(self, vue):
         self.app.layout = vue
@@ -60,6 +58,8 @@ class AppDash:
                 return None
             elif pathname == "/home":
                 return self.home_page.vue
+            elif pathname == "/category":
+                return self.category_home_page.vue
             elif pathname == "/dashhome":
                 return self.dashboard_home_page.vue
             elif pathname == "/notebook":

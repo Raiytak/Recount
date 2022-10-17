@@ -10,9 +10,15 @@ __all__ = ["RecountLinks"]
 class RecountLinks:
     @classproperty
     def home(cls):
-        button = html.Button("Home", className="nav-button")
+        button = html.Button("HomeVue", className="nav-button")
         home_page = dcc.Link(button, href="/home")
         return home_page
+
+    @classproperty
+    def categoryHome(cls):
+        button = html.Button("Category", className="nav-button")
+        categories = dcc.Link(button, href="/category")
+        return categories
 
     @classproperty
     def dashboardHome(cls):
@@ -26,19 +32,13 @@ class RecountLinks:
         notebook = dcc.Link(button, href="/notebook")
         return notebook
 
-    @classproperty
-    def categories(cls):
-        button = html.Button("Categories", className="nav-button")
-        categories = dcc.Link(button, href="/categories")
-        return categories
-
 
 # class ReusableSingleLinks:
 #     def __init__(cls):
 #         pass
 
 #     def getLinkPageHome(cls):
-#         link_page_home = html.Button("Home", className="header-button")
+#         link_page_home = html.Button("HomeVue", className="header-button")
 #         return link_page_home
 
 #     def getLinkPageDashhome(cls):

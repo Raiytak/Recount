@@ -1,4 +1,4 @@
-from dash import html
+from dash import html, dcc
 
 from .abstract_vue import AbstractVue
 
@@ -16,12 +16,9 @@ class DashboardHomeVue(AbstractVue):
 
     @property
     def vue(self):
+        loading_div = self.dashboard_home.loadingDiv()
         upper_div = self.dashboard_home.dashboardInputDiv()
         dashboard_div = self.dashboard_home.dashboardHome()
-        dashboard = html.Div([upper_div, dashboard_div])
+        dashboard = html.Div([upper_div, loading_div, dashboard_div])
 
-        test_div = self.dashboard_home.testDiv()
-
-        total_vue = html.Div([test_div, dashboard])
-
-        return total_vue
+        return dashboard

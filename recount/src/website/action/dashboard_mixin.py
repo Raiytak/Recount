@@ -95,6 +95,7 @@ class DashboardHomeMixin(AbstractAction):
     def osi_update_data(self):
         return (
             Output(self.dashboard_home.update_graph_button, "n_clicks"),
+            Output(self.dashboard_home.loading_div, "children"),
             Input(self.dashboard_home.update_data_button, "n_clicks"),
             Input(self.dashboard_home.upload_excel, "contents"),
             Input(self.dashboard_home.confirm_reset_dialogue, "submit_n_clicks"),
@@ -120,11 +121,11 @@ class DashboardHomeMixin(AbstractAction):
             user_data.user_files.removeUserFolder()
             user_data.dumpUserOfAllTables()
             logging.info("@{}: Data is reseted!".format(username))
-            return graph_button_status + 1
+            return graph_button_status + 1, None
 
         user_data.updateData()
 
-        return graph_button_status + 1
+        return graph_button_status + 1, None
 
     @property
     def osi_download_button_pressed(self):

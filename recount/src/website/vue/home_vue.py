@@ -2,16 +2,12 @@ from dash import html
 
 from .abstract_vue import AbstractVue
 
-__all__ = ["Home"]
+__all__ = ["HomeVue"]
 
 
-class Home(AbstractVue):
+class HomeVue(AbstractVue):
     @property
     def vue(self):
-        return self.welcomePage
-
-    @property
-    def welcomePage(self):
         title = html.H1(
             "Recount",
             style={"marginBottom": "-1rem", "fontSize": "8rem", "fontWeight": "bold",},

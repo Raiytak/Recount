@@ -1,4 +1,4 @@
-from dash import html
+from dash import html, dcc
 
 from .abstract_vue import AbstractVue
 

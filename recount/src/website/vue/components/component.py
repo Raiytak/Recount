@@ -56,7 +56,7 @@ class RecountComponents:
     def __init__(self, name_vue, *args, **kwargs):
         self.name_vue = name_vue
 
-        self.location_id = name_vue + "-default-url"
+        self.loading_div = name_vue + "-loading-page"
         self.test = "test"
 
         # INPUT
@@ -67,15 +67,18 @@ class RecountComponents:
         self.remove_div_div = name_vue + "-remove-div"
 
         # OUTPUT
-        self.h1_div_div = name_vue + "-h1-div"
-        self.h2_div_div = name_vue + "-h2-div"
-        self.h3_div_div = name_vue + "-h3-div"
-        self.h4_div_div = name_vue + "-h4-div"
-        self.hidden_div = name_vue + "-hidden-div"
         self.conf_dial = name_vue + "-confirm-dialog"
 
         # BUTTON
         self.submit_id = name_vue + "-submit-button"
+
+        # self.hidden_div = name_vue + "-hidden-div"
+
+    def loadingDiv(self):
+        loading_page = dcc.Loading(
+            type="default", children=[html.Div(id=self.loading_div)],
+        )
+        return loading_page
 
     def datePeriodDiv(self):
         period_input = self.periodDiv()
@@ -120,9 +123,6 @@ class RecountComponents:
 class RecountDefaultDivs(RecountComponents, DefaultButtons):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.location_id = self.name_vue + "-default-url"
-
-        self.update_data_button = self.name_vue + "-update-data-button"
 
     def datePeriodDiv(self):
         period_input = self.periodDiv()
