@@ -1,3 +1,4 @@
+import sys
 import argparse
 
 import file_management
@@ -22,34 +23,23 @@ def generateDefaultExcelKey():
         key_folder.generateKey(default_key)
 
 
-"""
-Main script
-
-Handles the arguments
-"""
-
-
 parser = argparse.ArgumentParser()
 parser.add_argument(
-    "-p",
-    "--path",
-    help="path to the json containing the information on the birthdays' person name and date",
-    type=str,
-)
-parser.add_argument(
     "--initiate-folders",
-    # metavar="initiate_folders",
     help="create default folders for the recount project",
     action="store_true",
 )
 parser.add_argument(
     "--remove-old-folders",
-    # metavar="remove_old_folders",
     help="remove the default folders of the recount project",
     action="store_true",
 )
 
 args = parser.parse_args()
+
+if len(sys.argv) == 1:
+    parser.print_help()
+    sys.exit(1)
 
 if args.remove_old_folders:
     removeFolders()
