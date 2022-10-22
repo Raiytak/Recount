@@ -30,10 +30,11 @@ __all__ = [
     "UsersFolder",
     "KeyFolder",
     "User",
+    "Sql",
 ]
 
 
-class _FileAccessor:
+class FileAccessor:
     @staticmethod
     def readBinary(filepath: Path) -> bytes:
         with open(filepath, "rb") as file:
@@ -92,11 +93,6 @@ class _Excel:
         return False
 
 
-# =====================================================================================
-# ================================= PUBLIC API ========================================
-# =====================================================================================
-
-
 class FolderManager:
     @property
     @abc.abstractmethod
@@ -119,15 +115,15 @@ class FolderManager:
 
 
 class RootFolder(FolderManager):
-    ROOT = path_definition.RootFolder.ROOT
+    ROOT: Path = path_definition.RootFolder.ROOT
 
 
 class DataFolder(FolderManager):
-    ROOT = path_definition.DataFolder.ROOT
+    ROOT: Path = path_definition.DataFolder.ROOT
 
 
 class AssetFolder(FolderManager):
-    ROOT = path_definition.AssetFolder.ROOT
+    ROOT: Path = path_definition.AssetFolder.ROOT
 
     @classmethod
     def copyDefaultAssets(cls):
@@ -139,8 +135,8 @@ class AssetFolder(FolderManager):
 
 
 class KeyFolder(FolderManager):
-    ROOT = path_definition.KeyFolder.ROOT
-    DEFAULT_EXCEL_KEY_NAME = path_definition.KeyFolder.DEFAULT_EXCEL_KEY_NAME
+    ROOT: Path = path_definition.KeyFolder.ROOT
+    DEFAULT_EXCEL_KEY_NAME: str = path_definition.KeyFolder.DEFAULT_EXCEL_KEY_NAME
 
     @classmethod
     def generateKey(cls, name: str, dirpath: Path = None, override: bool = False):
@@ -153,21 +149,38 @@ class KeyFolder(FolderManager):
             raise FileExistsError("The key '{}' already exists".format(name))
         else:
             key = encryption.generateKey()
-            _FileAccessor.writeBinary(key_path, key)
+            FileAccessor.writeBinary(key_path, key)
 
 
 class ConfigFolder(FolderManager):
-    ROOT = path_definition.ConfigFolder.ROOT
+    ROOT: Path = path_definition.ConfigFolder.ROOT
+    SQL_PATH: Path = path_definition.ConfigFolder.SQL_PATH
 
     @staticmethod
     def changeSqlAdminPassword(new_password: str):
-        _FileAccessor.readJson()
+        return
+        FileAccessor.readJson()
 
-    @staticmethod
-    def copyExampleConfig():
-        example_config = path_definition.ConfigFolder.DEFAULT
-        config = path_definition.ConfigFolder.SQL_PATH
-        shutil.copy2(example_config, config)
+    @classmethod
+    def copyExampleConfig(cls):
+        example_sql_conf = path_definition.ConfigFolder.DEFAULT_SQL
+        shutil.copy2(example_sql_conf, cls.SQL_PATH)
+
+
+class Config:
+    ROOT: Path = ConfigFolder.ROOT
+    SQL: Path = ConfigFolder.SQL_PATH
+
+    @classmethod
+    def sql(cls):
+        data = FileAccessor.readJson(cls.SQL)
+        return data
+
+    @classmethod
+    def setSqlAdminPassword(cls, password: str):
+        data = FileAccessor.readJson(cls.SQL)
+        data["password"] = password
+        FileAccessor.writeJson(cls.SQL, data)
 
 
 class LogFolder(FolderManager):
@@ -176,7 +189,7 @@ class LogFolder(FolderManager):
     @staticmethod
     def clearLogs():
         for log_path in path_definition.LogFolder:
-            _FileAccessor.removeFile(log_path)
+            FileAccessor.removeFile(log_path)
 
 
 class UsersFolder(FolderManager):
@@ -197,6 +210,11 @@ class UsersFolder(FolderManager):
         return file_data
 
 
+# =====================================================================================
+# ================================= PUBLIC API ========================================
+# =====================================================================================
+
+
 class User:
     """CRUD operations on the files of the defined user"""
 
@@ -209,7 +227,7 @@ class User:
 
         # Instanciation of a file encryption object
         if not key:
-            key = _FileAccessor.readBinary(path_definition.KeyFolder.DEFAULT_EXCEL)
+            key = FileAccessor.readBinary(path_definition.KeyFolder.DEFAULT_EXCEL)
         self.file_encryption = encryption.FileEncryption(key)
         self.default_excel_path = (
             self.ROOT / path_definition.UsersFolder.DEFAULT_EXCEL_NAME
@@ -240,7 +258,7 @@ class User:
                 "The file provided is '{}' where it is expected to be a 'xlsx'".format()
             )
 
-        unknown_data = _FileAccessor.readBinary(filepath)
+        unknown_data = FileAccessor.readBinary(filepath)
         if not _Excel.isExcel(filepath):
             decrypted_data = self.file_encryption.decryptData(unknown_data)
             if not _Excel.isExcel(decrypted_data):
@@ -298,14 +316,14 @@ class User:
             data_to_write = self.file_encryption.encryptData(data)
         else:
             data_to_write = data
-        _FileAccessor.writeBinary(filepath, data_to_write)
+        FileAccessor.writeBinary(filepath, data_to_write)
 
     def removeDefaultExcel(self):
-        _FileAccessor.removeFile(self.default_excel_path)
+        FileAccessor.removeFile(self.default_excel_path)
 
     def removeAllExcels(self):
         for filepath in os.listdir(self.ROOT):
-            _FileAccessor.removeFile(filepath)
+            FileAccessor.removeFile(filepath)
 
 
 # def saveUploadedFile(self, file_uploaded):
@@ -350,7 +368,7 @@ class User:
 #     return self.translations["equivalent_columns"]
 
 
-# class AccessNotebookConfig(_FileAccessor):
+# class AccessNotebookConfig(FileAccessor):
 #     """CRUD operations on the notebook confs of the application"""
 
 #     # TODO: change this to for each user + save
@@ -376,7 +394,7 @@ class User:
 #         return json_formatted_str
 
 
-# class AccessStandardButtonsConfig(_FileAccessor):
+# class AccessStandardButtonsConfig(FileAccessor):
 #     """CRUD operations on the button confs of the application"""
 
 #     # TODO: change this to for each user + save
@@ -410,12 +428,12 @@ class User:
 #     """CRUD operations on the unittest files"""
 
 #     pipeline_test_values = [
-#         (pandas.read_excel(input_file), _FileAccessor.readJson(output_file))
+#         (pandas.read_excel(input_file), FileAccessor.readJson(output_file))
 #         for input_file, output_file in UnittestFilesPath.pipeline_test_values
 #     ]
 
 #     convert_df_to_sql_test_values = [
-#         (pandas.read_excel(input_file), _FileAccessor.read(output_file).split("\n"))
+#         (pandas.read_excel(input_file), FileAccessor.read(output_file).split("\n"))
 #         for input_file, output_file in UnittestFilesPath.convert_df_to_sql_test_values
 #     ]
 
