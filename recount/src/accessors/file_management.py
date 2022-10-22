@@ -29,7 +29,8 @@ __all__ = [
     "ConfigFolder",
     "UsersFolder",
     "KeyFolder",
-    "User",
+    "KeyManager",
+    "UserManager",
     "Config",
 ]
 
@@ -136,20 +137,6 @@ class AssetFolder(FolderManager):
 
 class KeyFolder(FolderManager):
     ROOT = path_definition.KeyFolder.ROOT
-    DEFAULT_EXCEL_KEY_NAME: str = path_definition.KeyFolder.DEFAULT_EXCEL_KEY_NAME
-
-    @classmethod
-    def generateKey(cls, name: str, dirpath: Path = None, override: bool = False):
-        """If dirpath is not specified, register the key in the default 'key' folder of Recount"""
-        if not dirpath:
-            key_path = cls.ROOT / name
-        else:
-            key_path = dirpath / name
-        if key_path.exists() and not override:
-            raise FileExistsError("The key '{}' already exists".format(name))
-        else:
-            key = encryption.generateKey()
-            FileAccessor.writeBinary(key_path, key)
 
 
 class ConfigFolder(FolderManager):
@@ -214,7 +201,38 @@ class UsersFolder(FolderManager):
 # =====================================================================================
 
 
-class User:
+class KeyManager:
+    _ROOT = KeyFolder.ROOT
+    DEFAULT_EXCEL_KEY_NAME = path_definition.KeyFolder.DEFAULT_EXCEL_KEY_NAME
+    DEFAULT_EXCEL_KEY = _ROOT / DEFAULT_EXCEL_KEY_NAME
+
+    @property
+    def ROOT(self) -> typing.Type[Path]:
+        return self._ROOT
+
+    def get(self, key_name: str):
+        return FileAccessor.readBinary(self.ROOT / key_name)
+
+    def set(self, key_name: str, key: bytes):
+        return FileAccessor.writeBinary(self.ROOT / key_name, key)
+
+    def getDefaultExcelKey(self):
+        return self.get(self.DEFAULT_EXCEL_KEY_NAME)
+
+    def generateKey(self, name: str, dirpath: Path = None, override: bool = False):
+        """If dirpath is not specified, register the key in the default 'key' folder of Recount"""
+        if not dirpath:
+            key_path = self.ROOT / name
+        else:
+            key_path = dirpath / name
+        if key_path.exists() and not override:
+            raise FileExistsError("The key '{}' already exists".format(name))
+        else:
+            key = encryption.generateKey()
+            FileAccessor.writeBinary(key_path, key)
+
+
+class UserManager:
     """CRUD operations on the files of the defined user"""
 
     def __init__(self, username: str = "", key: typing.Union[bytes, str] = ""):
@@ -226,7 +244,8 @@ class User:
 
         # Instanciation of a file encryption object
         if not key:
-            key = FileAccessor.readBinary(path_definition.KeyFolder.DEFAULT_EXCEL)
+            key_manager = KeyManager()
+            key = key_manager.getDefaultExcelKey()
         self.file_encryption = encryption.FileEncryption(key)
         self.default_excel_path = (
             self.ROOT / path_definition.UsersFolder.DEFAULT_EXCEL_NAME

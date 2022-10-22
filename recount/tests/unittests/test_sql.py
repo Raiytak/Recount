@@ -1,6 +1,6 @@
 from .defaults import *
 
-from db.sql import (
+from database.sql_db import (
     Table,
     SqlKeyword,
     SqlRequest,
@@ -123,8 +123,9 @@ requests_to_evaluate = [
     argvalues=requests_to_evaluate,
 )
 def test_sql_request(request_input, expected_request, expected_exception):
-    try:
-        assert str(SqlRequest(*request_input)) == expected_request
-    except expected_exception:
-        pass
+    # try:
+    assert str(SqlRequest(*request_input)) == expected_request
+
+# except expected_exception:
+#     pass
 

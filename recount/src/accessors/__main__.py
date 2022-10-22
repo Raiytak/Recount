@@ -24,11 +24,9 @@ def initializeFolders():
 
 
 def generateDefaultExcelKey():
-    key_folder = KeyFolder
-    default_key = key_folder.DEFAULT_EXCEL_KEY_NAME
-    default_key_path = key_folder.ROOT / default_key
-    if not default_key_path.exists():
-        key_folder.generateKey(default_key)
+    key = KeyManager()
+    if not key.DEFAULT_EXCEL_KEY.exists():
+        key.generateKey(key.DEFAULT_EXCEL_KEY_NAME)
 
 
 def copyAssetFiles():
