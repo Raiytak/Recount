@@ -1,4 +1,4 @@
-from .defaults import *
+from .conftest import *
 
 from database.sql_db import (
     Table,
