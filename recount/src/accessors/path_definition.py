@@ -2,11 +2,10 @@
 """
                     ====     DESCRIPTION    ====
 This file contains the paths of the documents used in the app.
-The manipulations of those files are done in other access_files or in the
-class directly.
+The manipulations of those files are done in 'file_management.py'
 """
 
-"""ACHTUNG: To access user files, you should always do it using UserFolder class !"""
+"""ACHTUNG: Edit this file with caution and care!"""
 
 from pathlib import Path
 
@@ -43,23 +42,21 @@ class LogFolder:
 
 class UsersFolder:
     ROOT = DataFolder.ROOT / "user"
+
     DEFAULT_EXCEL_NAME = "default.xlsx"
 
 
 class KeyFolder:
     ROOT = RootFolder.KEY
+
     DEFAULT_EXCEL_KEY_NAME = "default_excel.key"
 
 
-class Config:
-    pass
+class ConfigFolder:
+    ROOT = RootFolder.CONFIG
+    DEFAULT = Path(__file__).parent.parent.parent / "config" / "example_app_config.json"
 
-
-# class AssetPath:
-#     """Path to the folder containing the CSS rules and asset of the app"""
-
-#     _ROOT = "/var/recount/asset"
-#     ROOT = pathlib.Path(_ROOT) / Folder.ASSET
+    SQL_PATH = ROOT / "sql.config"
 
 
 # class ConfigPath:
@@ -128,33 +125,6 @@ class Config:
 #     #             list_folders, "server-private-key.pem"
 #     #         )
 #     #         return path_created
-
-
-# class LogPath:
-#     """Path to the logs of the application"""
-
-#     ROOT = ROOT_PATH / Folder.LOGS
-
-#     @classproperty
-#     def application(cls):
-#         return cls.ROOT / "application.log"
-
-#     @classproperty
-#     def db_com(cls):
-#         return cls.ROOT / "db_com.log"
-
-#     @classproperty
-#     def error(cls):
-#         return cls.ROOT / "error.log"
-
-#     @classproperty
-#     def logs_path(cls):
-#         paths = [
-#             getattr(LogPath, name)
-#             for name in cls.__dict__.keys()
-#             if not name.startswith("_") and name != "ROOT" and name != "logs_path"
-#         ]
-#         return paths
 
 
 # class UserFilesPath:

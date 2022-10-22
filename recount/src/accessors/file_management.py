@@ -26,6 +26,7 @@ __all__ = [
     "AssetFolder",
     "LogFolder",
     "DataFolder",
+    "ConfigFolder",
     "UsersFolder",
     "KeyFolder",
     "User",
@@ -130,7 +131,9 @@ class AssetFolder(FolderManager):
 
     @classmethod
     def copyDefaultAssets(cls):
-        for filepath in os.listdir(path_definition.AssetFolder.DEFAULT):
+        path_default_assets = path_definition.AssetFolder.DEFAULT
+        for filename in os.listdir(path_default_assets):
+            filepath = path_default_assets / filename
             if os.path.isfile(filepath):
                 shutil.copy2(filepath, cls.ROOT)
 
@@ -151,6 +154,20 @@ class KeyFolder(FolderManager):
         else:
             key = encryption.generateKey()
             _FileAccessor.writeBinary(key_path, key)
+
+
+class ConfigFolder(FolderManager):
+    ROOT = path_definition.ConfigFolder.ROOT
+
+    @staticmethod
+    def changeSqlAdminPassword(new_password: str):
+        _FileAccessor.readJson()
+
+    @staticmethod
+    def copyExampleConfig():
+        example_config = path_definition.ConfigFolder.DEFAULT
+        config = path_definition.ConfigFolder.SQL_PATH
+        shutil.copy2(example_config, config)
 
 
 class LogFolder(FolderManager):

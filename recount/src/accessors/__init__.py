@@ -8,13 +8,6 @@ sys.path.insert(0, str(pathlib.Path(__file__).parent))
 
 # from currency_converter import ECB_URL
 
-# from file_management import *
-
-# from .filepath import *
-
-# from path_files import *
-# TODO: INITIATE PROJECT
-
 
 def initializeFolders():
     return

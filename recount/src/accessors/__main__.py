@@ -3,7 +3,15 @@ import argparse
 
 from file_management import *
 
-DEFAULT_FOLDERS = [RootFolder, DataFolder, LogFolder, KeyFolder, UsersFolder]
+DEFAULT_FOLDERS = [
+    RootFolder,
+    DataFolder,
+    LogFolder,
+    AssetFolder,
+    ConfigFolder,
+    KeyFolder,
+    UsersFolder,
+]
 
 
 def removeFolders():
@@ -24,8 +32,11 @@ def generateDefaultExcelKey():
 
 
 def copyAssetFiles():
-    asset_folder = AssetFolder
-    asset_folder.copyDefaultAssets()
+    AssetFolder.copyDefaultAssets()
+
+
+def copyAppExampleConfig():
+    ConfigFolder.copyExampleConfig()
 
 
 parser = argparse.ArgumentParser()
@@ -33,11 +44,25 @@ parser.add_argument(
     "--initiate-folders",
     help="create default folders for the recount project",
     action="store_true",
+    default=False,
 )
 parser.add_argument(
     "--remove-old-folders",
     help="remove the default folders of the recount project",
     action="store_true",
+    default=False,
+)
+parser.add_argument(
+    "--copy-example-config",
+    help="copy the file 'example_app_config.json' into the config folder",
+    action="store_true",
+    default=False,
+)
+parser.add_argument(
+    "--generate-default-excel-key",
+    help="generate a default key to encrypt the excels",
+    action="store_true",
+    default=False,
 )
 
 args = parser.parse_args()
@@ -53,3 +78,10 @@ if args.initiate_folders:
     initializeFolders()
     generateDefaultExcelKey()
     copyAssetFiles()
+    copyAppExampleConfig()
+
+if args.copy_example_config:
+    copyAppExampleConfig()
+
+if args.generate_default_excel_key:
+    generateDefaultExcelKey()
