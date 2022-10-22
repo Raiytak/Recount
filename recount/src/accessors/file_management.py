@@ -30,7 +30,7 @@ __all__ = [
     "UsersFolder",
     "KeyFolder",
     "User",
-    "Sql",
+    "Config",
 ]
 
 
@@ -115,15 +115,15 @@ class FolderManager:
 
 
 class RootFolder(FolderManager):
-    ROOT: Path = path_definition.RootFolder.ROOT
+    ROOT = path_definition.RootFolder.ROOT
 
 
 class DataFolder(FolderManager):
-    ROOT: Path = path_definition.DataFolder.ROOT
+    ROOT = path_definition.DataFolder.ROOT
 
 
 class AssetFolder(FolderManager):
-    ROOT: Path = path_definition.AssetFolder.ROOT
+    ROOT = path_definition.AssetFolder.ROOT
 
     @classmethod
     def copyDefaultAssets(cls):
@@ -135,7 +135,7 @@ class AssetFolder(FolderManager):
 
 
 class KeyFolder(FolderManager):
-    ROOT: Path = path_definition.KeyFolder.ROOT
+    ROOT = path_definition.KeyFolder.ROOT
     DEFAULT_EXCEL_KEY_NAME: str = path_definition.KeyFolder.DEFAULT_EXCEL_KEY_NAME
 
     @classmethod
@@ -153,23 +153,22 @@ class KeyFolder(FolderManager):
 
 
 class ConfigFolder(FolderManager):
-    ROOT: Path = path_definition.ConfigFolder.ROOT
-    SQL_PATH: Path = path_definition.ConfigFolder.SQL_PATH
+    ROOT = path_definition.ConfigFolder.ROOT
+    SQL_PATH = path_definition.ConfigFolder.SQL_PATH
 
-    @staticmethod
-    def changeSqlAdminPassword(new_password: str):
-        return
-        FileAccessor.readJson()
+    @classmethod
+    def copyExampleSqlConfig(cls):
+        example_sql_conf = path_definition.ConfigFolder.DEFAULT_SQL
+        shutil.copy2(src=example_sql_conf, dst=cls.SQL_PATH)
 
     @classmethod
     def copyExampleConfig(cls):
-        example_sql_conf = path_definition.ConfigFolder.DEFAULT_SQL
-        shutil.copy2(example_sql_conf, cls.SQL_PATH)
+        cls.copyExampleSqlConfig()
 
 
 class Config:
-    ROOT: Path = ConfigFolder.ROOT
-    SQL: Path = ConfigFolder.SQL_PATH
+    ROOT = ConfigFolder.ROOT
+    SQL = ConfigFolder.SQL_PATH
 
     @classmethod
     def sql(cls):

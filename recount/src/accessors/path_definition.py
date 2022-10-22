@@ -55,7 +55,7 @@ class KeyFolder:
 class ConfigFolder:
     ROOT = RootFolder.CONFIG
     DEFAULT_SQL = (
-        Path(__file__).parent.parent.parent / "config" / "example_sql_config.json"
+        Path(__file__).parent.parent.parent / "example" / "example_sql_config.json"
     )
 
     SQL_PATH = ROOT / "sql.config"
