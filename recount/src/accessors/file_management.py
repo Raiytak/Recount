@@ -24,9 +24,9 @@ import encryption
 __all__ = [
     "RootFolder",
     "AssetFolder",
+    "LogFolder",
     "DataFolder",
     "UsersFolder",
-    "LogFolder",
     "KeyFolder",
     "User",
 ]
@@ -101,6 +101,7 @@ class FolderManager:
     @abc.abstractmethod
     def ROOT(self) -> Path:
         """Root path of the Folder"""
+        # TODO: automate instanciation
 
     @classmethod
     def createFolder(cls):
@@ -117,25 +118,32 @@ class FolderManager:
 
 
 class RootFolder(FolderManager):
-    ROOT = path_definition.RootFolder.ROOT.value
+    ROOT = path_definition.RootFolder.ROOT
 
 
 class DataFolder(FolderManager):
-    ROOT = path_definition.RootFolder.DATA.value
+    ROOT = path_definition.DataFolder.ROOT
 
 
 class AssetFolder(FolderManager):
-    ROOT = path_definition.RootFolder.ASSET.value
+    ROOT = path_definition.AssetFolder.ROOT
+
+    @classmethod
+    def copyDefaultAssets(cls):
+        for filepath in os.listdir(path_definition.AssetFolder.DEFAULT):
+            if os.path.isfile(filepath):
+                shutil.copy2(filepath, cls.ROOT)
 
 
 class KeyFolder(FolderManager):
-    ROOT = path_definition.RootFolder.KEY.value
-    DEFAULT_EXCEL_KEY_NAME = path_definition.KeyFolder.DEFAULT_EXCEL_KEY_NAME.value
+    ROOT = path_definition.KeyFolder.ROOT
+    DEFAULT_EXCEL_KEY_NAME = path_definition.KeyFolder.DEFAULT_EXCEL_KEY_NAME
 
-    def generateKey(self, name: str, dirpath: Path = None, override: bool = False):
+    @classmethod
+    def generateKey(cls, name: str, dirpath: Path = None, override: bool = False):
         """If dirpath is not specified, register the key in the default 'key' folder of Recount"""
         if not dirpath:
-            key_path = self.ROOT / name
+            key_path = cls.ROOT / name
         else:
             key_path = dirpath / name
         if key_path.exists() and not override:
@@ -146,16 +154,16 @@ class KeyFolder(FolderManager):
 
 
 class LogFolder(FolderManager):
-    ROOT = path_definition.LogFolder.ROOT.value
+    ROOT = path_definition.LogFolder.ROOT
 
     @staticmethod
     def clearLogs():
         for log_path in path_definition.LogFolder:
-            _FileAccessor.removeFile(log_path.value)
+            _FileAccessor.removeFile(log_path)
 
 
 class UsersFolder(FolderManager):
-    ROOT = path_definition.UsersFolder.ROOT.value
+    ROOT = path_definition.UsersFolder.ROOT
 
     @property
     def isEmpty(self) -> bool:
@@ -180,16 +188,14 @@ class User:
             self._username = "default"
         else:
             self._username = username
-        self._ROOT = path_definition.UsersFolder.ROOT.value / self.username
+        self._ROOT = path_definition.UsersFolder.ROOT / self.username
 
         # Instanciation of a file encryption object
         if not key:
-            key = _FileAccessor.readBinary(
-                path_definition.KeyFolder.DEFAULT_EXCEL.value
-            )
+            key = _FileAccessor.readBinary(path_definition.KeyFolder.DEFAULT_EXCEL)
         self.file_encryption = encryption.FileEncryption(key)
         self.default_excel_path = (
-            self.ROOT / path_definition.UsersFolder.DEFAULT_EXCEL_NAME.value
+            self.ROOT / path_definition.UsersFolder.DEFAULT_EXCEL_NAME
         )
 
     @property

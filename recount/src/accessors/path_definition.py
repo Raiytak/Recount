@@ -8,15 +8,12 @@ class directly.
 
 """ACHTUNG: To access user files, you should always do it using UserFolder class !"""
 
-# TODO rename file
-
 from pathlib import Path
-from enum import Enum
 
 __all__ = ["RootFolder", "DataFolder", "LogFolder", "KeyFolder"]
 
 
-class RootFolder(Enum):
+class RootFolder:
     HOME = Path.home()
     ROOT = HOME / ".recount"
 
@@ -28,28 +25,33 @@ class RootFolder(Enum):
     LOG = ROOT / "log"
 
 
-class DataFolder(Enum):
-    ROOT = RootFolder.LOG.value
+class DataFolder:
+    ROOT = RootFolder.DATA
 
 
-class LogFolder(Enum):
-    ROOT = RootFolder.LOG.value
+class AssetFolder:
+    ROOT = RootFolder.ASSET
+    DEFAULT = Path(__file__).parent.parent.parent.parent / "asset"
+
+
+class LogFolder:
+    ROOT = RootFolder.LOG
     APP = ROOT / "app.log"
     APP_ERROR = ROOT / "app_error.log"
     SQL = ROOT / "sql_communcation.log"
 
 
-class UsersFolder(Enum):
-    ROOT = RootFolder.DATA.value / "user"
+class UsersFolder:
+    ROOT = DataFolder.ROOT / "user"
     DEFAULT_EXCEL_NAME = "default.xlsx"
 
 
-class KeyFolder(Enum):
-    ROOT = RootFolder.KEY.value
+class KeyFolder:
+    ROOT = RootFolder.KEY
     DEFAULT_EXCEL_KEY_NAME = "default_excel.key"
 
 
-class Config(Enum):
+class Config:
     pass
 
 
@@ -57,7 +59,7 @@ class Config(Enum):
 #     """Path to the folder containing the CSS rules and asset of the app"""
 
 #     _ROOT = "/var/recount/asset"
-#     ROOT = pathlib.Path(_ROOT) / Folder.ASSET.value
+#     ROOT = pathlib.Path(_ROOT) / Folder.ASSET
 
 
 # class ConfigPath:
@@ -67,7 +69,7 @@ class Config(Enum):
 #         -server certificates"""
 
 #     _ROOT = "/etc/recount"
-#     ROOT = pathlib.Path(_ROOT) / Folder.CONFIG.value
+#     ROOT = pathlib.Path(_ROOT) / Folder.CONFIG
 
 #     USERS = ROOT / "USERS.json"
 
@@ -131,7 +133,7 @@ class Config(Enum):
 # class LogPath:
 #     """Path to the logs of the application"""
 
-#     ROOT = ROOT_PATH / Folder.LOGS.value
+#     ROOT = ROOT_PATH / Folder.LOGS
 
 #     @classproperty
 #     def application(cls):
@@ -162,7 +164,7 @@ class Config(Enum):
 #                     manipulated by the application, then removed)
 #         If reaching USERS' file, 'ROOT' should be the excel's user folder"""
 
-#     ROOT = APP_PATH / Folder.EXAMPLE.value
+#     ROOT = APP_PATH / Folder.EXAMPLE
 
 #     def __init__(self, username: str = None):
 #         if username is not None:
@@ -171,7 +173,7 @@ class Config(Enum):
 
 #     @property
 #     def user_folder(self):
-#         return ROOT_PATH / Folder.DATA.value / Folder.USERS.value / self.username
+#         return ROOT_PATH / Folder.DATA / Folder.USERS / self.username
 
 #     @property
 #     def excel(self):
@@ -218,7 +220,7 @@ class Config(Enum):
 # class UnittestFilesPath:
 #     """Path to the files used by the unittests"""
 
-#     ROOT = APP_PATH / Folder.TEST.value / "test_files"
+#     ROOT = APP_PATH / Folder.TEST / "test_files"
 
 #     @classproperty
 #     def folder(cls):
