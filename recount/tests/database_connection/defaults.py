@@ -34,9 +34,6 @@ EXPECTED_DEFAULT_COLUMNS_NAME = [
 USER_ACCESS = UserManager(USERNAME)
 USER_TABLE = UserSqlTable(USERNAME, TABLE_NAME)
 
-# USER_DATA_PIPELINE = pipeline.UserDataPipeline(USERNAME)
-# USER_GRAPH_PIPELINE = pipeline.UserGraphPipeline(USERNAME)
-
 
 def defaultSelectExpenseResponses(request):
     if (

@@ -46,7 +46,7 @@ requests_to_evaluate = [
             None,
             f"value='{update_value}'",
         ),
-        f"UPDATE expense SET value='{update_value}' WHERE id='1';",
+        f"UPDATE {TABLE_NAME.value} SET value='{update_value}' WHERE id='1';",
         NoException,
     ),
     (
@@ -123,9 +123,7 @@ requests_to_evaluate = [
     argvalues=requests_to_evaluate,
 )
 def test_sql_request(request_input, expected_request, expected_exception):
-    # try:
-    assert str(SqlRequest(*request_input)) == expected_request
-
-# except expected_exception:
-#     pass
-
+    try:
+        assert str(SqlRequest(*request_input)) == expected_request
+    except expected_exception:
+        pass
