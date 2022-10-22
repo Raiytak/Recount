@@ -12,7 +12,7 @@ def initializeFolders():
     return
 
     def __init__(self, username: str = None):
-        self.fernet_encryption = FileEncryption(Config.EXCEL_KEY)
+        self.fernet_encryption = FileEncryption(ConfigManager.EXCEL_KEY)
         if username is None:
             self.user_files_path = UserFilesPath
         else:
@@ -60,7 +60,7 @@ def initializeFolders():
     def updateCurrenciesRates():
         # Delete the older file
         for filename in ConfigPath.currencies_rates_filenames:
-            Config.removeFile(ConfigPath.ROOT / filename)
+            ConfigManager.removeFile(ConfigPath.ROOT / filename)
         # Import the CURRENCIES rates up to date
         urllib.request.urlretrieve(ECB_URL, ConfigPath.currencies_rates)
 

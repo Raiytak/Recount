@@ -8,7 +8,7 @@ import logging
 from logging import Formatter, StreamHandler
 from logging.handlers import RotatingFileHandler
 
-import access
+from accessors.file_management import *
 
 PAD_SIZE = 50
 FILE_SIZE_BYTES = 1 * 10 ** 6
@@ -101,9 +101,7 @@ class ApplicationHandler:
 
     @staticmethod
     def createInfoHandler():
-        info_handler = RotatingFileHandler(
-            access.LogPath.application, maxBytes=FILE_SIZE_BYTES
-        )
+        info_handler = RotatingFileHandler(LogFolder.APP, maxBytes=FILE_SIZE_BYTES)
         log_file_format = DETAILLED_DESCR
         info_handler.setLevel(logging.INFO)
         info_handler.setFormatter(Formatter(log_file_format, datefmt=DATE_FORMAT))
@@ -112,7 +110,7 @@ class ApplicationHandler:
     @staticmethod
     def createErrorHandler():
         debug_handler = RotatingFileHandler(
-            access.LogPath.error, maxBytes=FILE_SIZE_BYTES
+            LogFolder.APP_ERROR, maxBytes=FILE_SIZE_BYTES
         )
         log_file_format = DETAILLED_DESCR
         debug_handler.setLevel(logging.WARNING)
@@ -121,9 +119,7 @@ class ApplicationHandler:
 
     @staticmethod
     def createDbComsHandler():
-        debug_handler = RotatingFileHandler(
-            access.LogPath.db_com, maxBytes=FILE_SIZE_BYTES
-        )
+        debug_handler = RotatingFileHandler(LogFolder.SQL, maxBytes=FILE_SIZE_BYTES)
         log_file_format = DETAILLED_DESCR
         debug_handler.setLevel(logging.DEBUG)
         debug_handler.setFormatter(Formatter(log_file_format, datefmt=DATE_FORMAT))
@@ -139,7 +135,7 @@ class ApplicationLogger:
 
 def startLogs(stdout_filter: Filter = Filter.INFO, log_level: str = "INFO"):
     """Initiates and launches the logs of the application"""
-    access.LogAccess.removeLogs()
+    LogManager.clearLogs()
 
     stream_stdout = ApplicationHandler.createStreamInfoHandler()
     stream_stdout.addFilter(stdout_filter.value())

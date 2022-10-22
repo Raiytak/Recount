@@ -29,9 +29,13 @@ __all__ = [
     "ConfigFolder",
     "UsersFolder",
     "KeyFolder",
+    #############
+    # Pubic API #
+    #############
+    "LogManager",
     "KeyManager",
     "UserManager",
-    "Config",
+    "ConfigManager",
 ]
 
 
@@ -153,24 +157,11 @@ class ConfigFolder(FolderManager):
         cls.copyExampleSqlConfig()
 
 
-class Config:
-    ROOT = ConfigFolder.ROOT
-    SQL = ConfigFolder.SQL_PATH
-
-    @classmethod
-    def sql(cls):
-        data = FileAccessor.readJson(cls.SQL)
-        return data
-
-    @classmethod
-    def setSqlAdminPassword(cls, password: str):
-        data = FileAccessor.readJson(cls.SQL)
-        data["password"] = password
-        FileAccessor.writeJson(cls.SQL, data)
-
-
 class LogFolder(FolderManager):
     ROOT = path_definition.LogFolder.ROOT
+    APP = path_definition.LogFolder.APP
+    APP_ERROR = path_definition.LogFolder.APP_ERROR
+    SQL = path_definition.LogFolder.SQL
 
     @staticmethod
     def clearLogs():
@@ -201,14 +192,47 @@ class UsersFolder(FolderManager):
 # =====================================================================================
 
 
-class KeyManager:
-    _ROOT = KeyFolder.ROOT
-    DEFAULT_EXCEL_KEY_NAME = path_definition.KeyFolder.DEFAULT_EXCEL_KEY_NAME
-    DEFAULT_EXCEL_KEY = _ROOT / DEFAULT_EXCEL_KEY_NAME
+class FolderManager:
+    @property
+    @abc.abstractmethod
+    def _ROOT(self) -> typing.Type[Path]:
+        """Root path of the folder"""
 
     @property
     def ROOT(self) -> typing.Type[Path]:
         return self._ROOT
+
+
+class LogManager(FolderManager):
+    _ROOT = LogFolder.ROOT
+
+    @classmethod
+    def clearLogs(cls):
+        for filename in os.listdir(cls.ROOT):
+            filepath = cls.ROOT / filename
+            os.remove(filepath)
+
+
+class ConfigManager:
+    ROOT = ConfigFolder.ROOT
+    SQL = ConfigFolder.SQL_PATH
+
+    @classmethod
+    def sql(cls):
+        data = FileAccessor.readJson(cls.SQL)
+        return data
+
+    @classmethod
+    def setSqlAdminPassword(cls, password: str):
+        data = FileAccessor.readJson(cls.SQL)
+        data["password"] = password
+        FileAccessor.writeJson(cls.SQL, data)
+
+
+class KeyManager(FolderManager):
+    _ROOT = KeyFolder.ROOT
+    DEFAULT_EXCEL_KEY_NAME = path_definition.KeyFolder.DEFAULT_EXCEL_KEY_NAME
+    DEFAULT_EXCEL_KEY = _ROOT / DEFAULT_EXCEL_KEY_NAME
 
     def get(self, key_name: str):
         return FileAccessor.readBinary(self.ROOT / key_name)
@@ -232,7 +256,7 @@ class KeyManager:
             FileAccessor.writeBinary(key_path, key)
 
 
-class UserManager:
+class UserManager(FolderManager):
     """CRUD operations on the files of the defined user"""
 
     def __init__(self, username: str = "", key: typing.Union[bytes, str] = ""):
