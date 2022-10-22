@@ -1,25 +1,22 @@
-from .defaults import *
-from accessors.file_management import UserManager
+from .conftest import *
 
 
-USERNAME = "hello"
-DB_CONFIG = {}
-TABLE_NAME = Table.EXPENSE
-EXPECTED_DEFAULT_COLUMNS_NAME = [
-    "ID",
-    "username",
-    "date",
-    "amount",
-    "category",
-    "travel",
-    "company",
-    "description",
-    "payment_method",
-]
-
-USER_ACCESS = UserManager(USERNAME)
-USER_TABLE = UserSqlTable(USERNAME, TABLE_NAME)
+def test_sql_database(user_table):
+    assert user_table.columns_name == EXPECTED_DEFAULT_COLUMNS_NAME
 
 
-def test_sql_database():
-    assert USER_TABLE.columns_name == EXPECTED_DEFAULT_COLUMNS_NAME
+def test_sql_insertion(user_table):
+
+    sql_request = SqlRequest(
+        SqlKeyword.INSERT,
+        Table.EXPENSE,
+        insert_columns=("ID", "username", "date", "amount"),
+        insert_values=(1, "hello", datetime.datetime(2020, 1, 1), 10),
+    )
+    user_table.insert(sql_request)
+    sql_request = SqlRequest(SqlKeyword.SELECT, Table.EXPENSE, "*")
+    response = user_table.select(sql_request)
+    assert response == (
+        (1, "hello", datetime.date(2020, 1, 1), 10.0, None, None, None, None, "card"),
+    )
+    user_table.truncateTableOfUser()

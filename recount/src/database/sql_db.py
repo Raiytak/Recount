@@ -249,6 +249,7 @@ class SqlTable:
     def __init__(self, table: Table = None, config: dict = None):
         if not table:
             table = Table.EXPENSE  # Default table
+        self.table = table
         self.table_name = table.value
         self.config = config
 
@@ -309,40 +310,38 @@ class SqlTable:
         return name_columns
 
     def selectAll(self):
-        request = SqlRequest(
-            action=SqlKeyword.SELECT, column="*", table=self.table_name
-        )
+        request = SqlRequest(action=SqlKeyword.SELECT, column="*", table=self.table)
         return self.select(request)
 
     def truncateTable(self):
-        request = SqlRequest(action=SqlKeyword.TRUNCATE, table=self.table_name)
+        request = SqlRequest(action=SqlKeyword.TRUNCATE, table=self.table)
         self.delete(request)
 
 
 class UserSqlTable(SqlTable):
-    def __init__(self, username: str, table_name: str, config: dict = None):
-        super().__init__(table_name, config)
+    def __init__(self, username: str, table: Table, config: dict = None):
+        super().__init__(table, config)
         self.username = username
 
     def selectAll(self):
         request = SqlRequest(
             action=SqlKeyword.SELECT,
             column="*",
-            table=self.table_name,
+            table=self.table,
             username=self.username,
         )
         return self.select(request)
 
     def truncateTableOfUser(self):
         request = SqlRequest(
-            action=SqlKeyword.DELETE, table=self.table_name, username=self.username
+            action=SqlKeyword.DELETE, table=self.table, username=self.username
         )
         self.delete(request)
 
     def selectRowId(self, id):
         request = SqlRequest(
             action=SqlKeyword.SELECT,
-            table=self.table_name,
+            table=self.table,
             condition=f"ID = {str(id)}",
             username=self.username,
         )
