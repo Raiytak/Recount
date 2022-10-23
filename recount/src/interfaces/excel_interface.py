@@ -5,7 +5,7 @@ class ExcelColumns:
     """Default columns"""
 
     ID = "ID"
-    USERNAME = "username"
+    username = "username"
     DATE = "date"
     AMOUNT = "amount"
     CURRENCY = "currency"
