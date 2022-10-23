@@ -1,11 +1,16 @@
-# from .conftest import *
+from unittest.mock import patch
+
+from .conftest import *
+
+# from recount.src.accessors.__main__ import initializeFolders
 
 # import access as access
 # from access.path_files import UserFilesPath
 
 
-# # Initialization
-# USER_ACCESS.removeUserFolder()
+# @patch("os.mkdir")
+# def test_create_folders(mock_mkdir):
+#     pass
 
 
 # def test_instanciate_user_folder():

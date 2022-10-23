@@ -15,9 +15,10 @@ EXPECTED_DEFAULT_COLUMNS_NAME = [
     "username",
     "date",
     "amount",
+    "currency",
     "category",
-    "travel",
-    "company",
+    "receiver",
+    "place",
     "description",
     "payment_method",
 ]
