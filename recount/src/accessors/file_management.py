@@ -70,7 +70,9 @@ class FileAccessor:
 
 class _Excel:
     @staticmethod
-    def isExcel(filepath) -> bool:
+    def isExcel(filepath: Path = None, data_bytes: bytes = None) -> bool:
+        if filepath and data_bytes:
+            raise AttributeError("filpath and data_bytes provided at the same time")
         # TODO 2496: use openpyxl instead
         accepted_excel_signatures = [
             (b"\x50\x4B\x05\x06", 2, -22, 4),
@@ -90,12 +92,23 @@ class _Excel:
         ]
 
         for sig, whence, offset, size in accepted_excel_signatures:
-            with open(filepath, "rb") as file:
-                file.seek(offset, whence)  # Seek to the offset.
-                bytes = file.read(size)  # Capture the specified number of bytes.
-                if bytes == sig:
-                    return True
+            if filepath:
+                with open(filepath, "rb") as file:
+                    file.seek(offset, whence)  # Seek to the offset.
+                    data_bytes = file.read(
+                        size
+                    )  # Capture the specified number of bytes.
+            if data_bytes == sig[offset:size]:
+                return True
         return False
+
+        # for sig, whence, offset, size in accepted_excel_signatures:
+        #     with open(filepath, "rb") as file:
+        #         file.seek(offset, whence)  # Seek to the offset.
+        #         data_bytes = file.read(size)  # Capture the specified number of bytes.
+        #         if data_bytes == sig:
+        #             return True
+        # return False
 
 
 class FolderManager:
@@ -315,18 +328,19 @@ class UserManager(FolderManager, FileManager):
             )
 
         unknown_data = FileAccessor.readBinary(filepath)
-        if not _Excel.isExcel(filepath):
+        if not _Excel.isExcel(filepath=filepath):
             decrypted_data = self.file_encryption.decryptData(unknown_data)
-            if not _Excel.isExcel(decrypted_data):
-                # Case 3: Either the decryption did not work or the file is not an excel
-                raise ValueError(
-                    "The provided file '{}' is either not an excel or is encrypted with a different from the one used by the user '{}'".format(
-                        filepath, self.username
-                    )
-                )
-            else:
-                # Case 1: The file provided was encrypted, decryption worked out
-                data = decrypted_data
+            # TODO: isExcel not working on decrypted excel :/
+            # if not _Excel.isExcel(data_bytes=decrypted_data):
+            #     # Case 3: Either the decryption did not work (wrong key?) or the file is not an excel, even though it has the right extension
+            #     raise ValueError(
+            #         "The provided file '{}' is either not an excel or is encrypted with a different from the one used by the user '{}'".format(
+            #             filepath, self.username
+            #         )
+            #     )
+            # else:
+            #     # Case 1: The file provided was encrypted, decryption worked out
+            data = decrypted_data
         else:
             # Case 2: The file provided was already clear
             data = unknown_data
@@ -344,7 +358,7 @@ class UserManager(FolderManager, FileManager):
         self,
         data: bytes,
         name: str = None,
-        to_encode: bool = True,
+        encrypt: bool = True,
         override: bool = True,
     ):
         """
@@ -365,7 +379,7 @@ class UserManager(FolderManager, FileManager):
                 )
             )
 
-        if to_encode == True:
+        if encrypt == True:
             data_to_write = self.file_encryption.encryptData(data)
         else:
             data_to_write = data
