@@ -299,7 +299,7 @@ class UserManager(FolderManager, FileManager):
             )
         if filename:
             filepath = self.ROOT / filename
-        if not filepath:
+        elif not filepath:
             filepath = self.default_excel_path
 
         if not filepath.exists():
@@ -386,7 +386,7 @@ class TestManager(FileManager):
     _ROOT = path_definition.TestFolder.FILES
 
     excel_1 = _ROOT / "excel_input_1.xlsx"
-    json_1 = _ROOT / "pipeline_output_1.json"
+    path_df_output_json_1 = _ROOT / "dataframe_output_1.json"
 
 
 # def saveUploadedFile(self, file_uploaded):

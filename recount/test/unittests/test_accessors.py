@@ -1,11 +1,4 @@
 from .conftest import *
-from src.excel_interface import UserExcelManager
-
-
-def test_excel_manager(excel_manager: UserExcelManager):
-    df = excel_manager.dataframe()
-    assert df == None
-
 
 # import access as access
 # from access.path_files import UserFilesPath
