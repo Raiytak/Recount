@@ -12,6 +12,11 @@ from pathlib import Path
 __all__ = ["RootFolder", "DataFolder", "LogFolder", "KeyFolder"]
 
 
+class RecountSrcRoot:
+    ROOT = Path(__file__).parent.parent.parent
+    TEST = ROOT / "test"
+
+
 class RootFolder:
     HOME = Path.home()
     ROOT = HOME / ".recount"
@@ -52,13 +57,22 @@ class KeyFolder:
     DEFAULT_EXCEL_KEY_NAME = "default_excel.key"
 
 
+class ExampleFolder:
+    ROOT = RecountSrcRoot.ROOT / "example"
+
+    SQL_CONFIG = ROOT / "example_sql_config.json"
+    EXCEL_PATH = ROOT / "example_expenses_en.xlsx"
+
+
 class ConfigFolder:
     ROOT = RootFolder.CONFIG
-    DEFAULT_SQL = (
-        Path(__file__).parent.parent.parent / "example" / "example_sql_config.json"
-    )
 
     SQL_PATH = ROOT / "sql.config"
+
+
+class TestFolder:
+    ROOT = RecountSrcRoot.TEST
+    FILES = ROOT / "test_files"
 
 
 # class ConfigPath:

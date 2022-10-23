@@ -149,7 +149,7 @@ class ConfigFolder(FolderManager):
 
     @classmethod
     def copyExampleSqlConfig(cls):
-        example_sql_conf = path_definition.ConfigFolder.DEFAULT_SQL
+        example_sql_conf = path_definition.ExampleFolder.SQL_CONFIG
         shutil.copy2(src=example_sql_conf, dst=cls.SQL_PATH)
 
     @classmethod
@@ -192,13 +192,13 @@ class UsersFolder(FolderManager):
 # =====================================================================================
 
 
-class FolderManager:
+class FileManager:
     @property
     def ROOT(self) -> typing.Type[Path]:
         return self._ROOT
 
 
-class LogManager(FolderManager):
+class LogManager(FileManager):
     _ROOT = LogFolder.ROOT
 
     @classmethod
@@ -224,7 +224,7 @@ class ConfigManager:
         FileAccessor.writeJson(cls.SQL, data)
 
 
-class KeyManager(FolderManager):
+class KeyManager(FileManager):
     _ROOT = KeyFolder.ROOT
     DEFAULT_EXCEL_KEY_NAME = path_definition.KeyFolder.DEFAULT_EXCEL_KEY_NAME
     DEFAULT_EXCEL_KEY = _ROOT / DEFAULT_EXCEL_KEY_NAME
@@ -251,7 +251,7 @@ class KeyManager(FolderManager):
             FileAccessor.writeBinary(key_path, key)
 
 
-class UserManager(FolderManager):
+class UserManager(FolderManager, FileManager):
     """CRUD operations on the files of the defined user"""
 
     def __init__(self, username: str = "", key: typing.Union[bytes, str] = None):
@@ -278,10 +278,27 @@ class UserManager(FolderManager):
     def ROOT(self) -> typing.Type[Path]:
         return self._ROOT
 
-    def excel(self, filepath: Path = None) -> bytes:
-        """Return the data of 'filepath'
-        If no path is provided, default excel data is returned"""
+    def createFolder(self):
+        if not self.folderExists():
+            os.mkdir(self.ROOT)
 
+    def removeFolder(self):
+        shutil.rmtree(self.ROOT)
+
+    def folderExists(self) -> bool:
+        return self.ROOT.exists()
+
+    def excel(self, filepath: Path = None, filename: str = None) -> bytes:
+        """Return the data of an excel
+        If a filename is provided, returns the excel of the user named accordingly
+        If filepath is not provided, default excel data is returned
+        filename and filepath should not be provided at the same time"""
+        if filename and filepath:
+            raise AttributeError(
+                "provided both filepath and filename, while the function expects only one argument"
+            )
+        if filename:
+            filepath = self.ROOT / filename
         if not filepath:
             filepath = self.default_excel_path
 
@@ -290,9 +307,11 @@ class UserManager(FolderManager):
                 "The file '{}' does not exists".format(str(filepath))
             )
 
-        if filepath.suffix != "xlsx":
+        if filepath.suffix != ".xlsx":
             raise AttributeError(
-                "The file provided is '{}' where it is expected to be a 'xlsx'".format()
+                "The file provided is '{}' where it is expected to be a 'xlsx'".format(
+                    filepath.suffix
+                )
             )
 
         unknown_data = FileAccessor.readBinary(filepath)
@@ -352,12 +371,22 @@ class UserManager(FolderManager):
             data_to_write = data
         FileAccessor.writeBinary(filepath, data_to_write)
 
+    def copyExampleExcel(self):
+        shutil.copy(path_definition.ExampleFolder.EXCEL_PATH, self.default_excel_path)
+
     def removeDefaultExcel(self):
         FileAccessor.removeFile(self.default_excel_path)
 
     def removeAllExcels(self):
         for filepath in os.listdir(self.ROOT):
             FileAccessor.removeFile(filepath)
+
+
+class TestManager(FileManager):
+    _ROOT = path_definition.TestFolder.FILES
+
+    excel_1 = _ROOT / "excel_input_1.xlsx"
+    json_1 = _ROOT / "pipeline_output_1.json"
 
 
 # def saveUploadedFile(self, file_uploaded):
