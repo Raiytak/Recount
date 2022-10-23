@@ -25,7 +25,7 @@
 # sys.path.insert(0, str(src_path))
 
 
-# from access import Config
+# from access import ConfigManager
 
 
 # class KeyValSocket:
@@ -34,7 +34,7 @@
 
 #     def createSocket(self, db_config):
 #         if db_config is None:
-#             db_config = Config.database_config_key_val
+#             db_config = ConfigManager.database_config_key_val
 #         return redis.Redis(
 #             host=db_config["host"],
 #             port=db_config["port"],
@@ -59,7 +59,7 @@
 #             kv_socket.set(key, value)
 
 
-# db_config = Config.database_config_key_val
+# db_config = ConfigManager.database_config_key_val
 # r = redis.Redis(
 #     host=db_config["host"], port=db_config["port"], db=0, password=db_config["password"]
 # )

@@ -10,7 +10,7 @@ from enum import Enum
 from typing import Union, List
 import pymysql
 
-from accessors.file_management import Config
+from accessors.file_management import ConfigManager
 
 __all__ = ["SqlRequest", "SqlTable", "UserSqlTable"]
 
@@ -28,7 +28,7 @@ class SqlSocket:
 
     def __init__(self, config=None):
         if config is None:
-            config = Config.sql()  # Get the default config
+            config = ConfigManager.sql()  # Get the default config
         self.connection, self.cursor = self.createSocket(config)
 
     def createSocket(self, config, enable_ssl=True):
@@ -364,8 +364,8 @@ class UserSqlTable(SqlTable):
 #     """Encryption logic of the SQL exchanges."""
 
 #     def __init__(self):
-#         self.Config = Config()
-#         sql_key = self.Config.getDataSqlKey()
+#         self.ConfigManager = ConfigManager()
+#         sql_key = self.ConfigManager.getDataSqlKey()
 #         self.list_columns_to_left_unchanged = [
 #             "ID",
 #             "_id",
