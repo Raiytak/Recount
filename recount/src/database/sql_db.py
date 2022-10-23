@@ -18,7 +18,7 @@ __all__ = ["SqlRequest", "SqlTable", "UserSqlTable"]
 class Table(Enum):
     """Name of the available tables"""
 
-    EXPENSE = "expenses"  # Default table
+    EXPENSE = "expense"  # Default table
     # REIMBURSEMENT = "reimbursement"
     INFORMATION_COLUMNS = "information_schema.columns"
 
