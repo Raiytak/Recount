@@ -77,7 +77,7 @@ from .conftest import *
 #     dataframe = user_pipeline.getDataframeFromExcel()
 
 #     assert not excel_test_path.exists()
-#     user_access.saveExcel(dataframe, name=excel_test_name, to_encode=False)
+#     user_access.saveExcel(dataframe, name=excel_test_name, encrypt=False)
 #     assert excel_test_path.exists()
 #     assert user_access.isDecryptedExcelFile(excel_test_path)
 
