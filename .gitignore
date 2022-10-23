@@ -1,6 +1,9 @@
 # Ignore important stuff
 recount/src/.env
 
+# Ignore the data folder
+data/**
+
 # Ignore the database other files
 database/init_**
 
@@ -41,3 +44,4 @@ recount/include
 **.pem
 recount/commands.py
 **.bat
+**.coverage

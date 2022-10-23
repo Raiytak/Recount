@@ -54,7 +54,7 @@ class UsersFolder:
 class KeyFolder:
     ROOT = RootFolder.KEY
 
-    DEFAULT_EXCEL_KEY_NAME = "default_excel.key"
+    _DEFAULT_EXCEL_KEY_NAME = "default_excel.key"
 
 
 class ExampleFolder:

@@ -226,8 +226,8 @@ class ConfigManager:
 
 class KeyManager(FileManager):
     _ROOT = KeyFolder.ROOT
-    DEFAULT_EXCEL_KEY_NAME = path_definition.KeyFolder.DEFAULT_EXCEL_KEY_NAME
-    DEFAULT_EXCEL_KEY = _ROOT / DEFAULT_EXCEL_KEY_NAME
+    _DEFAULT_EXCEL_KEY_NAME = path_definition.KeyFolder._DEFAULT_EXCEL_KEY_NAME
+    _DEFAULT_EXCEL_KEY = _ROOT / _DEFAULT_EXCEL_KEY_NAME
 
     def get(self, key_name: str):
         return FileAccessor.readBinary(self.ROOT / key_name)
@@ -236,7 +236,7 @@ class KeyManager(FileManager):
         return FileAccessor.writeBinary(self.ROOT / key_name, key)
 
     def getDefaultExcelKey(self):
-        return self.get(self.DEFAULT_EXCEL_KEY_NAME)
+        return self.get(self._DEFAULT_EXCEL_KEY_NAME)
 
     def generateKey(self, name: str, dirpath: Path = None, override: bool = False):
         """If dirpath is not specified, register the key in the default 'key' folder of Recount"""
