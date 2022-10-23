@@ -15,29 +15,30 @@ CREATE DATABASE IF NOT EXISTS `recount` DEFAULT CHARACTER SET latin1 COLLATE lat
 USE `recount`;
 
 
-DROP TABLE IF EXISTS `expenses`;
-CREATE TABLE IF NOT EXISTS `expenses` (
+DROP TABLE IF EXISTS `expense`;
+CREATE TABLE IF NOT EXISTS `expense` (
   `ID` int(11) NOT NULL,
   `username` VARCHAR(255) NOT NULL,
   `date` date NOT NULL,
   `amount` float NOT NULL,
-  `category` VARCHAR(255),
-  `travel` VARCHAR(255),
-  `company` VARCHAR(255),
-  `description` VARCHAR(255),
-  `payment_method` varchar(15) DEFAULT 'card',
+  `currency` VARCHAR(3) NOT NULL,
+  `category` VARCHAR(75) DEFAULT NULL,
+  `receiver` VARCHAR(50) DEFAULT NULL,
+  `place` VARCHAR(50) DEFAULT NULL,
+  `description` VARCHAR(255) DEFAULT NULL,
+  `payment_method` varchar(30) DEFAULT 'card',
   PRIMARY KEY (`username`, `ID`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 
-DROP TABLE IF EXISTS `reimbursement`;
-CREATE TABLE IF NOT EXISTS `reimbursement` (
-  `username` VARCHAR(255) NOT NULL,
-  `ID` int(11) NOT NULL,
-  `ID_origin` int(11) NOT NULL,
-  `amount` float NOT NULL,
-  PRIMARY KEY (`username`, `ID`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+-- DROP TABLE IF EXISTS `reimbursement`;
+-- CREATE TABLE IF NOT EXISTS `reimbursement` (
+--   `username` VARCHAR(255) NOT NULL,
+--   `ID` int(11) NOT NULL,
+--   `ID_origin` int(11) NOT NULL,
+--   `amount` float NOT NULL,
+--   PRIMARY KEY (`username`, `ID`)
+-- ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 
 COMMIT;

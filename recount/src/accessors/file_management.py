@@ -194,11 +194,6 @@ class UsersFolder(FolderManager):
 
 class FolderManager:
     @property
-    @abc.abstractmethod
-    def _ROOT(self) -> typing.Type[Path]:
-        """Root path of the folder"""
-
-    @property
     def ROOT(self) -> typing.Type[Path]:
         return self._ROOT
 
@@ -259,7 +254,7 @@ class KeyManager(FolderManager):
 class UserManager(FolderManager):
     """CRUD operations on the files of the defined user"""
 
-    def __init__(self, username: str = "", key: typing.Union[bytes, str] = ""):
+    def __init__(self, username: str = "", key: typing.Union[bytes, str] = None):
         if not username:
             self._username = "default"
         else:
@@ -328,7 +323,7 @@ class UserManager(FolderManager):
 
     def saveExcel(
         self,
-        data: typing.Union[bytes, pandas.core.frame.DataFrame],
+        data: bytes,
         name: str = None,
         to_encode: bool = True,
         override: bool = True,
@@ -350,9 +345,6 @@ class UserManager(FolderManager):
                     filepath
                 )
             )
-
-        if type(data) == pandas.core.frame.DataFrame:
-            data = _Excel.convertDataframeToBytes(data)
 
         if to_encode == True:
             data_to_write = self.file_encryption.encryptData(data)
