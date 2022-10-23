@@ -9,7 +9,7 @@
 # )
 # def test_translate_df_to_sql_requests(df, expected):
 #     USER_DATA_PIPELINE.cleanDataframe(df)
-#     requests = convert.translateDataframeIntoInsertRequests(df, USER_TABLE)
+#     requests = convert.translateDataframeIntoInsertRequests(df, user_table)
 #     for request, exp in zip(requests, expected):
 #         assert str(request) == exp
 #     # Use to update the test file
@@ -40,7 +40,7 @@
 # def test_convert_date_to_df(start_date, end_date, expected):
 #     with patch("src.com.sql.UserSqlTable.select") as fake_select:
 #         fake_select.side_effect = defaultSelectExpenseResponses
-#         df = convert.convertDateToDataframe(start_date, end_date, USER_TABLE)
+#         df = convert.convertDateToDataframe(start_date, end_date, user_table)
 #         df_json = df.to_json()
 #         cleaned_json = json.loads(df_json)
 #         assert cleaned_json == expected
@@ -50,7 +50,7 @@
 # def test_convert_df_to_expense_uniq_value_in_column(start_date, end_date):
 #     with patch("src.com.sql.UserSqlTable.select") as fake_select:
 #         fake_select.side_effect = defaultSelectExpenseResponses
-#         df = convert.convertDateToDataframe(start_date, end_date, USER_TABLE)
+#         df = convert.convertDateToDataframe(start_date, end_date, user_table)
 #         response = convert.convertDataframeToGraphDataForEachUniqValueInColumn(
 #             df, "category"
 #         )
@@ -70,7 +70,7 @@
 # def test_convert_df_to_sum_expense_uniq_value_in_column(start_date, end_date):
 #     with patch("src.com.sql.UserSqlTable.select") as fake_select:
 #         fake_select.side_effect = defaultSelectExpenseResponses
-#         df = convert.convertDateToDataframe(start_date, end_date, USER_TABLE)
+#         df = convert.convertDateToDataframe(start_date, end_date, user_table)
 #         response = convert.convertDataframeToSumDataForEachUniqValueInColumn(
 #             df, "category"
 #         )

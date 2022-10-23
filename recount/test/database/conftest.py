@@ -25,16 +25,6 @@ EXPECTED_DEFAULT_COLUMNS_NAME = [
 
 
 @pytest.fixture
-def username():
-    return "hello"
-
-
-@pytest.fixture
-def table_name():
-    return Table.EXPENSE
-
-
-@pytest.fixture
 def user_table(username, table_name):
     user_table = UserSqlTable(username, table_name)
     yield user_table

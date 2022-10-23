@@ -13,59 +13,33 @@ from database.sql_db import (
     UserSqlTable,
 )
 
-from accessors.file_management import UserManager
+# from accessors.file_management import UserManager
 
 
-USERNAME = "hello"
 DB_CONFIG = {}
-TABLE_NAME = Table.EXPENSE
-EXPECTED_DEFAULT_COLUMNS_NAME = [
-    "ID",
-    "username",
-    "date",
-    "amount",
-    "category",
-    "travel",
-    "company",
-    "description",
-    "payment_method",
-]
 
-USER_ACCESS = UserManager(USERNAME)
-USER_TABLE = UserSqlTable(USERNAME, TABLE_NAME)
-
-# USER_DATA_PIPELINE = pipeline.UserDataPipeline(USERNAME)
-# USER_GRAPH_PIPELINE = pipeline.UserGraphPipeline(USERNAME)
+# USER_ACCESS = UserManager(username)
+# @pytest.fixture
+# def user_table(username, table_name):
+#     user_table = UserSqlTable(username, table_name)
+#     yield user_table
+#     user_table.truncateTableOfUser()
 
 
-def defaultSelectExpenseResponses(request):
-    if (
-        str(request)
-        == "SELECT * FROM expense WHERE date >= '2019-09-02' AND date <= '2019-09-03' AND username='hello';"
-    ):
-        return (
-            (
-                60,
-                "hello",
-                datetime.date(2019, 9, 3),
-                7.0,
-                "leasure:pub",
-                None,
-                "pub universitaire",
-                "soiree",
-                "card",
-            ),
-            (
-                61,
-                "hello",
-                datetime.date(2019, 9, 3),
-                57.57,
-                "alimentary:food",
-                None,
-                "metro",
-                "nourriture",
-                "card",
-            ),
-        )
-    return ()
+# USER_DATA_PIPELINE = pipeline.UserDataPipeline(username)
+# USER_GRAPH_PIPELINE = pipeline.UserGraphPipeline(username)
 
+
+# ---
+# Add param to a fixture
+# @pytest.fixture
+# def tester(request):
+#     """Create tester object"""
+#     return MyTester(request.param)
+
+
+# class TestIt:
+#     @pytest.mark.parametrize('tester', [['var1', 'var2']], indirect=True)
+#     def test_tc1(self, tester):
+#        tester.dothis()
+#        assert 1

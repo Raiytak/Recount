@@ -1,8 +1,11 @@
-from unittest.mock import patch
-
 from .conftest import *
+from src.excel_interface import UserExcelManager
 
-# from recount.src.accessors.__main__ import initializeFolders
+
+def test_excel_manager(excel_manager: UserExcelManager):
+    df = excel_manager.dataframe()
+    assert df == None
+
 
 # import access as access
 # from access.path_files import UserFilesPath
@@ -14,9 +17,9 @@ from .conftest import *
 
 
 # def test_instanciate_user_folder():
-#     user_path = UserFilesPath(USERNAME)
+#     user_path = UserFilesPath(username)
 #     assert not user_path.user_folder.exists()
-#     user_access = access.UserFolder(USERNAME)
+#     user_access = access.UserFolder(username)
 #     assert user_path.user_folder.exists()
 #     assert user_path.excel.exists()
 #     assert not user_access.isDecryptedExcelFile(user_path.excel)
@@ -30,8 +33,8 @@ from .conftest import *
 
 # def test_initialize_excel():
 #     USER_ACCESS.removeUserFolder()
-#     user_path = UserFilesPath(USERNAME)
-#     user_access = access.UserFolder(USERNAME)
+#     user_path = UserFilesPath(username)
+#     user_access = access.UserFolder(username)
 
 #     user_excel = user_access.excel()
 #     example_excel = user_access.excel(user_path.example_excel)
@@ -42,8 +45,8 @@ from .conftest import *
 
 
 # def test_update_files():
-#     user_access = access.UserFolder(USERNAME)
-#     user_path = UserFilesPath(USERNAME)
+#     user_access = access.UserFolder(username)
+#     user_path = UserFilesPath(username)
 
 #     # Categories part
 #     categories = user_access.categories
@@ -77,7 +80,7 @@ from .conftest import *
 #     assert not user_access.isDecryptedExcelFile(excel_test_path)
 
 #     user_access.removeFile(excel_test_path)
-#     user_pipeline = pipeline.UserDataPipeline(USERNAME)
+#     user_pipeline = pipeline.UserDataPipeline(username)
 #     dataframe = user_pipeline.getDataframeFromExcel()
 
 #     assert not excel_test_path.exists()
