@@ -45,3 +45,4 @@ recount/include
 recount/commands.py
 **.bat
 **.coverage
+**.bak
