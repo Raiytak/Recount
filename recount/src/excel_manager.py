@@ -15,9 +15,9 @@ class ExcelManager:
     ) -> typing.Type[pd.DataFrame]:
         excel_data = self.user_manager.excel(filepath, filename)
         # TODO: add translation of columns using the SQL columns
-        df = dfFromData(excel_data)
+        df = dataToDf(excel_data)
         return df
 
     def saveDataframe(self, df: pd.DataFrame, *args, **kwargs):
-        excel_data = dataFromDf(df)
+        excel_data = dfFromData(df)
         self.user_manager.saveExcel(excel_data, *args, **kwargs)

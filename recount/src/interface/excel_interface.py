@@ -3,8 +3,8 @@ import io
 
 __all__ = [
     "ExcelColumns",
+    "dataToDf",
     "dfFromData",
-    "dataFromDf",
 ]
 
 
@@ -23,13 +23,13 @@ class ExcelColumns:
     PAYEMENT_METHOD = "payment_method"
 
 
-def dfFromData(data: bytes):
+def dataToDf(data: bytes):
     dataframe = pd.read_excel(data)
     # TODO: add optional translations
     return dataframe
 
 
-def dataFromDf(df: pd.DataFrame):
+def dfFromData(df: pd.DataFrame):
     buffer = io.BytesIO()
     with pd.ExcelWriter(buffer) as writer:
         df.to_excel(writer)
