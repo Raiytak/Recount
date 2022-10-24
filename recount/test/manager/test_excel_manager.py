@@ -1,5 +1,5 @@
 from .conftest import *
-from src.excel_manager import ExcelManager
+from excel_manager import ExcelManager
 
 
 def test_excel_dataframe(excel_manager: ExcelManager, excel_1, json_df_output_1):
