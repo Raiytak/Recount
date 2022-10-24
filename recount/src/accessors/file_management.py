@@ -399,8 +399,11 @@ class UserManager(FolderManager, FileManager):
 class TestManager(FileManager):
     _ROOT = path_definition.TestFolder.FILES
 
-    excel_1 = _ROOT / "excel_input_1.xlsx"
-    path_df_output_json_1 = _ROOT / "dataframe_output_1.json"
+    EXCEL_1 = path_definition.TestFolder.EXCEL_1
+    PATH_DF_OUTPUT_JSON_1 = path_definition.TestFolder.PATH_DF_OUTPUT_JSON_1
+    PATH_DF_OUTPUT_PIPELINE_JSON_1 = (
+        path_definition.TestFolder.PATH_DF_OUTPUT_PIPELINE_JSON_1
+    )
 
 
 # def saveUploadedFile(self, file_uploaded):

@@ -74,6 +74,10 @@ class TestFolder:
     ROOT = RecountSrcRoot.TEST
     FILES = ROOT / "test_files"
 
+    EXCEL_1 = FILES / "excel_input_1.xlsx"
+    PATH_DF_OUTPUT_JSON_1 = FILES / "dataframe_output_1.json"
+    PATH_DF_OUTPUT_PIPELINE_JSON_1 = FILES / "pipeline_output_1.json"
+
 
 # class ConfigPath:
 #     """Path to the configs containing all the secrets of the application :
