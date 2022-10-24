@@ -17,8 +17,10 @@ On the MySQL part:
 # import database
 # import accessors
 
-from src.interfaces.excel_interface import ExcelColumns
-from cleaner import *
+import pandas as pd
+
+from interface.excel_interface import ExcelColumns
+from .cleaner import *
 
 
 # import pipeline.convert as convert
@@ -27,21 +29,26 @@ from cleaner import *
 # from pipeline.old_cleaner.intelligent_fill import updateUserIntelligentFill
 
 
-class Pipeline:
-    @staticmethod
-    def cleanDf(df, inplace: bool = False):
-        removeLinesWithEmptyColumn(df, ExcelColumns.CURRENCY, inplace)
+@inplace
+def cleanDf(df: pd.DataFrame, inplace: bool):
+    # Makes inplace modifications in the function
+    # but the decorator will make cleanDf do the changes inplace or not in the end
+    inplace = True
+    normalizeColumnsName(df, inplace)
 
-        replaceEmptyCellWithAboveCellForEachRow(df, ExcelColumns.AMOUNT, inplace)
-        replaceEmptyCellWithAboveCellForEachRow(df, ExcelColumns.CURRENCY, inplace)
+    removeLinesWithEmptyColumn(df, ExcelColumns.CURRENCY, inplace)
 
-        applyStrTo(df, ExcelColumns.AMOUNT, inplace)
+    replaceEmptyCellWithAboveCellForEachRow(df, ExcelColumns.CURRENCY, inplace)
+    replaceEmptyCellWithAboveCellForEachRow(df, ExcelColumns.PLACE, inplace)
 
-        normalizeColumn(df, ExcelColumns.CATEGORY, inplace)
-        normalizeColumn(df, ExcelColumns.DESCRITPION, inplace)
-        normalizeColumn(df, ExcelColumns.PLACE, inplace)
-        normalizeColumn(df, ExcelColumns.PAYEMENT_METHOD, inplace)
-        normalizeColumn(df, ExcelColumns.RECEIVER, inplace)
+    applyStrTo(df, ExcelColumns.AMOUNT, inplace)
+    applyStrTo(df, ExcelColumns.DESCRITPION, inplace)
+
+    normalizeColumn(df, ExcelColumns.CATEGORY, inplace)
+    normalizeColumn(df, ExcelColumns.DESCRITPION, inplace)
+    normalizeColumn(df, ExcelColumns.PLACE, inplace)
+    normalizeColumn(df, ExcelColumns.PAYEMENT_METHOD, inplace)
+    normalizeColumn(df, ExcelColumns.RECEIVER, inplace)
 
 
 # \\\\\\\\\\\\\\\\\\\\\

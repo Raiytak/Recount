@@ -1,10 +1,15 @@
 from .conftest import *
 
-# from pipeline.pipeline import Pipeline
+from pipeline.pipeline import cleanDf
 
 
-# def test_excel_cleaner(df_input, json_output):
-#     assert Pipeline.cleanDf(df_input) == json_output
+def test_excel_cleaner(df_input_1, json_pipeline_output_1):
+    cleaned_df = cleanDf(df_input_1, inplace=False)
+    data_json = cleaned_df.to_json()
+    # If broke the PATH_DF_OUTPUT_PIPELINE_JSON_1, here is the way to recreate it
+    # from accessors.file_management import FileAccessor, TestManager
+    # FileAccessor.writeJson(TestManager.PATH_DF_OUTPUT_PIPELINE_JSON_1, data_json)
+    assert data_json == json_pipeline_output_1
 
 
 # from access.access_files import UnittestFiles

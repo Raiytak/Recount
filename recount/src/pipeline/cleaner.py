@@ -1,42 +1,66 @@
+# import typing
 import pandas as pd
 import unidecode
 
 
+def inplace(func):
+    def inner(*args, **kwargs):
+        inplace = kwargs["inplace"] if "inplace" in kwargs.keys() else args[-1]
+        if not inplace:
+            if "df" in kwargs.keys():
+                df = kwargs["df"]
+                df_copy = df.copy()
+                kwargs["df"] = df_copy
+            else:
+                df = args[0]
+                df_copy = df.copy()
+                new_args = tuple(
+                    arg if i != 0 else df_copy for i, arg in enumerate(args)
+                )
+                args = new_args
+        func(*args, **kwargs)
+        if not inplace:
+            return kwargs["df"] if "df" in kwargs.keys() else args[0]
+
+    return inner
+
+
+@inplace
+def normalizeColumnsName(df: pd.DataFrame, inplace: bool):
+    columns = df.columns
+    lowered_columns = (col.lower() for col in columns)
+    normalized_columns = (col.replace(" ", "_") for col in lowered_columns)
+    df.columns = normalized_columns
+
+
+@inplace
 def replaceEmptyCellWithAboveCellForEachRow(
-    df: pd.DataFrame, column: str, inplace: bool = False
+    df: pd.DataFrame, column: str, inplace: bool
 ) -> pd.DataFrame:
-    if not inplace:
-        df = df.copy()
-    above_value = df.loc[0, column]
-    for i in range(1, len(df)):
-        value = df.loc[i, column]
+    above_value = df.at[0, column]
+    for i in df.index[1:]:
+        value = df.at[i, column]
         if pd.isnull(value):
             df.at[i, column] = above_value
         else:
             above_value = value
 
-    if not inplace:
-        return df
 
-
-def removeLinesWithEmptyColumn(df, column: str, inplace: bool = False):
+@inplace
+def removeLinesWithEmptyColumn(df, column: str, inplace: bool):
     for i in range(len(df)):
         value = df.loc[i, column]
         if pd.isnull(value):
             df.drop(i, inplace=inplace)
-    if not inplace:
-        return df
 
 
-def applyStrTo(df, column: str, inplace: bool = False):
-    if not inplace:
-        df = df.copy()
+@inplace
+def applyStrTo(df, column: str, inplace: bool):
     df[column] = df[column].apply(str)
-    if not inplace:
-        return df
 
 
-def normalizeColumn(df, column: str, inplace: bool = False):
+@inplace
+def normalizeColumn(df, column: str, inplace: bool):
     cleaners = [
         unidecode.unidecode,
         lambda text: text.lower(),
