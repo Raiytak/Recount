@@ -77,6 +77,7 @@ class TestFolder:
     EXCEL_1 = FILES / "excel_input_1.xlsx"
     OUTPUT_JSON_1 = FILES / "dataframe_output_1.json"
     OUTPUT_PIPELINE_JSON_1 = FILES / "pipeline_output_1.json"
+    DATABASE_DATAFRAME_JSON_1 = FILES / "database_dataframe_1.json"
     DATABASE_SAVE_DATAFRAME_1 = FILES / "database_save_dataframe_1.binary"
 
 

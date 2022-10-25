@@ -12,9 +12,11 @@ class DatabaseManager:
 
     def dataframe(
         self, start_date: datetime = None, end_date: datetime = None
-    ) -> typing.Type[pd.DataFrame]:
+    ) -> pd.DataFrame:
         condition = convertDateToSqlCondition(start_date, end_date)
         request = SqlRequest(SqlKeyword.SELECT, Table.EXPENSE, "*", condition)
+        df = self.user_table.select(request)
+        return df
 
     def saveDataframe(self, df: pd.DataFrame, *args, **kwargs):
         rearranged_df = rearrangeDfColumns(df, EXCEL_COLUMNS)

@@ -414,6 +414,7 @@ class TestManager(FileManager):
     EXCEL_1 = path_definition.TestFolder.EXCEL_1
     OUTPUT_JSON_1 = path_definition.TestFolder.OUTPUT_JSON_1
     OUTPUT_PIPELINE_JSON_1 = path_definition.TestFolder.OUTPUT_PIPELINE_JSON_1
+    DATABASE_DATAFRAME_JSON_1 = path_definition.TestFolder.DATABASE_DATAFRAME_JSON_1
     DATABASE_SAVE_DATAFRAME_1 = path_definition.TestFolder.DATABASE_SAVE_DATAFRAME_1
 
 

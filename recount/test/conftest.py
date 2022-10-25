@@ -70,9 +70,6 @@ def json_df_output_1():
     return data_json
 
 
-# @pytest.fixture
-# def use_example_1_in_database(
-#     df_input_1: pd.DataFrame, database_manager: DatabaseManager
-# ):
-#     database_manager.
-#     pass
+@pytest.fixture
+def use_excel_1_in_db(cleaned_df_input_1, database_manager: DatabaseManager):
+    database_manager.saveDataframe(cleaned_df_input_1)

@@ -1,4 +1,5 @@
 from enum import Enum
+from datetime import datetime
 
 
 class ExpenseColumn(Enum):
@@ -18,3 +19,9 @@ class ExpenseColumn(Enum):
 
 EXPENSE_COLUMNS = [col.value for col in ExpenseColumn]
 EXCEL_COLUMNS = [col.value for col in ExpenseColumn if col != ExpenseColumn.USERNAME]
+
+DEFAULT_DATE_FORMAT = "%Y-%m-%d"
+
+
+def dateToString(date: datetime) -> str:
+    return date.strftime(DEFAULT_DATE_FORMAT)

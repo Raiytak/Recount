@@ -1,6 +1,7 @@
 import typing
 from datetime import datetime
 import pandas as pd
+import re
 
 from recount.src.database.sql_db import SqlKeyword, SqlRequest, Table
 
@@ -16,11 +17,20 @@ def convertDateToSqlCondition(
     if not (start_date or end_date):
         raise AttributeError("no date provided")
     if start_date and end_date:
-        condition = start_date + " AND " + end_date
+        condition = (
+            ExpenseColumn.DATE.value
+            + " >= '"
+            + dateToString(start_date)
+            + "' AND "
+            + ExpenseColumn.DATE.value
+            + " <= '"
+            + dateToString(end_date)
+            + "'"
+        )
     if start_date:
-        condition = start_date
+        condition = ExpenseColumn.DATE.value + " >= '" + dateToString(start_date) + "'"
     if end_date:
-        condition = end_date
+        condition = ExpenseColumn.DATE.value + " <= '" + dateToString(end_date) + "'"
     return condition
 
 

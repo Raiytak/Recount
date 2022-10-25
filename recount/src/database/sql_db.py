@@ -4,8 +4,8 @@
 Creation and management of the MySQL connections, requests and return the responses.
 """
 
-from ast import Delete
 import logging
+from socket import socket
 import pandas as pd
 from enum import Enum
 from typing import Union, List
@@ -293,8 +293,9 @@ class SqlTable:
 
     def select(self, sql_request: SqlRequest):
         with SqlSocket(self.config) as sql_socket:
-            self._execute(sql_request, sql_socket)
-            return sql_socket.cursor.fetchall()
+            request = str(sql_request)
+            df = pd.read_sql(request, sql_socket.connection)
+            return df
 
     def insert(self, sql_request: SqlRequest):
         with SqlSocket(self.config) as sql_socket:
@@ -358,7 +359,7 @@ class UserSqlTable(SqlTable):
         sql_request.username = self.username
         return super().insert(sql_request)
 
-    def select(self, sql_request: SqlRequest):
+    def select(self, sql_request: SqlRequest) -> pd.DataFrame:
         sql_request.username = self.username
         return super().select(sql_request)
 
