@@ -4,11 +4,12 @@
 Creation and management of the MySQL connections, requests and return the responses.
 """
 
+
 import logging
 from socket import socket
 import pandas as pd
 from enum import Enum
-from typing import Union, List
+from typing import Union, List, Type
 import pymysql
 
 from accessors.file_management import ConfigManager
@@ -291,6 +292,11 @@ class SqlTable:
         response = sql_socket.cursor.execute(request)
         return response
 
+    def _select(self, sql_request: SqlRequest) -> str:
+        with SqlSocket(self.config) as sql_socket:
+            self._execute(sql_request, sql_socket)
+            return sql_socket.cursor.fetchall()
+
     def select(self, sql_request: SqlRequest):
         with SqlSocket(self.config) as sql_socket:
             request = str(sql_request)
@@ -325,7 +331,7 @@ class SqlTable:
     @property
     def database_name(self) -> str:
         request = SqlRequest(action=SqlKeyword.SELECT, by_hand="DATABASE()")
-        response = self.select(request)
+        response = self._select(request)
         return response[0][0]
 
     @property
@@ -337,7 +343,7 @@ class SqlTable:
             condition=f"table_schema='{self.database_name}' AND table_name='{self.table_name}'",
             order="table_name, ordinal_position",
         )
-        response = self.select(request)
+        response = self._select(request)
         name_columns = [col[0] for col in response]
         return name_columns
 
@@ -411,7 +417,7 @@ class UserSqlTable(SqlTable):
 #         self.ConfigManager = ConfigManager()
 #         sql_key = self.ConfigManager.getDataSqlKey()
 #         self.list_columns_to_left_unchanged = [
-#             "ID",
+#             "id",
 #             "_id",
 #             "date",
 #             "username",

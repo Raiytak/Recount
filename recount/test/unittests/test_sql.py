@@ -10,7 +10,7 @@ from database.sql_db import (
 
 
 EXPECTED_DEFAULT_COLUMNS_NAME = [
-    "ID",
+    "id",
     "username",
     "date",
     "amount",

@@ -4,7 +4,7 @@ from database.sql_db import UserSqlTable
 from database_manager import DatabaseManager
 
 
-def test_database_dataframe(
+def test_database_manager_dataframe(
     database_manager: DatabaseManager,
     use_excel_1_in_db,
     excpected_response_database_dataframe_1,
@@ -19,16 +19,17 @@ def test_database_dataframe(
     assert data_json == excpected_response_database_dataframe_1
 
 
-def test_database_save_dataframe(
+def test_database_manager_save_dataframe(
     database_manager: DatabaseManager,
     user_table: UserSqlTable,
     cleaned_df_input_1: pd.DataFrame,
     excpected_response_database_save_dataframe_1,
 ):
     database_manager.saveDataframe(cleaned_df_input_1)
-    response = user_table.selectAll()
+    df = user_table.selectAll()
+    data_json = df.to_json()
     # If broke this test, here is the way to recreate its test file:
     # from accessors.file_management import FileAccessor, TestManager
-    # FileAccessor.pickleDump(TestManager.DATABASE_SAVE_DATAFRAME_1, response)
-    assert response == excpected_response_database_save_dataframe_1
+    # FileAccessor.writeJson(TestManager.DATABASE_SAVE_DATAFRAME_1, data_json)
+    assert data_json == excpected_response_database_save_dataframe_1
 

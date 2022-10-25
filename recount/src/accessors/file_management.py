@@ -42,6 +42,17 @@ __all__ = [
 
 class FileAccessor:
     @staticmethod
+    def read(filepath: Path) -> bytes:
+        with open(filepath, "r") as file:
+            data = file.read()
+        return data
+
+    @staticmethod
+    def write(filepath: Path, data: bytes):
+        with open(filepath, "w") as file:
+            file.write(data)
+
+    @staticmethod
     def pickleLoad(filepath: Path) -> bytes:
         with open(filepath, "rb") as file:
             data = pickle.load(file)

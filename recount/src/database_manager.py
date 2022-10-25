@@ -16,7 +16,10 @@ class DatabaseManager:
         condition = convertDateToSqlCondition(start_date, end_date)
         request = SqlRequest(SqlKeyword.SELECT, Table.EXPENSE, "*", condition)
         df = self.user_table.select(request)
-        return df
+        # The indexes have to be reordered as an SQL request provides no certainty on it
+        reordered_df = df.sort_values(by="id")
+        reindexed_df = reordered_df.reset_index(drop=True)
+        return reindexed_df
 
     def saveDataframe(self, df: pd.DataFrame, *args, **kwargs):
         rearranged_df = rearrangeDfColumns(df, EXCEL_COLUMNS)
