@@ -1,13 +1,13 @@
 import sys
 import argparse
 
-from accessors.file_management import Config
+from accessors.file_management import ConfigManager
 from accessors.encryption import generateKey
 
 
 def changeSqlAdminPassword():
     key = str(generateKey())
-    Config.setSqlAdminPassword(key)
+    ConfigManager.setSqlAdminPassword(key)
 
 
 parser = argparse.ArgumentParser()
@@ -25,8 +25,8 @@ if len(sys.argv) == 1:
     sys.exit(1)
 
 if args.change_sql_admin_password:
-    if not Config.ROOT.exists():
-        raise FileNotFoundError("folder {} does not exist".format(Config.ROOT))
-    if not Config.SQL.exists():
-        raise FileNotFoundError("file {} does not exist".format(Config.SQL))
+    if not ConfigManager.ROOT.exists():
+        raise FileNotFoundError("folder {} does not exist".format(ConfigManager.ROOT))
+    if not ConfigManager.SQL.exists():
+        raise FileNotFoundError("file {} does not exist".format(ConfigManager.SQL))
     changeSqlAdminPassword()

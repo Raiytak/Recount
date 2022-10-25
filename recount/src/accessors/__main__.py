@@ -29,6 +29,12 @@ parser.add_argument(
     default=False,
 )
 parser.add_argument(
+    "--copy-example-login",
+    help="copy the example login file containing the users and passwords recognized by the app",
+    action="store_true",
+    default=False,
+)
+parser.add_argument(
     "-u",
     "--user",
     "--username",
@@ -60,6 +66,30 @@ parser.add_argument(
     action="store_true",
     default=False,
 )
+parser.add_argument(
+    "-f",
+    "--file",
+    "--filename",
+    help="provide a username used for actions requiring one",
+    type=str,
+    dest="filename",
+)
+parser.add_argument(
+    "--encrypt",
+    "--encrypt-file",
+    help="encrypt the named file of the provided user",
+    action="store_true",
+    default=False,
+    dest="encrypt",
+)
+parser.add_argument(
+    "--decrypt",
+    "--decrypt-file",
+    help="decrypt the named file of the provided user",
+    action="store_true",
+    default=False,
+    dest="decrypt",
+)
 
 args = parser.parse_args()
 
@@ -72,6 +102,10 @@ if len(sys.argv) == 1:
 if any([args.remove_user, args.create_user]) and not args.username:
     raise AttributeError("username not provided")
 
+# Check if username and filename have been provided
+if any([args.encrypt, args.decrypt]) and not (args.username and args.filename):
+    raise AttributeError("username or filename not provided")
+
 # -- Actions --
 if args.remove_old_folders:
     removeFolders()
@@ -80,16 +114,22 @@ if args.initiate_folders:
     initializeFolders()
     generateDefaultExcelKey()
     copyAssetFiles()
-    copyAppExampleConfig()
+    copyExampleAppConfig()
+    copyExampleLogin()
+
 
 if args.copy_example_config:
-    copyAppExampleConfig()
+    copyExampleAppConfig()
+
+if args.copy_example_login:
+    copyExampleLogin()
 
 if args.generate_default_excel_key:
     generateDefaultExcelKey()
 
 if args.username:
     user_manager = UserManager(args.username)
+    excel_manager = ExcelManager(args.username)
 
 if args.remove_user:
     removeUserFolder(user_manager)
@@ -102,3 +142,9 @@ if args.copy_example_excel_user:
 
 if args.remove_default_excel_user:
     removeDefaultExcel(user_manager)
+
+if args.encrypt:
+    encryptFileOfUser(excel_manager, args.filename)
+
+if args.decrypt:
+    decryptFileOfUser(excel_manager, args.filename)

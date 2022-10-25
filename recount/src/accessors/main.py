@@ -1,4 +1,6 @@
 from file_management import *
+from accessors.file_management import UserManager
+from excel_manager import ExcelManager
 
 DEFAULT_FOLDERS = [
     RootFolder,
@@ -6,6 +8,7 @@ DEFAULT_FOLDERS = [
     LogFolder,
     AssetFolder,
     ConfigFolder,
+    LoginFolder,
     KeyFolder,
     UsersFolder,
 ]
@@ -30,8 +33,12 @@ def copyAssetFiles():
     AssetFolder.copyDefaultAssets()
 
 
-def copyAppExampleConfig():
+def copyExampleAppConfig():
     ConfigFolder.copyExampleConfig()
+
+
+def copyExampleLogin():
+    LoginManager.copyExample()
 
 
 def createUserFolder(user_manager):
@@ -48,3 +55,13 @@ def copyExampleExcel(user_manager):
 
 def removeDefaultExcel(user_manager):
     user_manager.removeDefaultExcel()
+
+
+def encryptFileOfUser(excel_manager: ExcelManager, filename: str):
+    df = excel_manager.dataframe(filename=filename)
+    excel_manager.saveDataframe(df, filename)
+
+
+def decryptFileOfUser(excel_manager: ExcelManager, filename: str):
+    df = excel_manager.dataframe(filename=filename)
+    excel_manager.saveDataframe(df, filename, encrypt=False)

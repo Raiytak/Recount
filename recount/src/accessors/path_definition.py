@@ -29,13 +29,27 @@ class RootFolder:
     LOG = ROOT / "log"
 
 
-class DataFolder:
-    ROOT = RootFolder.DATA
-
-
 class AssetFolder:
     ROOT = RootFolder.ASSET
     DEFAULT = Path(__file__).parent.parent.parent.parent / "asset"
+
+
+class KeyFolder:
+    ROOT = RootFolder.KEY
+
+    _DEFAULT_EXCEL_KEY_NAME = "default_excel.key"
+
+
+class ConfigFolder:
+    ROOT = RootFolder.CONFIG
+
+    SQL_PATH = ROOT / "sql.config"
+
+
+class LoginFolder:
+    ROOT = RootFolder.LOGIN
+
+    LOGIN_FILE = ROOT / "login.json"
 
 
 class LogFolder:
@@ -45,16 +59,14 @@ class LogFolder:
     SQL = ROOT / "sql_communcation.log"
 
 
+class DataFolder:
+    ROOT = RootFolder.DATA
+
+
 class UsersFolder:
     ROOT = DataFolder.ROOT / "user"
 
     DEFAULT_EXCEL_NAME = "default.xlsx"
-
-
-class KeyFolder:
-    ROOT = RootFolder.KEY
-
-    _DEFAULT_EXCEL_KEY_NAME = "default_excel.key"
 
 
 class ExampleFolder:
@@ -62,12 +74,7 @@ class ExampleFolder:
 
     SQL_CONFIG = ROOT / "example_sql_config.json"
     EXCEL_PATH = ROOT / "example_expenses_en.xlsx"
-
-
-class ConfigFolder:
-    ROOT = RootFolder.CONFIG
-
-    SQL_PATH = ROOT / "sql.config"
+    LOGIN = ROOT / "example_login.json"
 
 
 class TestFolder:

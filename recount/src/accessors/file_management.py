@@ -28,15 +28,18 @@ __all__ = [
     "LogFolder",
     "DataFolder",
     "ConfigFolder",
+    "LoginFolder",
     "UsersFolder",
     "KeyFolder",
     #############
     # Pubic API #
     #############
+    "AssetManager",
     "LogManager",
     "KeyManager",
     "UserManager",
     "ConfigManager",
+    "LoginManager",
 ]
 
 
@@ -193,6 +196,11 @@ class ConfigFolder(FolderManager):
         cls.copyExampleSqlConfig()
 
 
+class LoginFolder(FolderManager):
+    ROOT = path_definition.LoginFolder.ROOT
+    LOGIN_FILE = path_definition.LoginFolder.LOGIN_FILE
+
+
 class LogFolder(FolderManager):
     ROOT = path_definition.LogFolder.ROOT
     APP = path_definition.LogFolder.APP
@@ -234,13 +242,17 @@ class FileManager:
         return self._ROOT
 
 
+class AssetManager(FileManager):
+    ROOT = AssetFolder.ROOT
+
+
 class LogManager(FileManager):
     _ROOT = LogFolder.ROOT
 
     @classmethod
     def clearLogs(cls):
-        for filename in os.listdir(cls.ROOT):
-            filepath = cls.ROOT / filename
+        for filename in os.listdir(cls._ROOT):
+            filepath = cls._ROOT / filename
             os.remove(filepath)
 
 
@@ -258,6 +270,25 @@ class ConfigManager:
         data = FileAccessor.readJson(cls.SQL)
         data["password"] = password
         FileAccessor.writeJson(cls.SQL, data)
+
+
+class LoginManager(FileManager):
+    ROOT = LoginFolder.ROOT
+    LOGIN_FILE = LoginFolder.LOGIN_FILE
+
+    @classmethod
+    def getUsers(cls) -> list:
+        users_passwords = cls.getUsersAndPasswords()
+        return users_passwords.keys()
+
+    @classmethod
+    def getUsersAndPasswords(cls) -> dict:
+        users_passwords = FileAccessor.readJson(cls.LOGIN_FILE)
+        return users_passwords
+
+    @classmethod
+    def copyExample(cls):
+        shutil.copy(path_definition.ExampleFolder.LOGIN, cls.LOGIN_FILE)
 
 
 class KeyManager(FileManager):

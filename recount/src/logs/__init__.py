@@ -1,14 +1,13 @@
 # -*- coding: utf-8 -*-
 """ 
-                    ====     DESCRIPTION    ====
-Module that handle the logs of the application.
+Logs of the application.
 """
 from enum import Enum
 import logging
 from logging import Formatter, StreamHandler
 from logging.handlers import RotatingFileHandler
 
-from accessors.file_management import *
+from src.accessors.file_management import *
 
 PAD_SIZE = 50
 FILE_SIZE_BYTES = 1 * 10 ** 6
