@@ -1,6 +1,6 @@
 {
     "equivalent_columns": {
-        "ID": "ID",
+        "id": "id",
         "username": "username",
         "ID_origin": "ID_origin",
         "date": "Date",
