@@ -1,4 +1,4 @@
-# import typing
+import typing
 import pandas as pd
 import unidecode
 
@@ -12,12 +12,12 @@ def inplace(func):
                 df_copy = df.copy()
                 kwargs["df"] = df_copy
             else:
+                # Convert
                 df = args[0]
                 df_copy = df.copy()
-                new_args = tuple(
-                    arg if i != 0 else df_copy for i, arg in enumerate(args)
-                )
-                args = new_args
+                kwargs["inplace"] = inplace
+                kwargs["df"] = df_copy
+                args = ()
         func(*args, **kwargs)
         if not inplace:
             return kwargs["df"] if "df" in kwargs.keys() else args[0]
@@ -31,6 +31,11 @@ def normalizeColumnsName(df: pd.DataFrame, inplace: bool):
     lowered_columns = (col.lower() for col in columns)
     normalized_columns = (col.replace(" ", "_") for col in lowered_columns)
     df.columns = normalized_columns
+
+
+@inplace
+def selectColumns(df: pd.DataFrame, columns: typing.List[str], inplace: bool):
+    df = df[df.columns.intersection(columns)]
 
 
 @inplace
@@ -67,5 +72,5 @@ def normalizeColumn(df, column: str, inplace: bool):
         lambda text: text.replace("'", "_"),
     ]
     for cleaner in cleaners:
-        df[column] = df[column].apply(cleaner)
+        df[column] = df[column].apply(lambda x: cleaner(x) if not pd.isna(x) else x)
 

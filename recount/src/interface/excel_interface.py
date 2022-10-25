@@ -2,25 +2,9 @@ import pandas as pd
 import io
 
 __all__ = [
-    "ExcelColumns",
     "dataToDf",
     "dfFromData",
 ]
-
-
-class ExcelColumns:
-    """Default columns"""
-
-    ID = "ID"
-    USERNAME = "username"
-    DATE = "date"
-    AMOUNT = "amount"
-    CURRENCY = "currency"
-    CATEGORY = "category"
-    RECEIVER = "receiver"
-    PLACE = "place"
-    DESCRITPION = "description"
-    PAYEMENT_METHOD = "payment_method"
 
 
 def dataToDf(data: bytes):

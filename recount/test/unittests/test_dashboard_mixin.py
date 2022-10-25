@@ -11,4 +11,3 @@ from .conftest import *
 #     selected_date = "2019-09-01"
 #     period = "month"
 #     response = dashboard_page.updateGraph(selected_date, period, None)
-#     breakpoint()

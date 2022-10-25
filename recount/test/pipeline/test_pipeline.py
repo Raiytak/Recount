@@ -1,14 +1,15 @@
 from .conftest import *
 
+from interface.default import EXCEL_COLUMNS
 from pipeline.pipeline import cleanDf
 
 
 def test_excel_cleaner(df_input_1, json_pipeline_output_1):
-    cleaned_df = cleanDf(df_input_1, inplace=False)
+    cleaned_df = cleanDf(df_input_1, EXCEL_COLUMNS, inplace=False)
     data_json = cleaned_df.to_json()
-    # If broke the PATH_DF_OUTPUT_PIPELINE_JSON_1, here is the way to recreate it
+    # If broke this test, here is the way to recreate its test file:
     # from accessors.file_management import FileAccessor, TestManager
-    # FileAccessor.writeJson(TestManager.PATH_DF_OUTPUT_PIPELINE_JSON_1, data_json)
+    # FileAccessor.writeJson(TestManager.OUTPUT_PIPELINE_JSON_1, data_json)
     assert data_json == json_pipeline_output_1
 
 
@@ -32,7 +33,6 @@ def test_excel_cleaner(df_input_1, json_pipeline_output_1):
 # # def test_translate_df_to_sql_requests(start_date, end_date, expected):
 # #     USER_DATA_PIPELINE = pipeline.UserGraphPipeline(username)
 # #     dataframe = USER_DATA_PIPELINE.getDataframeForDate()
-# #     breakpoint()
 # #     for request, exp in zip(requests, expected):
 # #         assert str(request) == exp
 # #     # Use to update the test file

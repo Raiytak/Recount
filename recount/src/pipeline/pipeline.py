@@ -16,10 +16,10 @@ On the MySQL part:
 # import logging
 # import database
 # import accessors
-
+import typing
 import pandas as pd
 
-from interface.excel_interface import ExcelColumns
+from interface.default import ExpenseColumn
 from .cleaner import *
 
 
@@ -36,19 +36,20 @@ def cleanDf(df: pd.DataFrame, inplace: bool):
     inplace = True
     normalizeColumnsName(df, inplace)
 
-    removeLinesWithEmptyColumn(df, ExcelColumns.CURRENCY, inplace)
+    removeLinesWithEmptyColumn(df, ExpenseColumn.AMOUNT.value, inplace)
 
-    replaceEmptyCellWithAboveCellForEachRow(df, ExcelColumns.CURRENCY, inplace)
-    replaceEmptyCellWithAboveCellForEachRow(df, ExcelColumns.PLACE, inplace)
+    replaceEmptyCellWithAboveCellForEachRow(df, ExpenseColumn.DATE.value, inplace)
+    replaceEmptyCellWithAboveCellForEachRow(df, ExpenseColumn.CURRENCY.value, inplace)
+    replaceEmptyCellWithAboveCellForEachRow(df, ExpenseColumn.PLACE.value, inplace)
 
-    applyStrTo(df, ExcelColumns.AMOUNT, inplace)
-    applyStrTo(df, ExcelColumns.DESCRITPION, inplace)
+    applyStrTo(df, ExpenseColumn.AMOUNT.value, inplace)
+    applyStrTo(df, ExpenseColumn.DESCRITPION.value, inplace)
 
-    normalizeColumn(df, ExcelColumns.CATEGORY, inplace)
-    normalizeColumn(df, ExcelColumns.DESCRITPION, inplace)
-    normalizeColumn(df, ExcelColumns.PLACE, inplace)
-    normalizeColumn(df, ExcelColumns.PAYEMENT_METHOD, inplace)
-    normalizeColumn(df, ExcelColumns.RECEIVER, inplace)
+    normalizeColumn(df, ExpenseColumn.CATEGORY.value, inplace)
+    normalizeColumn(df, ExpenseColumn.DESCRITPION.value, inplace)
+    normalizeColumn(df, ExpenseColumn.PLACE.value, inplace)
+    normalizeColumn(df, ExpenseColumn.PAYEMENT_METHOD.value, inplace)
+    normalizeColumn(df, ExpenseColumn.RECEIVER.value, inplace)
 
 
 # \\\\\\\\\\\\\\\\\\\\\

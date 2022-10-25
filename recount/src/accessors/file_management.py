@@ -15,6 +15,7 @@ from pathlib import Path
 import io
 import json
 import shutil
+import pickle
 import pandas
 
 
@@ -40,6 +41,17 @@ __all__ = [
 
 
 class FileAccessor:
+    @staticmethod
+    def pickleLoad(filepath: Path) -> bytes:
+        with open(filepath, "rb") as file:
+            data = pickle.load(file)
+        return data
+
+    @staticmethod
+    def pickleDump(filepath: Path, data: bytes):
+        with open(filepath, "wb") as file:
+            pickle.dump(data, file)
+
     @staticmethod
     def readBinary(filepath: Path) -> bytes:
         with open(filepath, "rb") as file:
@@ -400,10 +412,9 @@ class TestManager(FileManager):
     _ROOT = path_definition.TestFolder.FILES
 
     EXCEL_1 = path_definition.TestFolder.EXCEL_1
-    PATH_DF_OUTPUT_JSON_1 = path_definition.TestFolder.PATH_DF_OUTPUT_JSON_1
-    PATH_DF_OUTPUT_PIPELINE_JSON_1 = (
-        path_definition.TestFolder.PATH_DF_OUTPUT_PIPELINE_JSON_1
-    )
+    OUTPUT_JSON_1 = path_definition.TestFolder.OUTPUT_JSON_1
+    OUTPUT_PIPELINE_JSON_1 = path_definition.TestFolder.OUTPUT_PIPELINE_JSON_1
+    DATABASE_SAVE_DATAFRAME_1 = path_definition.TestFolder.DATABASE_SAVE_DATAFRAME_1
 
 
 # def saveUploadedFile(self, file_uploaded):

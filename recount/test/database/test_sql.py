@@ -12,8 +12,9 @@ def test_sql_insertion(user_table):
     sql_request = SqlRequest(
         SqlKeyword.INSERT,
         Table.EXPENSE,
-        insert_columns=("ID", "username", "date", "amount", "currency"),
-        insert_values=(1, "hello", datetime.datetime(2020, 1, 1), 10, "EUR"),
+        username="hello",
+        insert_columns=("ID", "date", "amount", "currency"),
+        insert_values=(1, datetime.datetime(2020, 1, 1), 10, "EUR"),
     )
     user_table.insert(sql_request)
     sql_request = SqlRequest(SqlKeyword.SELECT, Table.EXPENSE, "*")

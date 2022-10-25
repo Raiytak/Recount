@@ -21,42 +21,8 @@ EXPECTED_DEFAULT_COLUMNS_NAME = [
     "payment_method",
 ]
 
-
-def defaultSelectExpenseResponses(request):
-    if (
-        str(request)
-        == "SELECT * FROM expense WHERE date >= '2019-09-02' AND date <= '2019-09-03' AND username='hello';"
-    ):
-        return (
-            (
-                60,
-                "hello",
-                datetime.date(2019, 9, 3),
-                7.0,
-                "leasure:pub",
-                None,
-                "pub universitaire",
-                "soiree",
-                "card",
-            ),
-            (
-                61,
-                "hello",
-                datetime.date(2019, 9, 3),
-                57.57,
-                "alimentary:food",
-                None,
-                "metro",
-                "nourriture",
-                "card",
-            ),
-        )
-    return ()
-
-
 update_value = "hi"
 
-# TODO: Improve
 username = "hello"
 table_name = Table.EXPENSE
 
@@ -118,7 +84,7 @@ requests_to_evaluate = [
             table_name,
             None,
             None,
-            None,
+            username,
             None,
             None,
             None,
@@ -127,7 +93,7 @@ requests_to_evaluate = [
             ["col 1", "col 2", "col 3"],
             ["val 1", "val 2", "val 3"],
         ),
-        f"INSERT INTO {table_name.value} (col 1, col 2, col 3) VALUES ('val 1', 'val 2', 'val 3');",
+        f"INSERT INTO {table_name.value} (col 1, col 2, col 3, username) VALUES ('val 1', 'val 2', 'val 3', 'hello');",
         NoException,
     ),
     (
@@ -154,14 +120,14 @@ requests_to_evaluate = [
             table_name,
             None,
             None,
-            None,
+            username,
             None,
             None,
             None,
             None,
             {"col 1": "val 1", "col 2": "val 2", "col 3": "val 3"},
         ),
-        f"INSERT INTO {table_name.value} (col 1, col 2, col 3) VALUES ('val 1', 'val 2', 'val 3');",
+        f"INSERT INTO {table_name.value} (col 1, col 2, col 3, username) VALUES ('val 1', 'val 2', 'val 3', 'hello');",
         NoException,
     ),
 ]

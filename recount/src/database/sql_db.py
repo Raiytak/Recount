@@ -4,6 +4,7 @@
 Creation and management of the MySQL connections, requests and return the responses.
 """
 
+from ast import Delete
 import logging
 import pandas as pd
 from enum import Enum
@@ -12,7 +13,7 @@ import pymysql
 
 from accessors.file_management import ConfigManager
 
-__all__ = ["SqlRequest", "SqlTable", "UserSqlTable"]
+__all__ = ["Table", "SqlKeyword", "SqlRequest", "SqlTable", "UserSqlTable"]
 
 
 class Table(Enum):
@@ -70,6 +71,21 @@ class SqlKeyword(Enum):
 
 
 class SqlRequest:
+    INTERNAL_VARIABLES = [
+        "action",
+        "table_name",
+        "column",
+        "condition",
+        "username",
+        "group",
+        "order",
+        "limit",
+        "change",
+        "insert_columns",
+        "insert_values",
+        "by_hand",
+    ]
+
     def __init__(
         self,
         action: SqlKeyword,
@@ -89,6 +105,19 @@ class SqlRequest:
         """
         :arg by_hand: useful to specify by hand the request, except for 'action' and 'table'
         """
+        # Assert that data provided can be accepted
+        if insert_dict_values:
+            if insert_columns or insert_values:
+                raise AttributeError(
+                    "'insert_dict_values' can't be used at the same time as 'insert_columns' and 'insert_values'"
+                )
+            insert_columns = [key for key in insert_dict_values.keys()]
+            insert_values = [value for value in insert_dict_values.values()]
+        if len(insert_columns) != len(insert_values):
+            raise AttributeError(
+                "'insert_columns' and 'insert_values' have different length"
+            )
+
         self.action = action.value if type(action) is SqlKeyword else action
         if action == SqlKeyword.INSERT:
             self.table_name = table.value
@@ -114,47 +143,8 @@ class SqlRequest:
         self.group = self.concatenateIfValueNotNone(group, SqlKeyword.GROUP.value + " ")
         self.change = self.concatenateIfValueNotNone(change, SqlKeyword.SET.value + " ")
         self.limit = self.concatenateIfValueNotNone(limit, SqlKeyword.LIMIT.value + " ")
-        if len(insert_columns) != len(insert_values):
-            raise AttributeError(
-                "'insert_columns' and 'insert_values' have different length"
-            )
-        if insert_dict_values:
-            if insert_columns or insert_values:
-                raise AttributeError(
-                    "'insert_dict_values' can't be used with 'insert_columns' or 'insert_values'"
-                )
-            insert_columns = [key for key in insert_dict_values.keys()]
-            insert_values = [value for value in insert_dict_values.values()]
-
-        cleaned_insert_values = (
-            [
-                "'" + str(value) + "'"
-                for value in insert_values
-                if not (pd.isnull(value) or value == "nan")
-            ]
-            if not insert_values is None
-            else insert_values
-        )
-
-        cleaned_insert_columns = (
-            [
-                column
-                for (column, value) in zip(insert_columns, insert_values)
-                if not (pd.isnull(value) or value == "nan")
-            ]
-            if not insert_columns is None
-            else insert_columns
-        )
-
-        assert len(cleaned_insert_columns) == len(cleaned_insert_values)
-        self.insert_columns = self.concatenateIfValueNotNone(
-            self.concatenateOrNone(*cleaned_insert_columns, joint=", "), "(", ")"
-        )
-        self.insert_values = self.concatenateIfValueNotNone(
-            self.concatenateOrNone(*cleaned_insert_values, joint=", "),
-            f"{SqlKeyword.VALUES.value} (",
-            ")",
-        )
+        self.insert_columns = insert_columns
+        self.insert_values = insert_values
         self.by_hand = by_hand
 
     def __str__(self) -> str:
@@ -170,15 +160,21 @@ class SqlRequest:
             return self.createTruncateRequest()
         raise Exception
 
+    @property
+    def values(self) -> str:
+        return ", ".join(
+            [var + ": " + str(getattr(self, var)) for var in self.INTERNAL_VARIABLES]
+        )
+
     @staticmethod
     def concatenate(*args, joint=" ", end=""):
-        useful_args = filter(lambda arg: not arg is None, args)
-        request = joint.join(useful_args)
+        existing_args = filter(lambda arg: not arg is None, args)
+        request = joint.join(existing_args)
         return request + end
 
     @staticmethod
     def concatenateIfValueNotNone(value, pre_value=None, after_value=None, joint=""):
-        if not value is None:
+        if value:
             return SqlRequest.concatenate(pre_value, value, after_value, joint=joint)
         return None
 
@@ -192,6 +188,40 @@ class SqlRequest:
     def concatenateConditionAndUsername(condition, username):
         username = SqlRequest.concatenateIfValueNotNone(username, "username='", "'")
         return SqlRequest.concatenateOrNone(condition, username, joint=" AND ")
+
+    def prepareInsertRequest(self):
+        if not self.username:
+            raise AttributeError("username not provided for an insert request")
+        cleaned_insert_values = (
+            [
+                "'" + str(value) + "'"
+                for value in self.insert_values
+                if not (pd.isnull(value) or value == "nan")
+            ]
+            if not self.insert_values is None
+            else self.insert_values
+        )
+        cleaned_insert_values.append("'" + self.username + "'")
+
+        cleaned_insert_columns = (
+            [
+                column
+                for (column, value) in zip(self.insert_columns, self.insert_values)
+                if not (pd.isnull(value) or value == "nan")
+            ]
+            if not self.insert_columns is None
+            else self.insert_columns
+        )
+        cleaned_insert_columns.append("username")
+
+        self.cleaned_insert_columns = self.concatenateIfValueNotNone(
+            self.concatenateOrNone(*cleaned_insert_columns, joint=", "), "(", ")"
+        )
+        self.cleaned_insert_values = self.concatenateIfValueNotNone(
+            self.concatenateOrNone(*cleaned_insert_values, joint=", "),
+            f"{SqlKeyword.VALUES.value} (",
+            ")",
+        )
 
     def createSelectRequest(self):
         request = self.concatenate(
@@ -227,11 +257,12 @@ class SqlRequest:
         return request
 
     def createInsertRequest(self):
+        self.prepareInsertRequest()
         request = self.concatenate(
             self.action,
             self.table_name,
-            self.insert_columns,
-            self.insert_values,
+            self.cleaned_insert_columns,
+            self.cleaned_insert_values,
             self.by_hand,
             end=";",
         )
@@ -323,6 +354,14 @@ class UserSqlTable(SqlTable):
         super().__init__(table, config)
         self.username = username
 
+    def insert(self, sql_request: SqlRequest):
+        sql_request.username = self.username
+        return super().insert(sql_request)
+
+    def select(self, sql_request: SqlRequest):
+        sql_request.username = self.username
+        return super().select(sql_request)
+
     def selectAll(self):
         request = SqlRequest(
             action=SqlKeyword.SELECT,
@@ -331,6 +370,10 @@ class UserSqlTable(SqlTable):
             username=self.username,
         )
         return self.select(request)
+
+    def delete(self, sql_request: SqlRequest):
+        sql_request.username = self.username
+        return super().delete(sql_request)
 
     def truncateTableOfUser(self):
         request = SqlRequest(
