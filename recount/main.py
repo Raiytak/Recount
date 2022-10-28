@@ -1,12 +1,6 @@
-from accessors.file_management import UserManager
-from excel_manager import ExcelManager
+import sys
+import argparse
 
-
-def encryptFileOfUser(excel_manager: ExcelManager, filename: str):
-    df = excel_manager.dataframe(filename=filename)
-    excel_manager.saveDataframe(df, filename)
-
-
-def decryptFileOfUser(excel_manager: ExcelManager, filename: str):
-    df = excel_manager.dataframe(filename=filename)
-    excel_manager.saveDataframe(df, filename, encrypt=False)
+from src.main import createDashApp
+from src.logs import *
+from src.web import *

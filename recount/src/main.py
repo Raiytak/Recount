@@ -6,8 +6,9 @@ from dash import Dash
 from security.authentification import *
 
 import logs
-from website import *
+from web import *
 from accessors.file_management import AssetManager
+from index import IndexManager
 
 
 def createDashApp(*args, **kwargs) -> Dash:
@@ -19,11 +20,13 @@ def createDashApp(*args, **kwargs) -> Dash:
     for key, value in default_values.items():
         if not key in kwargs.keys():
             kwargs[key] = value
+    index_manager = IndexManager()
 
     logs.formatAndDisplay("Application creation...", "-#", logs.Position.CENTER)
     dash_app = Dash(*args, **kwargs)
     addAuthentification(dash_app)
-    # setDefaultPage(dash_app)
+    index_manager.setMainLayout(dash_app)
+    index_manager.setCallbacks()
     logs.formatAndDisplay("Application created!", "-#", logs.Position.CENTER)
     return dash_app
 

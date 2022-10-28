@@ -17,7 +17,7 @@ USE `recount`;
 
 DROP TABLE IF EXISTS `expense`;
 CREATE TABLE IF NOT EXISTS `expense` (
-  `ID` int(11) NOT NULL,
+  `id` int(11) NOT NULL,
   `username` VARCHAR(255) NOT NULL,
   `date` date NOT NULL,
   `amount` float NOT NULL,
