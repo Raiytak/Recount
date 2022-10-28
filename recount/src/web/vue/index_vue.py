@@ -2,24 +2,29 @@ from dash import dcc, html
 
 from .components.css_style import *
 from .abstract_vue import AbstractVue
-from .components import link
+from .components.link import RecountLinks
 
 __all__ = ["IndexVue"]
 
 
 class IndexVue(AbstractVue):
+    def __init__(self, index_path, *args, **kwargs):
+        self.recount_links = RecountLinks(index_path)
+        super().__init__(*args, **kwargs)
+
     @property
     def vue(self):
-        # represents the browser address bar and doesn't render anything
-        url = dcc.Location(id="url", refresh=False)
+        url = dcc.Location(
+            id="url", refresh=False
+        )  # represents the browser address bar and doesn't render anything
         logo_div = html.Div(id="logo")
         links_div = html.Div(
             children=[
                 url,
-                link.RecountLinks.home(),
-                link.RecountLinks.dashboardHome(),
-                link.RecountLinks.notebookHome(),
-                link.RecountLinks.categoryHome(),
+                self.recount_links.home(),
+                self.recount_links.dashboardHome(),
+                # self.recount_links.notebook(),
+                # self.recount_links.category(),
             ],
             className="nav-links",
         )

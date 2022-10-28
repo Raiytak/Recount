@@ -14,7 +14,6 @@ __all__ = [
 
 class Page:
     def __init__(self, page_name=None, *args, **kwargs):
-        # self.app = app
         if page_name:
             self.page_name
         super().__init__(*args, **kwargs)
