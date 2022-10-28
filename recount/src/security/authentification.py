@@ -13,14 +13,19 @@ import flask, base64, hashlib
 
 from accessors.file_management import LoginManager
 
-__all__ = ["WrapperEncryptedAuthentification", "addAuthentification"]
+__all__ = [
+    "WrapperEncryptedAuthentification",
+    "addAuthentification",
+    "getUsername",
+]
 
 
 class WrapperEncryptedAuthentification(Auth):
     """Identification of the USERS. Encrypt the password given by the user"""
 
     def __init__(self, app, username_password: dict):
-        Auth.__init__(self, app, username_password)
+        Auth.__init__(self, app)
+        self._users = username_password
 
     # TODO: if not identified, return false. asked auth in vue
     def is_authorized(self):
@@ -29,11 +34,9 @@ class WrapperEncryptedAuthentification(Auth):
             return False
         username, password = getUsernameAndPassword()
         return (
-            self._users[username]
-            == hashlib.new(
-                "sha224", password.encode()
-            ).hexdigest()  # Encryption of the password
-        )
+            self._users.get(username)
+            == hashlib.new("sha224", password.encode()).hexdigest()
+        )  # Encryption of the password
 
     def login_request(self):
         # TODO: create vue, ask auth in vue, flaskresponse for auth
@@ -73,8 +76,13 @@ def getUsernameAndPassword():
     return username, password
 
 
+def getUsername() -> str:
+    username, _ = getUsernameAndPassword()
+    return username
+
+
 # auth.get_username()
-def addAuthentification(app: dash.Dash):
+def addAuthentification(app: dash.Dash) -> None:
     Login_manager = LoginManager()
     users_passwords = Login_manager.getUsersAndPasswords()
     WrapperEncryptedAuthentification(app, users_passwords)
