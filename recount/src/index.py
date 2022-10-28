@@ -13,9 +13,16 @@ from security import getUsername
 __all__ = ["IndexManager"]
 
 
+class IndexPath:
+    HOME = "/home"
+    DASHHOME = "/dashhome"
+    CATEGORY = "/category"
+    NOTEBOOK = "/notebook"
+
+
 class IndexManager:
     def __init__(self):
-        self.index_page = IndexPage()
+        self.index_page = IndexPage(IndexPath)
         self.home_page = HomePage()
         self.dashboard_page = DashboardHomePage()
         self.category_page = CategoryHomePage()
@@ -26,15 +33,15 @@ class IndexManager:
         def display_page(pathname):
             username = getUsername()
             dash.callback_context.response.set_cookie("username", username)
-            if pathname == "/":
-                # return None # returns the default page
+            if pathname == "/":  # returns the default page
+                # return None
                 return self.home_page.vue
-            elif pathname == "/home":
+            elif pathname == IndexPath.HOME:
                 return self.home_page.vue
-            elif pathname == "/category":
-                return self.category_page.vue
-            elif pathname == "/dashhome":
+            elif pathname == IndexPath.DASHHOME:
                 return self.dashboard_page.vue
+            # elif pathname == IndexPath.CATEGORY:
+            #     return self.category_page.vue
             else:
                 return "404 Page not found."
 
