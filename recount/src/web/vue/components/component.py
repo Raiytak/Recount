@@ -106,7 +106,7 @@ class RecountComponents:
         date_input = dcc.DatePickerSingle(
             id=self.date_div_date_id,
             date=datetime.date(
-                year=2019, month=9, day=1
+                year=2019, month=8, day=1
             ),  # TODO: start at begining of user's data date
             # date = datetime.datetime.today()-relativedelta(months=5),
             display_format="D/M/Y",

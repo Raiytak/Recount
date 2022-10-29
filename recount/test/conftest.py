@@ -36,10 +36,10 @@ def excel_manager(user_manager) -> typing.Type[ExcelManager]:
 
 
 @pytest.fixture
-def user_table(username) -> typing.Type[UserSqlTable]:
-    user_table = UserSqlTable(username, Table.EXPENSE)
+def user_table(username, table_name) -> typing.Type[UserSqlTable]:
+    user_table = UserSqlTable(username, table_name)
     yield user_table
-    user_table.truncateTableOfUser()
+    user_table.truncateUserOfTable()
 
 
 @pytest.fixture

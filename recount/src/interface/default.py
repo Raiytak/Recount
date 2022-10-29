@@ -1,6 +1,14 @@
 from enum import Enum
 from datetime import datetime
 
+__all__ = [
+    "ExpenseColumn",
+    "EXPENSE_COLUMNS",
+    "EXCEL_COLUMNS",
+    "DEFAULT_DATE_FORMAT",
+    "dateToString",
+]
+
 
 class ExpenseColumn(Enum):
     """Default columns"""
@@ -13,7 +21,7 @@ class ExpenseColumn(Enum):
     CATEGORY = "category"
     RECEIVER = "receiver"
     PLACE = "place"
-    DESCRITPION = "description"
+    DESCRIPTION = "description"
     PAYEMENT_METHOD = "payment_method"
 
 
@@ -25,3 +33,14 @@ DEFAULT_DATE_FORMAT = "%Y-%m-%d"
 
 def dateToString(date: datetime) -> str:
     return date.strftime(DEFAULT_DATE_FORMAT)
+
+
+def updateDictAUsingDictB(dictA: dict, dictB: dict) -> dict:
+    for key, value in dictB.items():
+        if key not in dictA.keys():
+            dictA[key] = value
+        else:
+            for subkey, subvalue in value.items():
+                if type(subvalue) == list:
+                    dictA[key][subkey] += subvalue
+    return dictA

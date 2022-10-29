@@ -9,6 +9,10 @@ from dash.dependencies import Input, Output
 
 from web import *
 from security import getUsername
+from database_manager import DatabaseManager
+from database.sql_db import Table, UserSqlTable
+from dash_manager import DashManager
+from accessors.file_management import UserManager
 
 __all__ = ["IndexManager"]
 
@@ -21,10 +25,12 @@ class IndexPath:
 
 
 class IndexManager:
-    def __init__(self):
+    def __init__(self,):
         self.index_page = IndexPage(IndexPath)
         self.home_page = HomePage()
-        self.dashboard_page = DashboardHomePage()
+        self.dashboard_page = DashboardHomePage(
+            Table.EXPENSE, UserManager, UserSqlTable, DatabaseManager, DashManager,
+        )
         self.category_page = CategoryHomePage()
         # self.notebook_page = NotebookHomePage()
 

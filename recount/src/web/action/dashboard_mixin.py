@@ -1,31 +1,52 @@
 import logging
+from datetime import datetime
 from dash import callback, dcc, Input, Output, State
 
 from .tools import *
-
-# from pipeline.pipeline import UserDataPipeline, UserGraphPipeline
-
 from .abstract_mixin import AbstractAction
-
 from .graphs import *
-
-# from pipeline.convert import convertPeriodToDate, shapeDatetimeToSimpleDate
 
 __all__ = ["DashboardHomeMixin"]
 
 
 class DashboardHomeMixin(AbstractAction):
+    def __init__(
+        self,
+        table,
+        classUserManager,
+        classUserSqlTable,
+        classDatabaseManager,
+        classDashManager,
+        *args,
+        **kwargs,
+    ):
+        self.table = table
+        self.classUserManager = classUserManager
+        self.classUserSqlTable = classUserSqlTable
+        self.classDatabaseManager = classDatabaseManager
+        self.classDashManager = classDashManager
+        super().__init__(*args, **kwargs)
+
+    def instanciateManagers(self) -> tuple:
+        username = getUsername()
+        user_manager = self.classUserManager(username)
+        sql_table = self.classUserSqlTable(username, self.table)
+        db_manager = self.classDatabaseManager(sql_table)
+        dash_manager = self.classDashManager(user_manager)
+        return user_manager, db_manager, dash_manager
+
     def setCallbacks(self):
+
+        # TODO: graph colors should be the same
+        @callback(*self.io_update_graphs)
+        def update_graphs(*args):
+            return self.update_graphs(*args)
+
         return
 
         @callback(*self.osi_update_data, prevent_initial_call=True)
         def update_data(*args):
             return self.update_data(*args)
-
-        # TODO: graph colors should be the same
-        @callback(*self.osi_update_graphs)
-        def update_graphs(*args):
-            return self.update_graphs(*args)
 
         @callback(*self.osi_reset_button_pressed, prevent_initial_call=True)
         def reset_button_pressed(reset_nclicks):
@@ -36,50 +57,44 @@ class DashboardHomeMixin(AbstractAction):
             return self.download_button_pressed(*args)
 
     @property
-    def osi_update_graphs(self):
+    def io_update_graphs(self):
         return (
-            self.dashboard_home.dashboardHomeCallbacks(),
+            self.dashboard_home.dashboardCallbacks(),
             Input(self.dashboard_home.date_div_date_id, "date"),
             Input(self.dashboard_home.date_div_period_id, "value"),
             Input(self.dashboard_home.update_graph_button, "n_clicks"),
         )
 
-    @staticmethod
-    def update_graphs(selected_date, selected_period, refresh):
+    def update_graphs(self, selected_date, selected_period, refresh):
+        user_manager, db_manager, dash_manager = self.instanciateManagers()
+
         username = getUsername()
         logging.info("@{}: Refresing graph ...".format(username))
 
-        user_graph = UserGraphPipeline(username)
+        start_date = datetime.strptime(selected_date, "%Y-%m-%d")
+        end_date = deltaToDatetime(start_date, selected_period)
+        df = db_manager.dataframe(start_date, end_date)
 
-        end_datetime = convertPeriodToDate(selected_date, selected_period)
-        end_date = shapeDatetimeToSimpleDate(end_datetime)
-        dataframe = user_graph.getExpenseRepaidForPeriod(selected_date, end_date)
+        dash_manager.cleanDf(df)
+        expenses = dash_manager.expensesByCategory(df)
+        scatter_graph = scatterGraph(expenses, [selected_date, end_date])
 
-        main_category_df = dataframe.copy()
-        main_category_df["category"] = main_category_df["category"].apply(
-            func=user_graph.selectMainCategory
-        )
+        sum_expenses = dash_manager.sumExpensesByCategory(df)
+        pie_graph = pieGraph(sum_expenses)
 
-        list_dict_of_expenses = user_graph.getDataByColumn(main_category_df)
-        scatter_graph = scatterGraph(list_dict_of_expenses, [selected_date, end_date])
+        # expenses_by_period = user_graph.getDataByDateDeltaAndColumn(main_category_df)
+        # mean_graph = meanGraph(expenses_by_period)
 
-        list_dict_of_sum_expenses = user_graph.getSumDataByColumn(main_category_df)
-        pie_graph = pieGraph(list_dict_of_sum_expenses)
-
-        expenses_by_period = user_graph.getDataByDateDeltaAndColumn(main_category_df)
-        mean_graph = meanGraph(expenses_by_period)
-
-        # TODO: improve stability by defining default categories, imposed categories ?
-        food_dataframe = dataframe[main_category_df["category"] == "alimentary"].copy()
-        food_dataframe["category"] = food_dataframe["category"].apply(
-            func=user_graph.selectSecondCategory
-        )
-        food_by_period = user_graph.getDataByDateDeltaAndColumn(food_dataframe)
-        food_graph = meanGraph(food_by_period)
-
+        # # TODO: improve stability by defining default categories, imposed categories ?
+        # food_dataframe = df[main_category_df["category"] == "alimentary"].copy()
+        # food_dataframe["category"] = food_dataframe["category"].apply(
+        #     func=user_graph.selectSecondCategory
+        # )
+        # food_by_period = user_graph.getDataByDateDeltaAndColumn(food_dataframe)
+        # food_graph = meanGraph(food_by_period)
         logging.info("@{}: Graph refreshed!".format(username))
 
-        return scatter_graph, pie_graph, mean_graph, food_graph
+        return scatter_graph, pie_graph  # , mean_graph, food_graph
 
     @property
     def osi_reset_button_pressed(self):

@@ -20,7 +20,7 @@ class RecountLinks:
         categories = dcc.Link(button, href=self.index_path.CATEGORY)
         return categories
 
-    def dashboardHome(self) -> dcc.Link:
+    def dashboardDiv(self) -> dcc.Link:
         button = html.Button("Dashboard", className="nav-button")
         dashhome = dcc.Link(button, href=self.index_path.DASHHOME)
         return dashhome

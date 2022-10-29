@@ -43,10 +43,10 @@ def cleanDf(df: pd.DataFrame, inplace: bool):
     replaceEmptyCellWithAboveCellForEachRow(df, ExpenseColumn.PLACE.value, inplace)
 
     applyStrTo(df, ExpenseColumn.AMOUNT.value, inplace)
-    applyStrTo(df, ExpenseColumn.DESCRITPION.value, inplace)
+    applyStrTo(df, ExpenseColumn.DESCRIPTION.value, inplace)
 
     normalizeColumn(df, ExpenseColumn.CATEGORY.value, inplace)
-    normalizeColumn(df, ExpenseColumn.DESCRITPION.value, inplace)
+    normalizeColumn(df, ExpenseColumn.DESCRIPTION.value, inplace)
     normalizeColumn(df, ExpenseColumn.PLACE.value, inplace)
     normalizeColumn(df, ExpenseColumn.PAYEMENT_METHOD.value, inplace)
     normalizeColumn(df, ExpenseColumn.RECEIVER.value, inplace)
@@ -158,7 +158,7 @@ def cleanDf(df: pd.DataFrame, inplace: bool):
 #         logging.info(
 #             "@{}: Truncate table '{}'".format(self.username, wrapperTable.table_name)
 #         )
-#         wrapperTable.truncateTableOfUser()
+#         wrapperTable.truncateUserOfTable()
 
 #     def dumpUserOfAllTables(self):
 #         logging.info("@{}: Truncate ALL tables".format(self.username))

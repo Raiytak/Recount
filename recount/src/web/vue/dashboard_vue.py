@@ -18,7 +18,7 @@ class DashboardHomeVue(AbstractVue):
     def vue(self):
         loading_div = self.dashboard_home.loadingDiv()
         upper_div = self.dashboard_home.dashboardInputDiv()
-        dashboard_div = self.dashboard_home.dashboardHome()
+        dashboard_div = self.dashboard_home.dashboardDiv()
         dashboard = html.Div([upper_div, loading_div, dashboard_div])
 
         return dashboard

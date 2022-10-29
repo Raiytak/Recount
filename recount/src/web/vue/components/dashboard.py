@@ -31,7 +31,7 @@ class DashboardHome(RecountDefaultDivs):
         )
         return graph
 
-    def dashboardHome(self):
+    def dashboardDiv(self):
         scatter_graph = self.defaultGraph(self.scatter_id)
         pie_chart_graph = self.defaultGraph(self.pie_chart_id)
         upper_graphs = html.Div([scatter_graph, pie_chart_graph], style=spaceAround)
@@ -45,12 +45,12 @@ class DashboardHome(RecountDefaultDivs):
         )
         return dashboard_div
 
-    def dashboardHomeCallbacks(self):
+    def dashboardCallbacks(self):
         return [
             Output(self.scatter_id, component_property="figure"),
             Output(self.pie_chart_id, component_property="figure"),
-            Output(self.mean_bar_id, component_property="figure"),
-            Output(self.food_bar_id, component_property="figure"),
+            # Output(self.mean_bar_id, component_property="figure"),
+            # Output(self.food_bar_id, component_property="figure"),
         ]
 
     def dashboardInputDiv(self):

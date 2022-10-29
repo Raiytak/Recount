@@ -382,7 +382,7 @@ class UserSqlTable(SqlTable):
         sql_request.username = self.username
         return super().delete(sql_request)
 
-    def truncateTableOfUser(self):
+    def truncateUserOfTable(self):
         request = SqlRequest(
             action=SqlKeyword.DELETE, table=self.table, username=self.username
         )

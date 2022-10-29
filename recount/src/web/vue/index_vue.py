@@ -22,7 +22,7 @@ class IndexVue(AbstractVue):
             children=[
                 url,
                 self.recount_links.home(),
-                self.recount_links.dashboardHome(),
+                self.recount_links.dashboardDiv(),
                 # self.recount_links.notebook(),
                 # self.recount_links.category(),
             ],

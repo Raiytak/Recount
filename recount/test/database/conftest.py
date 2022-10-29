@@ -28,7 +28,7 @@ EXPECTED_DEFAULT_COLUMNS_NAME = [
 def user_table(username, table_name):
     user_table = UserSqlTable(username, table_name)
     yield user_table
-    user_table.truncateTableOfUser()
+    user_table.truncateUserOfTable()
 
 
 # def defaultSelectExpenseResponses(request):

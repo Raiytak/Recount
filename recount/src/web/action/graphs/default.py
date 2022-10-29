@@ -49,11 +49,11 @@ def scatterGraph(expenses: list, range_date: List[str]):
     return fig_data
 
 
-def pieGraph(dict_of_expenses: dict):
-    dict_of_expenses["type"] = "pie"
-    dict_of_expenses["marker"] = {"colors": getColors(dict_of_expenses["names"])}
+def pieGraph(expenses: dict):
+    expenses["type"] = "pie"
+    expenses["marker"] = {"colors": getColors(expenses["names"])}
     fig_data = {
-        "data": [dict_of_expenses],
+        "data": [expenses],
         "layout": {"title": {"text": "Pie chart of categories"}},
     }
     return fig_data
