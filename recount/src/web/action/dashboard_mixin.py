@@ -44,15 +44,15 @@ class DashboardHomeMixin(AbstractAction):
 
         return
 
-        @callback(*self.osi_update_data, prevent_initial_call=True)
+        @callback(*self.io_update_data, prevent_initial_call=True)
         def update_data(*args):
             return self.update_data(*args)
 
-        @callback(*self.osi_reset_button_pressed, prevent_initial_call=True)
+        @callback(*self.io_reset_button_pressed, prevent_initial_call=True)
         def reset_button_pressed(reset_nclicks):
             return self.reset_button_pressed(reset_nclicks)
 
-        @callback(*self.osi_download_button_pressed, prevent_initial_call=True)
+        @callback(*self.io_download_button_pressed, prevent_initial_call=True)
         def download_button_pressed(*args):
             return self.download_button_pressed(*args)
 
@@ -66,13 +66,14 @@ class DashboardHomeMixin(AbstractAction):
         )
 
     def update_graphs(self, selected_date, selected_period, refresh):
-        user_manager, db_manager, dash_manager = self.instanciateManagers()
+        _, db_manager, dash_manager = self.instanciateManagers()
 
         username = getUsername()
         logging.info("@{}: Refresing graph ...".format(username))
 
         start_date = datetime.strptime(selected_date, "%Y-%m-%d")
-        end_date = deltaToDatetime(start_date, selected_period)
+        end_date = addDeltaToDatetime(start_date, selected_period)
+        range_date = [start_date, end_date]
         df = db_manager.dataframe(start_date, end_date)
 
         dash_manager.cleanDf(df)
@@ -82,22 +83,22 @@ class DashboardHomeMixin(AbstractAction):
         sum_expenses = dash_manager.sumExpensesByCategory(df)
         pie_graph = pieGraph(sum_expenses)
 
-        # expenses_by_period = user_graph.getDataByDateDeltaAndColumn(main_category_df)
-        # mean_graph = meanGraph(expenses_by_period)
+        expenses_by_period = dash_manager.sumExpensesByCategoryByPeriod(
+            df, selected_period
+        )
+        mean_graph = meanGraph(expenses_by_period, range_date)
 
-        # # TODO: improve stability by defining default categories, imposed categories ?
-        # food_dataframe = df[main_category_df["category"] == "alimentary"].copy()
-        # food_dataframe["category"] = food_dataframe["category"].apply(
-        #     func=user_graph.selectSecondCategory
-        # )
-        # food_by_period = user_graph.getDataByDateDeltaAndColumn(food_dataframe)
-        # food_graph = meanGraph(food_by_period)
+        alimentary_by_period = dash_manager.sumExpensesAlimentaryByPeriod(
+            df, selected_period
+        )
+        food_graph = meanGraph(alimentary_by_period, range_date)
+
         logging.info("@{}: Graph refreshed!".format(username))
 
-        return scatter_graph, pie_graph  # , mean_graph, food_graph
+        return scatter_graph, pie_graph, mean_graph, food_graph
 
     @property
-    def osi_reset_button_pressed(self):
+    def io_reset_button_pressed(self):
         return (
             Output(self.dashboard_home.confirm_reset_dialogue, "displayed"),
             Input(self.dashboard_home.reset_button, "n_clicks"),
@@ -110,7 +111,7 @@ class DashboardHomeMixin(AbstractAction):
         return False
 
     @property
-    def osi_update_data(self):
+    def io_update_data(self):
         return (
             Output(self.dashboard_home.update_graph_button, "n_clicks"),
             Output(self.dashboard_home.loading_div, "children"),
@@ -146,7 +147,7 @@ class DashboardHomeMixin(AbstractAction):
         return graph_button_status + 1, None
 
     @property
-    def osi_download_button_pressed(self):
+    def io_download_button_pressed(self):
         return (
             Output(self.dashboard_home.download_excel, "data"),
             Input(self.dashboard_home.download_excel_button, "n_clicks"),

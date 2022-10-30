@@ -49,8 +49,8 @@ class DashboardHome(RecountDefaultDivs):
         return [
             Output(self.scatter_id, component_property="figure"),
             Output(self.pie_chart_id, component_property="figure"),
-            # Output(self.mean_bar_id, component_property="figure"),
-            # Output(self.food_bar_id, component_property="figure"),
+            Output(self.mean_bar_id, component_property="figure"),
+            Output(self.food_bar_id, component_property="figure"),
         ]
 
     def dashboardInputDiv(self):

@@ -1,4 +1,5 @@
 from typing import List
+from datetime import datetime
 
 AVAILABLE_COLORS = [
     "navy",
@@ -59,7 +60,7 @@ def pieGraph(expenses: dict):
     return fig_data
 
 
-def meanGraph(expenses: list):
+def meanGraph(expenses: list, range_date: List[datetime]):
     data = []
     for dict_exp, color in zip(expenses, getColors([exp["name"] for exp in expenses])):
         dict_exp["type"] = "bar"
@@ -72,7 +73,7 @@ def meanGraph(expenses: list):
             "title": {"text": "Total expenses by week"},
             "barmode": "stack",
             "yaxis": {"title": "Expenses (euros)"},
-            "xaxis": {"title": "Day"},
+            "xaxis": {"title": "Day"},  # , "range": range_date
         },
     }
     return fig_data

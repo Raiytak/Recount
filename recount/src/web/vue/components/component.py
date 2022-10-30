@@ -5,6 +5,10 @@ from .css_style import *
 
 __all__ = ["RecountComponents", "DefaultButtons", "RecountDefaultDivs"]
 
+START_YEAR = 2019
+START_MONTH = 8
+START_DAY = 1
+
 
 class DefaultButtons:
     reset_button = "reset-button"
@@ -94,7 +98,7 @@ class RecountComponents:
             options=[
                 {"label": "Week", "value": "week"},
                 {"label": "Month", "value": "month"},
-                {"label": "Quarter", "value": "semestre"},
+                {"label": "Quarter", "value": "quarter"},
                 {"label": "Annual", "value": "annual"},
             ],
             value="month",
@@ -106,7 +110,7 @@ class RecountComponents:
         date_input = dcc.DatePickerSingle(
             id=self.date_div_date_id,
             date=datetime.date(
-                year=2019, month=8, day=1
+                year=START_YEAR, month=START_MONTH, day=START_DAY
             ),  # TODO: start at begining of user's data date
             # date = datetime.datetime.today()-relativedelta(months=5),
             display_format="D/M/Y",
