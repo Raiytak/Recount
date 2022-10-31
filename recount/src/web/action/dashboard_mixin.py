@@ -5,6 +5,7 @@ from dash import callback, dcc, Input, Output, State
 from .tools import *
 from .abstract_mixin import AbstractAction
 from .graphs import *
+from pipeline.pipeline import cleanDf
 
 __all__ = ["DashboardHomeMixin"]
 
@@ -14,6 +15,7 @@ class DashboardHomeMixin(AbstractAction):
         self,
         table,
         classUserManager,
+        classExcelManager,
         classUserSqlTable,
         classDatabaseManager,
         classDashManager,
@@ -22,6 +24,7 @@ class DashboardHomeMixin(AbstractAction):
     ):
         self.table = table
         self.classUserManager = classUserManager
+        self.classExcelManager = classExcelManager
         self.classUserSqlTable = classUserSqlTable
         self.classDatabaseManager = classDatabaseManager
         self.classDashManager = classDashManager
@@ -30,10 +33,11 @@ class DashboardHomeMixin(AbstractAction):
     def instanciateManagers(self) -> tuple:
         username = getUsername()
         user_manager = self.classUserManager(username)
+        excel_manager = self.classExcelManager(user_manager)
         sql_table = self.classUserSqlTable(username, self.table)
         db_manager = self.classDatabaseManager(sql_table)
-        dash_manager = self.classDashManager(user_manager)
-        return user_manager, db_manager, dash_manager
+        dash_manager = self.classDashManager(excel_manager)
+        return excel_manager, db_manager, dash_manager
 
     def setCallbacks(self):
 
@@ -42,15 +46,13 @@ class DashboardHomeMixin(AbstractAction):
         def update_graphs(*args):
             return self.update_graphs(*args)
 
-        return
+        @callback(*self.io_reset_button_pressed, prevent_initial_call=True)
+        def reset_button_pressed(reset_nclicks):
+            return self.reset_button_pressed(reset_nclicks)
 
         @callback(*self.io_update_data, prevent_initial_call=True)
         def update_data(*args):
             return self.update_data(*args)
-
-        @callback(*self.io_reset_button_pressed, prevent_initial_call=True)
-        def reset_button_pressed(reset_nclicks):
-            return self.reset_button_pressed(reset_nclicks)
 
         @callback(*self.io_download_button_pressed, prevent_initial_call=True)
         def download_button_pressed(*args):
@@ -121,28 +123,31 @@ class DashboardHomeMixin(AbstractAction):
             State(self.dashboard_home.update_graph_button, "n_clicks"),
         )
 
-    @staticmethod
     def update_data(
-        refresh, imported_excel, reset_confirmed, graph_button_status,
+        self, refresh, imported_excel, reset_confirmed, graph_button_status,
     ):
         button_clicked = getIdButtonClicked()
+        excel_manager, db_manager, dash_manager = self.instanciateManagers()
         username = getUsername()
-        user_data = UserDataPipeline(username)
-
         if "upload-excel" in button_clicked:
             if imported_excel != None:
                 logging.info(f"{username}: Uploading file ...")
-                user_data.user_files.saveUploadedFile(imported_excel)
+                excel_manager.saveImportedExcel(imported_excel)
                 logging.info(f"{username}: File uploaded!")
 
         elif "confirm-reset-dialog" in button_clicked:
             logging.info("@{}: Reseting data ...".format(username))
-            user_data.user_files.removeUserFolder()
-            user_data.dumpUserOfAllTables()
+            excel_manager.user_manager.removeAllExcels()
+            db_manager.user_table.truncateUserOfTable()
             logging.info("@{}: Data is reseted!".format(username))
             return graph_button_status + 1, None
 
-        user_data.updateData()
+        logging.info(f"{username}: Update data on database ...")
+        df = excel_manager.dataframe()
+        cleaned_df = cleanDf(df, False)
+        db_manager.user_table.truncateUserOfTable()
+        db_manager.saveDataframe(cleaned_df)
+        logging.info(f"{username}: Update done!")
 
         return graph_button_status + 1, None
 
@@ -153,11 +158,9 @@ class DashboardHomeMixin(AbstractAction):
             Input(self.dashboard_home.download_excel_button, "n_clicks"),
         )
 
-    @staticmethod
-    def download_button_pressed(export_nclicks):
-        username = getUsername()
-        user_data = UserDataPipeline(username)
-        df = user_data.getDataframeFromExcel()
+    def download_button_pressed(self, export_nclicks):
+        excel_manager, _, _ = self.instanciateManagers()
+        df = excel_manager.dataframe()
         return dcc.send_data_frame(
             df.to_excel, "recount_excel.xlsx", sheet_name="Sheet_name_1"
         )

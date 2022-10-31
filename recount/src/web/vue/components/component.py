@@ -6,7 +6,7 @@ from .css_style import *
 __all__ = ["RecountComponents", "DefaultButtons", "RecountDefaultDivs"]
 
 START_YEAR = 2019
-START_MONTH = 8
+START_MONTH = 9
 START_DAY = 1
 
 

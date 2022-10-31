@@ -89,7 +89,7 @@ class FileAccessor:
             json.dump(data, json_file, indent=4)
 
     @staticmethod
-    def removeFile(filepath):
+    def removeFile(filepath: Path):
         if filepath.exists():
             os.remove(filepath)
 
@@ -447,7 +447,7 @@ class UserManager(FolderManager, FileManager):
 
     def removeAllExcels(self):
         for filepath in os.listdir(self.ROOT):
-            FileAccessor.removeFile(filepath)
+            FileAccessor.removeFile(self.ROOT / filepath)
 
 
 class TestManager(FileManager):

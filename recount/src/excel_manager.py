@@ -21,3 +21,12 @@ class ExcelManager:
     def saveDataframe(self, df: pd.DataFrame, *args, **kwargs):
         excel_data = dfFromData(df)
         self.user_manager.saveExcel(excel_data, *args, **kwargs)
+
+    def saveImportedExcel(self, imported_file, *args, **kwargs):
+        content_type, buffer_content = decodeImportedFile(imported_file)
+        excel_data = buffer_content.read()
+        if not content_type == "xlsx":
+            raise AttributeError(
+                "provdided file is not 'xlsx' but {}".format(content_type)
+            )
+        self.user_manager.saveExcel(excel_data, *args, **kwargs)

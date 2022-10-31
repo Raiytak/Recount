@@ -45,15 +45,8 @@ def dateToString(date: datetime) -> str:
 class Period:
     WEEK = "week"
     MONTH = "month"
-    QUARTER = "semester"
+    QUARTER = "quarter"
     ANNUAL = "annual"
-
-
-class Frequence(Enum):
-    WEEK = "W"
-    MONTH = "M"
-    QUARTER = "3M"
-    ANNUAL = "Y"
 
 
 def addDeltaToDatetime(start_date: datetime, period: str) -> datetime:
@@ -98,16 +91,6 @@ def dataframeOfPeriod(
     after_start = df[date_column] >= start_date
     before_end = df[date_column] <= end_date
     return df.loc[after_start & before_end]
-
-
-# def groupByColumnAndSumByFrequence(df: pd.DataFrame, freq: Frequence):
-#     df_grouped = df.groupby(
-#         ["Name", pd.Grouper(key=ExpenseColumn.DATE.value, freq=freq.value)]
-#     )["Quantity"]
-#     df_sum = df_grouped.sum()
-#     df_reset = df_sum.reset_index()
-#     df_sorted = df_reset.sort_values("Date")
-#     return df_sorted
 
 
 def updateDictAUsingDictB(dictA: dict, dictB: dict) -> dict:
