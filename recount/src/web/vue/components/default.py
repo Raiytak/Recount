@@ -15,7 +15,9 @@ class DefaultButtons:
     confirm_reset_dialogue = "confirm-reset-dialog"
     upload_excel = "upload-excel"
     download_excel = "export-excel"
-    download_excel_button = "export-excel-button"
+    button_download_excel = "export-excel-button"
+    download_default_excel = "export-default-excel"
+    button_download_default_excel = "export-default-excel-button"
     edit_buttons_id = "edit-buttons-div"
 
     @classmethod
@@ -45,8 +47,22 @@ class DefaultButtons:
     def downloadButton(cls):
         download_div = html.Div(
             [
-                html.Button("Download Excel", id=cls.download_excel_button, n_clicks=0),
+                html.Button("Download Excel", id=cls.button_download_excel, n_clicks=0),
                 dcc.Download(id=cls.download_excel),
+            ]
+        )
+        return download_div
+
+    @classmethod
+    def downloadDefaultExcelButton(cls):
+        download_div = html.Div(
+            [
+                html.Button(
+                    "Download Default Excel",
+                    id=cls.button_download_default_excel,
+                    n_clicks=0,
+                ),
+                dcc.Download(id=cls.download_default_excel),
             ]
         )
         return download_div

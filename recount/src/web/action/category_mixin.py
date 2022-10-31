@@ -10,10 +10,10 @@ from .abstract_mixin import AbstractAction
 from src.web.vue.components.css_style import *
 from .graphs import *
 
-__all__ = ["CategoryHomeMixin"]
+__all__ = ["CategoryMixin"]
 
 
-class CategoryHomeMixin(AbstractAction):
+class CategoryMixin(AbstractAction):
     CATEGORY = "category-"
     DEPTH = "depth-"
     BUTTON = "button"
@@ -40,7 +40,7 @@ class CategoryHomeMixin(AbstractAction):
         username = getUsername()
         user_data = UserDataPipeline(username)
         categories = user_data.user_files.categories
-        categories_div = CategoryHomeMixin.categoryDivOfDepth(categories, depth=0)
+        categories_div = CategoryMixin.categoryDivOfDepth(categories, depth=0)
         return categories_div, None
 
     @staticmethod
@@ -48,26 +48,26 @@ class CategoryHomeMixin(AbstractAction):
         main_layer = []
         for category, subcategories in sorted(categories.items()):
             if subcategories:
-                sub_layer = CategoryHomeMixin.categoryDivOfDepth(
+                sub_layer = CategoryMixin.categoryDivOfDepth(
                     subcategories, depth + 1
                 )
-                category_layer = CategoryHomeMixin.createDivForCategory(
+                category_layer = CategoryMixin.createDivForCategory(
                     category, sub_layer, depth
                 )
                 main_layer.append(category_layer)
             else:
-                button = CategoryHomeMixin.createButtonForCategory(category, depth)
+                button = CategoryMixin.createButtonForCategory(category, depth)
                 main_layer.append(button)
 
         return html.Div(main_layer)
 
     def createDivForCategory(name: str, children: list, depth: int):
-        category = CategoryHomeMixin.createButtonForCategory(name, depth)
+        category = CategoryMixin.createButtonForCategory(name, depth)
         sub_categories = html.Div(
             children,
-            className=CategoryHomeMixin.CATEGORY
+            className=CategoryMixin.CATEGORY
             + " "
-            + CategoryHomeMixin.DEPTH
+            + CategoryMixin.DEPTH
             + str(depth),
         )
         return html.Div([category, sub_categories], style=flex)
@@ -75,10 +75,10 @@ class CategoryHomeMixin(AbstractAction):
     def createButtonForCategory(children: str, depth: int):
         return html.Button(
             children,
-            className=CategoryHomeMixin.CATEGORY
+            className=CategoryMixin.CATEGORY
             + " "
-            + CategoryHomeMixin.DEPTH
+            + CategoryMixin.DEPTH
             + str(depth)
             + " "
-            + CategoryHomeMixin.BUTTON,
+            + CategoryMixin.BUTTON,
         )

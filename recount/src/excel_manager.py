@@ -30,3 +30,7 @@ class ExcelManager:
                 "provdided file is not 'xlsx' but {}".format(content_type)
             )
         self.user_manager.saveExcel(excel_data, *args, **kwargs)
+
+    def getDefaultExcel(self) -> pd.DataFrame:
+        df = self.dataframe(self.user_manager.default_excel_path)
+        return df

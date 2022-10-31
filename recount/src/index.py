@@ -28,7 +28,7 @@ class IndexPath:
 class IndexManager:
     def __init__(self,):
         self.index_page = IndexPage(IndexPath)
-        self.home_page = HomePage()
+        self.home_page = HomePage(UserManager, ExcelManager,)
         self.dashboard_page = DashboardHomePage(
             Table.EXPENSE,
             UserManager,

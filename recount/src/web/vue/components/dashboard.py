@@ -1,7 +1,7 @@
 from dash import dcc, html
 from dash.dependencies import Output, Input
 
-from .component import RecountDefaultDivs, DefaultButtons
+from .default import RecountDefaultDivs, DefaultButtons
 from .css_style import *
 
 __all__ = ["DashboardHome"]
@@ -71,7 +71,8 @@ class DashboardHome(RecountDefaultDivs):
             id=self.update_data_button, children="Refresh Data", n_clicks=0,
         )
         refresh_div = html.Div(
-            children=[refresh_graph_button, refresh_data_button], style=flexColumn
+            children=[refresh_graph_button, refresh_data_button],
+            style={"display": "none"},  # style=flexColumn
         )
         return refresh_div
 

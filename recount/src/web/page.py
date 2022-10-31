@@ -31,15 +31,15 @@ class IndexPage(IndexVue, Page):
     page_name = "index-page"
 
 
-class HomePage(HomeVue, Page):
+class HomePage(HomeMixin, HomeVue, Page):
     page_name = "home-page"
 
 
-class CategoryHomePage(CategoryHomeMixin, CategoryHomeVue, Page):
+class CategoryHomePage(CategoryMixin, CategoryHomeVue, Page):
     page_name = "category-home-page"
 
 
-class DashboardHomePage(DashboardHomeMixin, DashboardHomeVue, Page):
+class DashboardHomePage(DashboardMixin, DashboardHomeVue, Page):
     page_name = "dashboard-home-page"
 
 

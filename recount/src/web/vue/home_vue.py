@@ -1,6 +1,8 @@
 from dash import html
 
 from .abstract_vue import AbstractVue
+from .components.default import DefaultButtons
+from .components.css_style import *
 
 __all__ = ["HomeVue"]
 
@@ -13,13 +15,16 @@ class HomeVue(AbstractVue):
             style={"marginBottom": "-1rem", "fontSize": "8rem", "fontWeight": "bold",},
         )
         subtext_title = html.Strong(
-            "Gonna check dat budget!", style={"fontSize": "3rem"}
+            "Gonna check that budget!", style={"fontSize": "3rem"}
         )
         upper_welcome = html.Div([title, subtext_title], style={"textAlign": "center"})
-
+        download_default_excel = html.Div(
+            DefaultButtons.downloadDefaultExcelButton(), style={"margin-left": "auto"}
+        )
         welcome = html.H2(
             [html.Br(), "Welcome"], style={"fontSize": "6rem", "fontWeight": "bold"}
         )
+        wecome_div = html.Div([welcome, download_default_excel], style=spaceBetween)
         paraf1 = html.P(
             [
                 "Bonjour et bienvenu sur ",
@@ -68,4 +73,11 @@ class HomeVue(AbstractVue):
             list_parafs[i].style = {"fontSize": "xx-large"}
         parafs = html.Div(list_parafs)
 
-        return html.Div([upper_welcome, welcome, parafs])
+        return html.Div([upper_welcome, wecome_div, parafs])
+
+    def downloadDefaultExcelCallbacks(self):
+        return DefaultButtons.download_default_excel
+
+    def buttonDownloadDefaultExcelCallbacks(self):
+        return DefaultButtons.button_download_default_excel
+

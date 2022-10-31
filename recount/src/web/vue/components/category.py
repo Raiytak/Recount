@@ -1,7 +1,7 @@
 from dash import dcc, html
 from dash.dependencies import Output, Input
 
-from .component import RecountDefaultDivs, DefaultButtons
+from .default import RecountDefaultDivs, DefaultButtons
 from .css_style import *
 
 __all__ = ["CategoryHome"]

@@ -7,10 +7,10 @@ from .abstract_mixin import AbstractAction
 from .graphs import *
 from pipeline.pipeline import cleanDf
 
-__all__ = ["DashboardHomeMixin"]
+__all__ = ["DashboardMixin"]
 
 
-class DashboardHomeMixin(AbstractAction):
+class DashboardMixin(AbstractAction):
     def __init__(
         self,
         table,
@@ -155,12 +155,15 @@ class DashboardHomeMixin(AbstractAction):
     def io_download_button_pressed(self):
         return (
             Output(self.dashboard_home.download_excel, "data"),
-            Input(self.dashboard_home.download_excel_button, "n_clicks"),
+            Input(self.dashboard_home.button_download_excel, "n_clicks"),
         )
 
     def download_button_pressed(self, export_nclicks):
         excel_manager, _, _ = self.instanciateManagers()
         df = excel_manager.dataframe()
         return dcc.send_data_frame(
-            df.to_excel, "recount_excel.xlsx", sheet_name="Sheet_name_1"
+            df.to_excel,
+            "recount_excel.xlsx",
+            sheet_name="Sheet_name_1",
+            # index=None, # TODO: remove index from excel
         )
