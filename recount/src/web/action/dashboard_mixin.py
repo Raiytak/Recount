@@ -165,5 +165,5 @@ class DashboardMixin(AbstractAction):
             df.to_excel,
             "recount_excel.xlsx",
             sheet_name="Sheet_name_1",
-            # index=None, # TODO: remove index from excel
+            index=None,  # remove dataframe's index from excel
         )

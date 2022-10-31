@@ -45,5 +45,5 @@ class HomeMixin(AbstractAction):
             df.to_excel,
             "default_recount_excel.xlsx",
             sheet_name="Sheet_name_1",
-            # index=0, # TODO: remove index from excel
+            index=None,  # remove dataframe's index from excel
         )

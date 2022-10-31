@@ -31,8 +31,8 @@ def cleanDf(df: pd.DataFrame, inplace: bool):
     applyStrTo(df, ExpenseColumn.AMOUNT.value, inplace)
     applyStrTo(df, ExpenseColumn.DESCRIPTION.value, inplace)
 
-    normalizeColumn(df, ExpenseColumn.CATEGORY.value, inplace)
-    normalizeColumn(df, ExpenseColumn.DESCRIPTION.value, inplace)
-    normalizeColumn(df, ExpenseColumn.PLACE.value, inplace)
-    normalizeColumn(df, ExpenseColumn.PAYEMENT_METHOD.value, inplace)
-    normalizeColumn(df, ExpenseColumn.RECEIVER.value, inplace)
+    normalizeValuesOfColumns(df, ExpenseColumn.CATEGORY.value, inplace)
+    normalizeValuesOfColumns(df, ExpenseColumn.DESCRIPTION.value, inplace)
+    normalizeValuesOfColumns(df, ExpenseColumn.PLACE.value, inplace)
+    normalizeValuesOfColumns(df, ExpenseColumn.PAYEMENT_METHOD.value, inplace)
+    normalizeValuesOfColumns(df, ExpenseColumn.RECEIVER.value, inplace)

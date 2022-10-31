@@ -5,6 +5,9 @@ import pandas as pd
 from accessors.file_management import UserManager
 from interface.excel_interface import *
 
+# from interface.excel_interface import convertDataframeToBytes
+from pipeline.cleaner import removeColumnsNotInExpectedExcelColumns
+
 
 class ExcelManager:
     def __init__(self, user_manager: UserManager):
@@ -16,6 +19,7 @@ class ExcelManager:
         excel_data = self.user_manager.excel(filepath, filename)
         # TODO: add translation of columns using the SQL columns
         df = dataToDf(excel_data)
+        removeColumnsNotInExpectedExcelColumns(df, True)
         return df
 
     def saveDataframe(self, df: pd.DataFrame, *args, **kwargs):
@@ -32,5 +36,6 @@ class ExcelManager:
         self.user_manager.saveExcel(excel_data, *args, **kwargs)
 
     def getDefaultExcel(self) -> pd.DataFrame:
-        df = self.dataframe(self.user_manager.default_excel_path)
+        df = self.dataframe(self.user_manager.EXAMPLE_EXCEL)
+        removeColumnsNotInExpectedExcelColumns(df, True)
         return df

@@ -2,6 +2,8 @@ import typing
 import pandas as pd
 import unidecode
 
+from interface.default import EXCEL_COLUMNS
+
 
 def inplace(func):
     def inner(*args, **kwargs):
@@ -28,9 +30,14 @@ def inplace(func):
 @inplace
 def normalizeColumnsName(df: pd.DataFrame, inplace: bool):
     columns = df.columns
-    lowered_columns = (col.lower() for col in columns)
-    normalized_columns = (col.replace(" ", "_") for col in lowered_columns)
+    normalized_columns = (normalizeColumn(col) for col in columns)
     df.columns = normalized_columns
+
+
+def normalizeColumn(column: str) -> str:
+    lowered_column = column.lower()
+    normalized_column = lowered_column.replace(" ", "_")
+    return normalized_column
 
 
 @inplace
@@ -65,7 +72,7 @@ def applyStrTo(df, column: str, inplace: bool):
 
 
 @inplace
-def normalizeColumn(df, column: str, inplace: bool):
+def normalizeValuesOfColumns(df, column: str, inplace: bool):
     cleaners = [
         unidecode.unidecode,
         lambda text: text.lower(),
@@ -74,3 +81,17 @@ def normalizeColumn(df, column: str, inplace: bool):
     for cleaner in cleaners:
         df[column] = df[column].apply(lambda x: cleaner(x) if not pd.isna(x) else x)
 
+
+@inplace
+def removeColumnsNotIn(
+    df: pd.DataFrame, expected_columns: typing.List[str], inplace: bool
+):
+    for column in df.columns:
+        normalized_column = normalizeColumn(column)
+        if normalized_column not in expected_columns:
+            df.pop(column)
+
+
+@inplace
+def removeColumnsNotInExpectedExcelColumns(df: pd.DataFrame, inplace: bool):
+    return removeColumnsNotIn(df, EXCEL_COLUMNS, inplace)

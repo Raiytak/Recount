@@ -9,11 +9,11 @@ import abc
 import typing
 import os
 from pathlib import Path
-import io
 import json
 import shutil
 import pickle
-import pandas
+
+# import pandas as pd
 
 
 import path_definition
@@ -217,16 +217,6 @@ class UsersFolder(FolderManager):
     def isEmpty(self) -> bool:
         return [file for file in os.listdir(self.ROOT)] == []
 
-    @staticmethod
-    def convertDataframeToBytes(dataframe):
-        buffer = io.BytesIO()
-        with pandas.ExcelWriter(buffer) as writer:
-            dataframe.to_excel(writer)
-            writer.save()
-        buffer.seek(0)
-        file_data = buffer.read()
-        return file_data
-
 
 # =====================================================================================
 # ================================= PUBLIC API ========================================
@@ -318,6 +308,8 @@ class KeyManager(FileManager):
 class UserManager(FolderManager, FileManager):
     """CRUD operations on the files of the defined user"""
 
+    EXAMPLE_EXCEL = path_definition.ExampleFolder.EXCEL_PATH
+
     def __init__(self, username: str = "", key: typing.Union[bytes, str] = None):
         if not username:
             self._username = "default"
@@ -325,7 +317,6 @@ class UserManager(FolderManager, FileManager):
             self._username = username
         self._ROOT = path_definition.UsersFolder.ROOT / self.username
 
-        # Instanciation of a file encryption object
         if not key:
             key_manager = KeyManager()
             key = key_manager.getDefaultExcelKey()
@@ -397,14 +388,6 @@ class UserManager(FolderManager, FileManager):
             data = unknown_data
         return data
 
-    def dataframe(self, filepath: Path = None):
-        """Returns the df of the file 'filepath'
-        If not path is provided, return the df of the default excel"""
-        df = pandas.read_excel(self.excel(filepath))
-        df.dropna(how="all", inplace=True)
-        df.reset_index(drop=True, inplace=True)
-        return df
-
     def saveExcel(
         self,
         data: bytes,
@@ -455,116 +438,4 @@ class TestManager(FileManager):
     OUTPUT_PIPELINE_JSON_1 = path_definition.TestFolder.OUTPUT_PIPELINE_JSON_1
     DATABASE_DATAFRAME_JSON_1 = path_definition.TestFolder.DATABASE_DATAFRAME_JSON_1
     DATABASE_SAVE_DATAFRAME_1 = path_definition.TestFolder.DATABASE_SAVE_DATAFRAME_1
-
-
-# def saveUploadedFile(self, file_uploaded):
-#     content_type_encoded, content_string_encoded = file_uploaded.split(",")
-#     content_decoded = self.getTypeAndDecodeUploadedFile(content_string_encoded)
-#     file_data = content_decoded.read()
-#     self.saveExcel(file_data)
-
-# @staticmethod
-# def getTypeAndDecodeUploadedFile(content_string_encoded):
-#     # if any(["xml" in content_type_encoded) or ("xls" in content_type_encoded) :
-#     #     content_decoded = io.BytesIO(content_string_base64)
-#     # else:
-#     #     raise TypeError("Uploaded file is expected to be created from openxml or excel")
-#     content_string_base64 = base64.b64decode(content_string_encoded)
-#     content_decoded = io.BytesIO(content_string_base64)
-#     return content_decoded
-
-# @property
-# def intelligent_fill(self):
-#     return self.readJson(self.user_files_path.intelligent_fill)
-
-# def updateIntelligentFill(self, data: dict):
-#     self.writeJson(self.user_files_path.intelligent_fill, data)
-
-# @property
-# def categories(self):
-#     return self.readJson(self.user_files_path.categories)
-
-# def updateCategories(self, data: dict):
-#     return self.writeJson(self.user_files_path.categories, data)
-
-# @property
-# def translations(self):
-#     return self.readJson(self.user_files_path.translations)
-
-# def updateTranslations(self, data: dict):
-#     return self.writeJson(self.user_files_path.translations, data)
-
-# @property
-# def equivalent_columns(self):
-#     return self.translations["equivalent_columns"]
-
-
-# class AccessNotebookConfig(FileAccessor):
-#     """CRUD operations on the notebook confs of the application"""
-
-#     # TODO: change this to for each user + save
-#     def __init__(self):
-#         self.NotebookConfigPath = NotebookConfigPath()
-
-#     def getJson(self):
-#         data = {}
-#         with open(self.NotebookConfigPath.getNotebookConfigPath(), "r") as json_file:
-#             data = json.load(json_file)
-#         return data
-
-#     def writeJson(self, data):
-#         with open(self.NotebookConfigPath.getNotebookConfigPath(), "w") as json_file:
-#             try:
-#                 json.dump(data, json_file, indent=4)
-#             except TypeError:
-#                 logging.exception("JSON of wrong type :\n", data)
-
-#     def getPrettyJson(self):
-#         data = self.getJson()
-#         json_formatted_str = json.dumps(data, indent=4)
-#         return json_formatted_str
-
-
-# class AccessStandardButtonsConfig(FileAccessor):
-#     """CRUD operations on the button confs of the application"""
-
-#     # TODO: change this to for each user + save
-#     def __init__(self):
-#         self.StandardButtonsConfigPath = StandardButtonsConfigPath()
-
-#     def getJson(self):
-#         data = {}
-#         with open(
-#             self.StandardButtonsConfigPath.getStandardButtonsConfigPath(), "r"
-#         ) as json_file:
-#             data = json.load(json_file)
-#         return data
-
-#     def writeJson(self, data):
-#         with open(
-#             self.StandardButtonsConfigPath.getStandardButtonsConfigPath(), "w"
-#         ) as json_file:
-#             try:
-#                 json.dump(data, json_file, indent=4)
-#             except TypeError:
-#                 logging.exception("JSON of wrong type :\n", data)
-
-#     def getPrettyJson(self):
-#         data = self.getJson()
-#         json_formatted_str = json.dumps(data, indent=4)
-#         return json_formatted_str
-
-
-# class UnittestFiles:
-#     """CRUD operations on the unittest files"""
-
-#     pipeline_test_values = [
-#         (pandas.read_excel(input_file), FileAccessor.readJson(output_file))
-#         for input_file, output_file in UnittestFilesPath.pipeline_test_values
-#     ]
-
-#     convert_df_to_sql_test_values = [
-#         (pandas.read_excel(input_file), FileAccessor.read(output_file).split("\n"))
-#         for input_file, output_file in UnittestFilesPath.convert_df_to_sql_test_values
-#     ]
 
