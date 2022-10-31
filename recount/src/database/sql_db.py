@@ -6,10 +6,9 @@ Creation and management of the MySQL connections, requests and return the respon
 
 
 import logging
-from socket import socket
 import pandas as pd
 from enum import Enum
-from typing import Union, List, Type
+from typing import Union, List
 import pymysql
 
 from accessors.file_management import ConfigManager

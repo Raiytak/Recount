@@ -7,7 +7,6 @@ Gestion of the USERS' identification.
 
 from dash_auth.auth import Auth
 
-# from dash_auth import BasicAuth
 import dash
 import flask, base64, hashlib
 
@@ -27,16 +26,32 @@ class WrapperEncryptedAuthentification(Auth):
         Auth.__init__(self, app)
         self._users = username_password
 
-    # TODO: if not identified, return false. asked auth in vue
+    def getPasswordOfUser(self, username: str) -> str:
+        password = self._users.get(username)
+        return password.upper()
+
+    @staticmethod
+    def encodePassword(password: str) -> str:
+        encrypted_password = hashlib.new("sha224", password.encode()).hexdigest()
+        return encrypted_password.upper()
+
+    def userExists(self, username: str) -> bool:
+        return username in self._users.keys()
+
+    # TODO: auth in vue
     def is_authorized(self):
         header = flask.request.headers.get("Authorization", None)
         if not header:
             return False
-        username, password = getUsernameAndPassword()
-        return (
-            self._users.get(username)
-            == hashlib.new("sha224", password.encode()).hexdigest()
-        )  # Encryption of the password
+        (
+            username,
+            clear_password,
+        ) = getUsernameAndPassword()  # request header information
+        if not self.userExists(username):
+            return False
+        password = self.encodePassword(clear_password)
+        expected_password = self.getPasswordOfUser(username)
+        return expected_password == password
 
     def login_request(self):
         # TODO: create vue, ask auth in vue, flaskresponse for auth
