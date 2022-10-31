@@ -11,7 +11,7 @@ class RecountLinks:
         self.index_path = index_path
 
     def home(self) -> dcc.Link:
-        button = html.Button("HomeVue", className="nav-button")
+        button = html.Button("Home", className="nav-button")
         home_page = dcc.Link(button, href=self.index_path.HOME)
         return home_page
 

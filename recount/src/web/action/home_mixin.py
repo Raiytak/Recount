@@ -27,7 +27,7 @@ class HomeMixin(AbstractAction):
         return excel_manager
 
     def setCallbacks(self):
-        @callback(*self.io_download_button_pressed)
+        @callback(*self.io_download_button_pressed, prevent_initial_call=True)
         def download_button_pressed(*args):
             return self.download_button_pressed(*args)
 

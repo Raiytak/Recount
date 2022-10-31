@@ -1,4 +1,4 @@
-from dash import html
+from dash import html, dcc
 
 from .abstract_vue import AbstractVue
 from .components.default import DefaultButtons
@@ -27,46 +27,44 @@ class HomeVue(AbstractVue):
         wecome_div = html.Div([welcome, download_default_excel], style=spaceBetween)
         paraf1 = html.P(
             [
-                "Bonjour et bienvenu sur ",
+                "Hello and welcome on ",
                 html.Strong("Recount"),
-                ", une application qui permet de visualiser ses dépenses.",
+                ", an interactive app to visualize your expenses.",
             ]
         )
-        paraf2 = html.P(
-            [
-                html.Br(),
-                "La ",
-                "version 0.1",
-                " viens de sortir, et ",
-                html.Strong("vous avez été choisi pour la tester!"),
-            ]
-        )
+        paraf2 = html.P([html.Br(), "The version 0.2 is now out! ",])
         paraf3 = html.P(
             [
-                "Testez, jouez avec les données, et faites moi des retours par mail quand vous le souhaitez à ",
+                "Test, play with data, and if you feel so you can make a feedback at ",
                 html.A("recount.original@gmail.com"),
             ]
         )
         paraf4 = html.P(
             [
-                "Si vous voulez un petit ",
-                html.Strong("tuto"),
-                " pour vous lancer, j'ai préparé ",
-                html.A("celui-ci."),
+                "If you need a little ",
+                html.Strong("guide"),
+                " to help you, I have made ",
+                dcc.Link(html.A("this one"), href=None),
+                ".",
             ]
         )
         paraf5 = html.P(
             [
                 html.Br(),
-                "Niveau sécurité, tout les fichiers sont chiffrés et les connexions sécurisées. Mais je ne vais pas mentir : tout est cadenassé, mais les clefs ne sont pas cachées. Il faut partir du principe qu'",
-                html.Strong("une fuite de données peut arriver TRÈS facilement."),
-                " Si cela vous dérange d'entrer vos dépenses personnelles, utilisez les données de l'exemple ou inventez vos propres données.",
+                "This project is at a testing phase, which means that ",
+                html.Strong("your data is NOT PROTECTED!"),
+                " You can use fake tags and fake names if you which to use it 'safely'.",
             ]
         )
         paraf6 = html.P(
-            [html.Br(), "Je reste joignable sur mon téléphone, mail ou via facebook."]
+            [
+                html.Br(),
+                "You can contact me by mail, on my phone or ",
+                dcc.Link("Facebook", href="https://www.facebook.com/Raiytak"),
+                ".",
+            ]
         )
-        paraf7 = html.P([html.Br(), "Amusez vous bien!"])
+        paraf7 = html.P([html.Br(), "Have fun!"])
 
         list_parafs = [paraf1, paraf2, paraf3, paraf4, paraf5, paraf6, paraf7]
         for i in range(len(list_parafs)):
