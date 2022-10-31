@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """
 Routing of the web application
 """
@@ -37,7 +36,7 @@ class IndexManager:
             DatabaseManager,
             DashManager,
         )
-        self.category_page = CategoryHomePage()
+        # self.category_page = CategoryHomePage()
         # self.notebook_page = NotebookHomePage()
 
     def setCallbacks(self):
@@ -45,8 +44,8 @@ class IndexManager:
         def display_page(pathname):
             username = getUsername()
             dash.callback_context.response.set_cookie("username", username)
-            if pathname == "/":  # returns the default page
-                # return None
+            if pathname == "/":
+                # return None # To return empty page
                 return self.home_page.vue
             elif pathname == IndexPath.HOME:
                 return self.home_page.vue

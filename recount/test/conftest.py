@@ -1,9 +1,5 @@
-# -*- coding: utf-8 -*-
-
 import typing
 import pytest
-import json
-import pandas as pd
 
 from database.sql_db import Table, UserSqlTable
 from file_management import FileAccessor, TestManager, UserManager

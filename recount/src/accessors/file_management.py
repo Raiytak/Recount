@@ -1,11 +1,8 @@
 # -*- coding: utf-8 -*-
 """ 
-                    ====     DESCRIPTION    ====
-This file aims to do the CRUD manipulations on the files used by the application.
-The paths used are stored in the paths_docs module, and are used by the wrappers of this module.
+CRUD manipulations on the files used by the application.
+The paths used are stored in the path_definition.py file,
 """
-
-"""ACHTUNG: To access user files, you should always do it using UserFolder class !"""
 
 
 import abc

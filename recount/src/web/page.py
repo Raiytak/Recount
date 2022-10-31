@@ -7,7 +7,7 @@ __all__ = [
     "IndexPage",
     "HomePage",
     "DashboardHomePage",
-    "CategoryHomePage",
+    # "CategoryHomePage",
     # "NotebookHomePage",
 ]
 
@@ -35,12 +35,12 @@ class HomePage(HomeMixin, HomeVue, Page):
     page_name = "home-page"
 
 
-class CategoryHomePage(CategoryMixin, CategoryHomeVue, Page):
-    page_name = "category-home-page"
-
-
 class DashboardHomePage(DashboardMixin, DashboardHomeVue, Page):
     page_name = "dashboard-home-page"
+
+
+# class CategoryHomePage(CategoryMixin, CategoryHomeVue, Page):
+#     page_name = "category-home-page"
 
 
 # class NotebookHomePage(NotebookHomeMixin, NotebookHomeVue, Page):

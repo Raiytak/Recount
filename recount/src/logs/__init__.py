@@ -1,6 +1,5 @@
-# -*- coding: utf-8 -*-
 """ 
-Logs of the application.
+Log management of the application.
 """
 from enum import Enum
 import logging
