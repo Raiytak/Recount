@@ -1,12 +1,6 @@
 # Ignore important stuff
 recount/src/.env
 
-# Ignore the data folder
-data/**
-
-# Ignore the database other files
-database/init_**
-
 # Ignore the __pycache__ files created by python
 **__pycache__**
 *.pyc
@@ -46,3 +40,4 @@ recount/commands.py
 **.bat
 **.coverage
 **.bak
+**.pytest_cache

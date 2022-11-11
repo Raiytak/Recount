@@ -18,12 +18,12 @@ class ExcelManager:
     ) -> typing.Type[pd.DataFrame]:
         excel_data = self.user_manager.excel(filepath, filename)
         # TODO: add translation of columns using the SQL columns
-        df = dataToDf(excel_data)
+        df = dfFromData(excel_data)
         removeColumnsNotInExpectedExcelColumns(df, True)
         return df
 
-    def saveDataframe(self, df: pd.DataFrame, *args, **kwargs):
-        excel_data = dfFromData(df)
+    def saveDataframe(self, df: typing.Type[pd.DataFrame], *args, **kwargs):
+        excel_data = dataFromDf(df)
         self.user_manager.saveExcel(excel_data, *args, **kwargs)
 
     def saveImportedExcel(self, imported_file, *args, **kwargs):
@@ -35,7 +35,6 @@ class ExcelManager:
             )
         self.user_manager.saveExcel(excel_data, *args, **kwargs)
 
-    def getDefaultExcel(self) -> pd.DataFrame:
-        df = self.dataframe(self.user_manager.EXAMPLE_EXCEL)
-        removeColumnsNotInExpectedExcelColumns(df, True)
+    def getDefaultExcel(self) -> typing.Type[pd.DataFrame]:
+        df = self.dataframe(self.user_manager.EXAMPLE_EXCEL, filename=None)
         return df

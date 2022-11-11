@@ -1,5 +1,7 @@
 import sql_db
 
+__all__ = ["testSqlConnection"]
+
 
 def testSqlConnection():
     sql_table = sql_db.SqlTable()

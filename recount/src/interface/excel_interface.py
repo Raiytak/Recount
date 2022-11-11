@@ -3,19 +3,19 @@ import io
 import base64
 
 __all__ = [
-    "dataToDf",
     "dfFromData",
+    "dataFromDf",
     "decodeImportedFile",
 ]
 
 
-def dataToDf(data: bytes):
+def dfFromData(data: bytes):
     dataframe = pd.read_excel(data)
     # TODO: add optional translations
     return dataframe
 
 
-def dfFromData(df: pd.DataFrame):
+def dataFromDf(df: pd.DataFrame):
     buffer = io.BytesIO()
     with pd.ExcelWriter(buffer) as writer:
         df.to_excel(writer)
