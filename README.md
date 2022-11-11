@@ -41,7 +41,7 @@ https://user-images.githubusercontent.com/52044172/158196182-bd84b827-b002-4b7b-
 # Installation
 
 ## Install necessary tools
-python => 3.8 necessary (see https://www.python.org/downloads/) \
+python => 3.7 necessary (see https://www.python.org/downloads/) \
 A mysql db is needed by the application. See https://dev.mysql.com/doc/mysql-installation-excerpt/5.7/en/ for installation (a docker should be released for that aspect soon).
 
 ## MySQL Configuration
@@ -49,22 +49,24 @@ Upload the `init.sql` file present in [database](https://github.com/Raiytak/Reco
 ```
 mysql -u USER -p recount < PATH/TO/FILE/init.sql
 ```
-Add a user `myuser` and grant him access to this new database:
+Add a user (for example here named `myuser`) and grant him access to this new database:
 ```
 CREATE USER 'myuser'@'localhost' IDENTIFIED BY 'mypass';
-GRANT ALL PRIVILEGES ON database_name.table_name TO 'newuser'@'localhost';
+GRANT ALL PRIVILEGES ON recount.* TO 'newuser'@'localhost';
 FLUSH PRIVILEGES;
 ```
-The user should match the description of the one defined in [default_configs.json](https://github.com/Raiytak/Recount/blob/sanity-cleaning-core/recount/config/default_configs.json)
+The user should match the description of the one defined in [default_configs.json](https://github.com/Raiytak/Recount/blob/sanity-cleaning-core/recount/config/default_configs.json).
+The name and password used SHOULD BE DIFFERENT from the ones defined in the default configuration.
 
 
 ## App installation
 ```
 git clone https://github.com/Raiytak/Recount.git
 cd Recount
-pip install recount/
+pip install -r recount/requirements.txt
 python -m recount
 ```
 
+Once running, you can access it through your browser by typing `localhost:8050`
 
 
