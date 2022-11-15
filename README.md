@@ -44,31 +44,47 @@ https://user-images.githubusercontent.com/52044172/158196182-bd84b827-b002-4b7b-
 python => 3.7 necessary (see https://www.python.org/downloads/) \
 A mysql db is needed by the application. See https://dev.mysql.com/doc/mysql-installation-excerpt/5.7/en/ for installation (a docker should be released for that aspect soon).
 
-## MySQL Configuration
-Upload the `init.sql` file present in [database](https://github.com/Raiytak/Recount/blob/master/database/init.sql) into mysql:
-```
-mysql -u USER -p recount < PATH/TO/FILE/init.sql
-```
-Add a user (for example here named `myuser`) and grant him access to this new database:
-```
-CREATE USER 'myuser'@'localhost' IDENTIFIED BY 'mypass';
-GRANT ALL PRIVILEGES ON recount.* TO 'newuser'@'localhost';
-FLUSH PRIVILEGES;
-```
-The user should match the description of the one defined in [default_configs.json](https://github.com/Raiytak/Recount/blob/sanity-cleaning-core/recount/config/default_configs.json).
-The name and password used SHOULD BE DIFFERENT from the ones defined in the default configuration.
-
 
 ## App installation
 ```
 git clone https://github.com/Raiytak/Recount.git
 cd Recount
 pip install -r recount/requirements.txt
-python -m recount
 ```
 
-Once running, you can access it through your browser by typing `localhost:8050`
+After that, we will create and instanciate the necessary folders and files:
+```
+python -m recount.src.accessors --initiate-folders
+```
+You should check on your home folder (~ for Linux), a `.recount` folder should have been created. It is this file that the app will use.
+You should modify the default password in `.recount/config/sql.config` to ensure some security.
 
+
+## MySQL Configuration
+Upload the `init.sql` file present in [database](https://github.com/Raiytak/Recount/blob/master/database/init.sql) into mysql:
+```
+mysql -u root -p recount < databases/mysql/init.sql
+```
+This will create the necessary database and tables. You have to use the ROOT of your MySQL for this process.
+
+
+Add a user and grant him access to this new database.
+Its information have to match the one written in `.recount/config/sql.config`.
+```
+CREATE USER 'recount_admin'@'localhost' IDENTIFIED BY 'mypass';
+GRANT ALL PRIVILEGES ON recount.* TO 'recount_admin'@'localhost';
+FLUSH PRIVILEGES;
+```
+The name and password used SHOULD BE DIFFERENT from the default ones.
+
+To ensure that the configuration is working, you can do `python -m recount.src.database --test`
+
+
+## App launch
+```
+python -m recount
+```
+Once running, you can access it through your browser by typing `localhost:8050`
 
 Other option: Run with Gunicorn
 `python -m gunicorn 'recount.app:createRecountServer()'`

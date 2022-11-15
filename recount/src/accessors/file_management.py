@@ -310,11 +310,10 @@ class UserManager(FolderManager, FileManager):
 
     EXAMPLE_EXCEL = path_definition.ExampleFolder.EXCEL_PATH
 
-    def __init__(self, username: str = "", key: typing.Union[bytes, str] = None):
+    def __init__(self, username: str, key: typing.Union[bytes, str] = None):
         if not username:
-            self._username = "default"
-        else:
-            self._username = username
+            raise AttributeError("No username was provided")
+        self._username = username
         self._ROOT = path_definition.UsersFolder.ROOT / self.username
 
         if not key:

@@ -41,6 +41,13 @@ def copyExampleLogin():
     LoginManager.copyExample()
 
 
+def createUsers():
+    users = LoginManager.getUsers()
+    for username in users:
+        user_manager = UserManager(username)
+        createUserFolder(user_manager)
+
+
 def createUserFolder(user_manager):
     user_manager.createFolder()
 

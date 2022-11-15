@@ -116,6 +116,7 @@ if args.initiate_folders:
     copyAssetFiles()
     copyExampleAppConfig()
     copyExampleLogin()
+    createUsers()
 
 
 if args.copy_example_config:
