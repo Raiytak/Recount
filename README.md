@@ -70,3 +70,5 @@ python -m recount
 Once running, you can access it through your browser by typing `localhost:8050`
 
 
+Other option: Run with Gunicorn
+`python -m gunicorn 'recount.app:createRecountServer()'`

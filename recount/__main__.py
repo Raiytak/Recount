@@ -1,7 +1,7 @@
 import argparse
 import sys
 
-from .main import *
+from .app import *
 
 
 parser = argparse.ArgumentParser()
@@ -32,5 +32,4 @@ logs.formatAndDisplay(
 )
 
 if args.launch:
-    dash_app = createDashApp()
-    dash_app.run_server()
+    launchApp()

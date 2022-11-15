@@ -44,7 +44,8 @@ class HomeVue(AbstractVue):
                 "If you need a little ",
                 html.Strong("guide"),
                 " to help you, I have made ",
-                dcc.Link(html.A("this one"), href=None),
+                # dcc.Link(html.A("this one"), href=None),
+                html.A("this one"),
                 ".",
             ]
         )
