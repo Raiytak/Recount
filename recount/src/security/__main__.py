@@ -4,7 +4,7 @@ import argparse
 from accessors.file_management import ConfigManager
 from accessors.encryption import generateKey
 
-
+# TODO: Change name / action, expecting to provide a key to change the password
 def changeSqlAdminPassword():
     key = str(generateKey())
     ConfigManager.setSqlAdminPassword(key)

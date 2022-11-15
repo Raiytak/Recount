@@ -1,7 +1,7 @@
 import sys
 import argparse
 
-from main import *
+from .main import *
 
 
 parser = argparse.ArgumentParser()
