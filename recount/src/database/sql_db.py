@@ -6,12 +6,13 @@ Creation and management MySQL connections and requests.
 import logging
 import pandas as pd
 from enum import Enum
+from collections import namedtuple
 from typing import Union, List
 import pymysql
 
 from accessors.file_management import ConfigManager
 
-__all__ = ["Table", "SqlKeyword", "SqlRequest", "SqlTable", "UserSqlTable"]
+__all__ = ["DbConf", "Table", "SqlKeyword", "SqlRequest", "SqlTable", "UserSqlTable"]
 
 
 class Table(Enum):
@@ -22,25 +23,40 @@ class Table(Enum):
     INFORMATION_COLUMNS = "information_schema.columns"
 
 
+class DbConf(Enum):
+    HOST = "localhost"
+    PORT = 3306
+    DB = "recount"
+    USER = "localhost"
+    PASSWORD = None
+    SSL = None
+
+
 class SqlSocket:
     """Create and manage a connection to the MySQL database"""
 
-    def __init__(self, config=None):
+    def __init__(self, config: dict = None, table: Table = Table.EXPENSE):
+        # TODO: use table
         if config is None:
-            config = ConfigManager.sql()  # Get the default config
+            json_config = ConfigManager.sqlConfig()
+            # Get default values for those unset
+            for item in DbConf:
+                key = item.name.lower()
+                if not key in json_config.keys():
+                    json_config[key] = item.value
+            config = json_config
         self.connection, self.cursor = self.createSocket(config)
 
-    def createSocket(self, config, enable_ssl=True):
-        config_ssl = None
+    def createSocket(self, config: dict, enable_ssl: bool = True):
         if enable_ssl:
-            config_ssl = {"fake_flag_to_enable_tls": True}
+            config["ssl"] = {"fake_flag_to_enable_tls": True}
         new_socket = pymysql.connect(
             host=config["host"],
             user=config["user"],
             passwd=config["password"],
             port=config["port"],
             db=config["db"],
-            ssl=config_ssl,
+            ssl=config["ssl"],
         )
         return new_socket, new_socket.cursor()
 
@@ -267,12 +283,16 @@ class SqlRequest:
         return request
 
     def createTruncateRequest(self):
-        request = self.concatenate(self.action, self.table_name, end=";",)
+        request = self.concatenate(
+            self.action,
+            self.table_name,
+            end=";",
+        )
         return request
 
 
 class SqlTable:
-    """Access to one table of the """
+    """Access to one table of the"""
 
     # TODO : assert table exists
     def __init__(self, table: Table = None, config: dict = None):

@@ -12,7 +12,11 @@ class HomeVue(AbstractVue):
     def vue(self):
         title = html.H1(
             "Recount",
-            style={"marginBottom": "-1rem", "fontSize": "8rem", "fontWeight": "bold",},
+            style={
+                "marginBottom": "-1rem",
+                "fontSize": "8rem",
+                "fontWeight": "bold",
+            },
         )
         subtext_title = html.Strong(
             "Gonna check that budget!", style={"fontSize": "3rem"}
@@ -32,7 +36,12 @@ class HomeVue(AbstractVue):
                 ", an interactive app to visualize your expenses.",
             ]
         )
-        paraf2 = html.P([html.Br(), "The version 0.2 is now out! ",])
+        paraf2 = html.P(
+            [
+                html.Br(),
+                "The version 0.2 is now out! ",
+            ]
+        )
         paraf3 = html.P(
             [
                 "Test, play with data, and if you feel so you can make a feedback at ",
@@ -79,4 +88,3 @@ class HomeVue(AbstractVue):
 
     def buttonDownloadDefaultExcelCallbacks(self):
         return DefaultButtons.button_download_default_excel
-

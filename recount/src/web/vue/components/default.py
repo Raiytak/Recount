@@ -38,7 +38,9 @@ class DefaultButtons:
     @classmethod
     def uploadButton(cls):
         upload_component = dcc.Upload(
-            id=cls.upload_excel, children=html.Div("Upload my Excel"), multiple=False,
+            id=cls.upload_excel,
+            children=html.Div("Upload my Excel"),
+            multiple=False,
         )
         upload_div = html.Button(upload_component, n_clicks=0)
         return upload_div
@@ -96,7 +98,8 @@ class RecountComponents:
 
     def loadingDiv(self):
         loading_page = dcc.Loading(
-            type="default", children=[html.Div(id=self.loading_div)],
+            type="default",
+            children=[html.Div(id=self.loading_div)],
         )
         return loading_page
 

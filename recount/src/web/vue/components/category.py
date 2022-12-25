@@ -16,4 +16,3 @@ class CategoryHome(RecountDefaultDivs):
         )
         self.category_diplay_div = self.name_vue + "-category-display-div"
         self.layer = self.name_vue + "-layer-"
-

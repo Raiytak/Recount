@@ -58,6 +58,7 @@ python -m recount.src.accessors --initiate-folders
 ```
 You should check on your home folder (~ for Linux), a `.recount` folder should have been created. It is this file that the app will use.
 You should modify the default password in `.recount/config/sql.config` to ensure some security.
+You can also configure it while launching the application by providing information to the script. See `python -m recount -h` for that.
 
 
 ## MySQL Configuration
@@ -82,7 +83,7 @@ To ensure that the configuration is working, you can do `python -m recount.src.d
 
 ## App launch
 ```
-python -m recount
+python -m recount --launch
 ```
 Once running, you can access it through your browser by typing `localhost:8050`
 

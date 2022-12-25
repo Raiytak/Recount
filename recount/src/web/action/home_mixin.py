@@ -14,7 +14,11 @@ __all__ = ["HomeMixin"]
 
 class HomeMixin(AbstractAction):
     def __init__(
-        self, classUserManager, classExcelManager, *args, **kwargs,
+        self,
+        classUserManager,
+        classExcelManager,
+        *args,
+        **kwargs,
     ):
         self.classUserManager = classUserManager
         self.classExcelManager = classExcelManager
