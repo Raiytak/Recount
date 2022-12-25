@@ -27,7 +27,8 @@ class DashboardHome(RecountDefaultDivs):
 
     def defaultGraph(self, graph_id):
         graph = dcc.Graph(
-            id=graph_id, config={"edits": {"axisTitleText": True, "titleText": True}},
+            id=graph_id,
+            config={"edits": {"axisTitleText": True, "titleText": True}},
         )
         return graph
 
@@ -65,14 +66,17 @@ class DashboardHome(RecountDefaultDivs):
 
     def refreshDiv(self):
         refresh_graph_button = html.Button(
-            id=self.update_graph_button, children="Refresh Graph", n_clicks=0,
+            id=self.update_graph_button,
+            children="Refresh Graph",
+            n_clicks=0,
         )
         refresh_data_button = html.Button(
-            id=self.update_data_button, children="Refresh Data", n_clicks=0,
+            id=self.update_data_button,
+            children="Refresh Data",
+            n_clicks=0,
         )
         refresh_div = html.Div(
             children=[refresh_graph_button, refresh_data_button],
             style={"display": "none"},  # style=flexColumn
         )
         return refresh_div
-

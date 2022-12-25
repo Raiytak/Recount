@@ -13,9 +13,6 @@ import json
 import shutil
 import pickle
 
-# import pandas as pd
-
-
 import path_definition
 import encryption
 
@@ -186,6 +183,7 @@ class ConfigFolder(FolderManager):
     @classmethod
     def copyExampleSqlConfig(cls):
         example_sql_conf = path_definition.ExampleFolder.SQL_CONFIG
+        # TODO: erase old configuration file. Handle it properly
         shutil.copy2(src=example_sql_conf, dst=cls.SQL_PATH)
 
     @classmethod
@@ -248,15 +246,15 @@ class ConfigManager:
     SQL = ConfigFolder.SQL_PATH
 
     @classmethod
-    def sql(cls):
+    def setValue(cls, key: str, value: str):
         data = FileAccessor.readJson(cls.SQL)
-        return data
+        data[key] = value
+        FileAccessor.writeJson(cls.SQL, data)
 
     @classmethod
-    def setSqlAdminPassword(cls, password: str):
+    def sqlConfig(cls) -> dict:
         data = FileAccessor.readJson(cls.SQL)
-        data["password"] = password
-        FileAccessor.writeJson(cls.SQL, data)
+        return data
 
 
 class LoginManager(FileManager):
@@ -437,4 +435,3 @@ class TestManager(FileManager):
     OUTPUT_PIPELINE_JSON_1 = path_definition.TestFolder.OUTPUT_PIPELINE_JSON_1
     DATABASE_DATAFRAME_JSON_1 = path_definition.TestFolder.DATABASE_DATAFRAME_JSON_1
     DATABASE_SAVE_DATAFRAME_1 = path_definition.TestFolder.DATABASE_SAVE_DATAFRAME_1
-

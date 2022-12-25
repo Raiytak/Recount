@@ -9,7 +9,7 @@ from logging.handlers import RotatingFileHandler
 from src.accessors.file_management import *
 
 PAD_SIZE = 50
-FILE_SIZE_BYTES = 1 * 10 ** 6
+FILE_SIZE_BYTES = 1 * 10**6
 DATE_FORMAT = "%H:%M:%S"
 DETAILLED_DESCR = "[%(levelname)s] - %(asctime)s - %(module)s - : %(message)s in %(pathname)s , line : %(lineno)d"
 

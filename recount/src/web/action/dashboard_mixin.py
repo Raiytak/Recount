@@ -124,7 +124,11 @@ class DashboardMixin(AbstractAction):
         )
 
     def update_data(
-        self, refresh, imported_excel, reset_confirmed, graph_button_status,
+        self,
+        refresh,
+        imported_excel,
+        reset_confirmed,
+        graph_button_status,
     ):
         button_clicked = getIdButtonClicked()
         excel_manager, db_manager, dash_manager = self.instanciateManagers()

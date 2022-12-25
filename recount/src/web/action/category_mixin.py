@@ -48,9 +48,7 @@ class CategoryMixin(AbstractAction):
         main_layer = []
         for category, subcategories in sorted(categories.items()):
             if subcategories:
-                sub_layer = CategoryMixin.categoryDivOfDepth(
-                    subcategories, depth + 1
-                )
+                sub_layer = CategoryMixin.categoryDivOfDepth(subcategories, depth + 1)
                 category_layer = CategoryMixin.createDivForCategory(
                     category, sub_layer, depth
                 )
@@ -65,10 +63,7 @@ class CategoryMixin(AbstractAction):
         category = CategoryMixin.createButtonForCategory(name, depth)
         sub_categories = html.Div(
             children,
-            className=CategoryMixin.CATEGORY
-            + " "
-            + CategoryMixin.DEPTH
-            + str(depth),
+            className=CategoryMixin.CATEGORY + " " + CategoryMixin.DEPTH + str(depth),
         )
         return html.Div([category, sub_categories], style=flex)
 

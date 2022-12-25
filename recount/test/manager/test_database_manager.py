@@ -32,4 +32,3 @@ def test_database_manager_save_dataframe(
     # from accessors.file_management import FileAccessor, TestManager
     # FileAccessor.writeJson(TestManager.DATABASE_SAVE_DATAFRAME_1, data_json)
     assert data_json == excpected_response_database_save_dataframe_1
-

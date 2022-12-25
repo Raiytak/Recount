@@ -2,12 +2,17 @@
 Handles web instanciation and logic.
 """
 from dash import Dash
-from src.security.authentification import *
 
 import src.logs as logs
+from src.security.authentification import *
 from src.web import *
-from src.accessors.file_management import AssetManager
+from src.accessors.file_management import AssetManager, ConfigManager
 from src.index import IndexManager
+
+
+def saveConfiguration(config: dict):
+    for key, value in config.items():
+        ConfigManager.setValue(key, value)
 
 
 def launchApp(*args, **kwargs):

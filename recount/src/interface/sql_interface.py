@@ -40,13 +40,18 @@ def rearrangeDfColumns(df: pd.DataFrame, columns: typing.List[str]):
 
 
 def convertDfToSqlInsertRequests(
-    df: pd.DataFrame, table: typing.Type[Table], columns: typing.List[str],
+    df: pd.DataFrame,
+    table: typing.Type[Table],
+    columns: typing.List[str],
 ) -> typing.List[SqlRequest]:
     sql_requests = []
     for index, row in df.iterrows():
         values = list(row.values)
         sql_request = SqlRequest(
-            SqlKeyword.INSERT, table, insert_columns=columns, insert_values=values,
+            SqlKeyword.INSERT,
+            table,
+            insert_columns=columns,
+            insert_values=values,
         )
         sql_requests.append(sql_request)
     return sql_requests
