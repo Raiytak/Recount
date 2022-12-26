@@ -81,6 +81,15 @@ The name and password used SHOULD BE DIFFERENT from the default ones.
 To ensure that the configuration is working, you can do `python -m recount.src.database --test`
 
 
+## App configuration
+To configure the database credentials and values used by Recount, you can set them via 2 possibilities:
+-1: via command line
+```
+python -m recount --dbname recount-1 --dbuser recount-administrator
+```
+-2: by editing manually the config file, which is located at `~/.recount/config/sql.config`
+
+
 ## App launch
 ```
 python -m recount --launch
