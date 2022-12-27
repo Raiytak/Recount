@@ -107,6 +107,12 @@ if any([args.encrypt, args.decrypt]) and not (args.username and args.filename):
     raise AttributeError("username or filename not provided")
 
 # -- Actions --
+
+logs.startLogs(log_level="INFO")
+logs.formatAndDisplay(
+    "Launch accessors script", "+#", logs.Position.CENTER, to_highlight=True
+)
+
 if args.remove_old_folders:
     removeFolders()
 

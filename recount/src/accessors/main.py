@@ -1,3 +1,4 @@
+import src.logs as logs
 from file_management import *
 from accessors.file_management import UserManager
 from excel_manager import ExcelManager
