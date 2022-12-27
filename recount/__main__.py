@@ -32,7 +32,7 @@ parser.add_argument(
 )
 parser.add_argument(
     "--dbpass",
-    help="password of the user.",
+    help="password of the user",
 )
 parser.add_argument(
     "--launch",

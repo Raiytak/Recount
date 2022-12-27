@@ -12,6 +12,7 @@ from pathlib import Path
 import json
 import shutil
 import pickle
+import logging
 
 import path_definition
 import encryption
@@ -85,6 +86,7 @@ class FileAccessor:
     @staticmethod
     def removeFile(filepath: Path):
         if filepath.exists():
+            logging.info(f"Remove file {filepath}")
             os.remove(filepath)
 
 
@@ -141,10 +143,12 @@ class FolderManager:
     @classmethod
     def createFolder(cls):
         if not cls.folderExists():
+            logging.info(f"Create folder {cls.ROOT}")
             os.mkdir(cls.ROOT)
 
     @classmethod
     def removeFolder(cls):
+        logging.info(f"Remove folder {cls.ROOT}")
         shutil.rmtree(cls.ROOT)
 
     @classmethod
