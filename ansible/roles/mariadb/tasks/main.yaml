@@ -1,0 +1,13 @@
+---
+
+- name: "mariadb installation"
+  apt:
+    name: "mariadb-server,python3-mysqldb"
+    state: "present"
+
+- name: "start mariadb service"
+  service:
+    name: "mariadb"
+    state: "started"
+    enabled: yes
+

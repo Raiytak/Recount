@@ -1,0 +1,19 @@
+---
+
+
+- name: "add user-ansible to www-data group"
+  command:
+    usermod -aG www-data user-ansible
+
+- name: "create recount folder"
+  file:
+    path: "{{recount_folder}}"
+    owner: "www-data"
+    group: "www-data"
+    state: directory
+
+- name: "clone recount git repo"
+  git:
+    repo: "{{recount_git_url}}"
+    version: "{{recount_version}}"
+    dest: "{{recount_git_folder}}"

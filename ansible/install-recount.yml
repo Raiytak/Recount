@@ -1,0 +1,27 @@
+---
+
+- name: "installation of necessary components for recount"
+  hosts: app1
+  gather_facts: no
+  roles:
+    - role: mariadb
+    - role: git
+    - role: python
+
+- name: "configure git"
+  hosts: app1
+  gather_facts: no
+  roles:
+    - role: "recount/confgit"
+
+- name: "configure db"
+  hosts: app1
+  gather_facts: no
+  roles:
+    - role: "recount/confdb"
+
+- name: "configure and launch recount"
+  hosts: app1
+  gather_facts: no
+  roles:
+    - role: "recount/confrecount"

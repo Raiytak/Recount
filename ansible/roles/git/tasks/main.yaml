@@ -1,0 +1,7 @@
+---
+
+- name: "git installation"
+  apt:
+    name: "git"
+    state: "present"
+

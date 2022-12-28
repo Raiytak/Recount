@@ -26,18 +26,6 @@ recount/src/pyproject.toml
 # Ignoring pytest cache
 **.pytest_cache
 
-# Ignoring files created by venv.
-recount/bin
-recount/etc
-recount/share
-recount/lib
-recount/lib64
-recount/include
-
-
-# Ignore Ansible, temporary
-ansible/**
-
 # Other ignores
 **.pem
 recount/commands.py

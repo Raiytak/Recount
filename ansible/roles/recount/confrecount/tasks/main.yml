@@ -1,0 +1,41 @@
+---
+
+- name: "create working app folder"
+  file:
+    path: "{{recount_working_folder}}"
+    owner: "user-ansible"
+    group: "www-data"
+    state: directory
+
+- name: "create virtualenv and install recount modules"
+  pip:
+    requirements: "{{recount_git_folder}}/recount/requirements.txt"
+    virtualenv: "{{recount_virtual_env}}"
+    virtualenv_python: python3.10
+    state: present
+
+- name: "initialize recount folders"
+  command:
+    chdir: "{{recount_git_folder}}"
+    cmd: "{{recount_virtual_env_python}} -m recount.src.accessors --initiate-folders"
+
+- name: "set config values for sql db"
+  command:
+    chdir: "{{recount_git_folder}}"
+    cmd: "{{recount_virtual_env_python}} -m recount
+        --dbserver {{recount_db_host}}
+        --dbport {{recount_db_port}}
+        --dbname {{recount_db_name}}
+        --dbuser {{recount_db_username}}
+        --dbpass {{recount_db_password}}"
+
+- name: "launch application"
+  shell:
+    chdir: "{{recount_git_folder}}"
+    cmd:  "nohup {{recount_virtual_env_python}} -m
+          gunicorn
+          -b {{recount_gunicorn_host}}:{{recount_gunicorn_port}}
+          'recount.app:createRecountServer()'
+          &"
+
+

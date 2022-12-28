@@ -1,0 +1,16 @@
+---
+    
+- name: "configure sql table"
+  community.mysql.mysql_db:
+    name: "{{recount_db_name}}"
+    target: "{{recount_mysql_init}}"
+    login_unix_socket: /run/mysqld/mysqld.sock # To use when "Please explicitly state intended protocol" error appears
+    state: import
+
+- name: "recount user and privilege"
+  community.mysql.mysql_user:
+    name: "{{recount_db_username}}"
+    password: "{{recount_db_password}}"
+    priv: "{{recount_db_name}}.*:ALL"
+    host: "app1"
+    state: present
