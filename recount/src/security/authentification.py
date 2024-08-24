@@ -100,4 +100,5 @@ def getUsername() -> str:
 def addAuthentification(app: dash.Dash) -> None:
     Login_manager = LoginManager()
     users_passwords = Login_manager.getUsersAndPasswords()
+    print(users_passwords)
     WrapperEncryptedAuthentification(app, users_passwords)

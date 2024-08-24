@@ -1,12 +1,11 @@
 ---
-
 - name: "python installation"
-  apt:
+  ansible.builtin.apt:
     name: "python3"
     state: "present"
 
 - name: "virtualenv installation"
-  apt:
+  ansible.builtin.apt:
     name: "virtualenv"
     state: "present"
 
