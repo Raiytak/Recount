@@ -40,11 +40,7 @@ https://user-images.githubusercontent.com/52044172/158196182-bd84b827-b002-4b7b-
 
 # Installation
 
-## Install necessary tools
-python => 3.7 necessary (see https://www.python.org/downloads/) \
-A mysql db is needed by the application. See https://dev.mysql.com/doc/mysql-installation-excerpt/5.7/en/ for installation (a docker should be released for that aspect soon).
-
-
+You can install the application using Ansible.
 ## App installation
 ```
 git clone https://github.com/Raiytak/Recount.git
@@ -64,7 +60,7 @@ You can also configure it while launching the application by providing informati
 ## MySQL Configuration
 Upload the `init.sql` file present in [database](https://github.com/Raiytak/Recount/blob/master/database/init.sql) into mysql:
 ```
-mysql -u root -p recount < databases/mysql/init.sql
+mysql -u root -p recount < db/sql/init.sql
 ```
 This will create the necessary database and tables. You have to use the ROOT of your MySQL for this process.
 

@@ -1,0 +1,19 @@
+---
+- name: "installation of necessary components for recount"
+  become: true
+  hosts: "{{ target_host | default([]) }}"
+  roles:
+    - mysql
+    - python
+
+- name: "configure db"
+  become: true
+  hosts: "{{ target_host | default([]) }}"
+  roles:
+    - recount/confdb
+
+- name: "configure and launch recount"
+  become: true
+  hosts: "{{ target_host | default([]) }}"
+  roles:
+    - recount/confrecount
