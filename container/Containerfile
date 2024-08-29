@@ -1,0 +1,15 @@
+FROM ubuntu:22.04
+
+RUN apt update -y \
+    && apt install python3-pip -y
+    
+RUN pip install -r recount/requirements.txt
+
+RUN mkdir /home/recount/.recount \
+    && python3 -m recount.src.accessors --initiate-folders
+
+
+ARG recount_gunicorn_host
+ARG recount_gunicorn_port
+
+CMD /bin/bash python3 -m gunicorn -b ${recount_gunicorn_host}:${recount_gunicorn_port} 'recount.app:createRecountServer()'

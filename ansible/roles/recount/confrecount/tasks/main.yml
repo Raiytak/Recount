@@ -1,7 +1,7 @@
 ---
 - name: "create working app folder"
   ansible.builtin.file:
-    path: "{{recount_working_folder}}"
+    path: "{{ recount_working_folder }}"
     owner: "{{ user_ansible }}"
     group: "www-data"
     state: directory
@@ -28,14 +28,14 @@
         --dbuser {{recount_db_username}}
         --dbpass {{recount_db_password}}"
 
-- name: "launch application"
-  ansible.builtin.shell:
-    chdir: "{{recount_git_folder}}"
-    cmd:  "nohup {{recount_virtual_env_python}} -m
-          gunicorn
-          -b {{recount_gunicorn_host}}:{{recount_gunicorn_port}}
-          'recount.app:createRecountServer()'
-          &"
-    executable: /bin/bash
+# - name: "launch application"
+#   ansible.builtin.shell:
+#     chdir: "{{recount_git_folder}}"
+#     cmd:  "nohup {{recount_virtual_env_python}} -m
+#           gunicorn
+#           -b {{recount_gunicorn_host}}:{{recount_gunicorn_port}}
+#           'recount.app:createRecountServer()'
+#           &"
+#     executable: /bin/bash
 
 
